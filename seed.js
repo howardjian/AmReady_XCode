@@ -6,10 +6,18 @@ module.exports = JSON.stringify({
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri'],
          route: {
-            start: [25, 26],
-            end: [25.4, 26.1],
+            start_lat: 37.78825,
+            start_long: -122.4324,
+            end_lat: 37.78825 ,
+            end_long: -122.4324,
             modeOfTransport: 'Train',
-            preferredRoute: '423dsfr3r32sf'
+            preferredRoute: '423dsfr3r32sf',
+            address: {
+              start: '',
+              end: ''
+            },
+            routeSelected: false,
+            routeIndex: null
          },
          prepTime: 10000,
          arrivalTime: '9:30',
@@ -22,16 +30,57 @@ module.exports = JSON.stringify({
       },
       {
          alarmName: 'Gym',
-         isRecurring: 0,
-         daysOfWeek: ['Sat'],
+         isRecurring: 1,
+         daysOfWeek: ['Mon', 'Tues', 'Thurs', 'Fri'],
          route: {
-            start: [25, 26],
-            end: [26.7, 25.34],
-            modeOfTransport: 'Walk',
-            preferredRoute: '4bsf78r63rfjk'
+            start_lat: 37.78825,
+            start_long: -122.4324,
+            end_lat: 37.78825 ,
+            end_long: -122.4324,
+            modeOfTransport: 'Train',
+            preferredRoute: '423dsfr3r32sf',
+            address: {
+              start: '',
+              end: ''
+            },
+            routeSelected: false,
+            routeIndex: null
          },
-         prepTime: 45000,
-         arrivalTime: '13:30'
+         prepTime: 10000,
+         arrivalTime: '9:30',
+         contacts: [
+            {
+               user: 56,
+               type: 'email'
+            }
+         ]
+      },
+      {
+         alarmName: 'Demo-Day',
+         isRecurring: 1,
+         daysOfWeek: ['Thurs'],
+         route: {
+            start_lat: 37.78825,
+            start_long: -122.4324,
+            end_lat: 37.78825 ,
+            end_long: -122.4324,
+            modeOfTransport: 'Train',
+            preferredRoute: '423dsfr3r32sf',
+            address: {
+              start: '',
+              end: ''
+            },
+            routeSelected: false,
+            routeIndex: null
+         },
+         prepTime: 10000,
+         arrivalTime: '9:30',
+         contacts: [
+            {
+               user: 56,
+               type: 'email'
+            }
+         ]
       }
    ],
    locations: [

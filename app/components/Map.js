@@ -4,12 +4,12 @@ import MapView from 'react-native-maps';
 
 
 export default function({start_lat,start_long,end_lat,end_long, polylines}){
-   
+
 
     return (
         <MapView
             style={{
-                height: 100,
+                height: 400,
                 width: 400}}
             initialRegion={{
                 latitude: start_lat,
@@ -19,7 +19,7 @@ export default function({start_lat,start_long,end_lat,end_long, polylines}){
             }}
         >
         {
-            polylines ? 
+            polylines ?
                 <MapView.Polyline
                     coordinates=
                     {[
