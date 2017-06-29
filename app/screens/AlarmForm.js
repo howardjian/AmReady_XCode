@@ -35,27 +35,29 @@ export default class extends React.Component {
 		this.saveDetails = this.saveDetails.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.saveNewAlarm = this.saveNewAlarm.bind(this);
 	}
 
   handleChange(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
     // console.log('newState', this.state);
+    this.saveNewAlarm();
   }
 
-	saveDetails() {
-    // alert('Save Details');
-
+  saveNewAlarm() {
     // 1. Get old alarms
-
-
     // 2. convert old alarms to JSON
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
+    AsyncStorage.getItem('alarms', (err, result) => {
+      console.log(result);
+    })
+  }
 
-
-
+	saveDetails() {
+    // alert('Save Details');
     AsyncStorage.setItem(this.state);
     this.props.navigation.dispatch(NavigationActions.reset(
       {
@@ -109,7 +111,6 @@ export default class extends React.Component {
 
 	render () {
 		return (
-
       <ScrollView style={styles.window}>
         <TextInput
           onChangeText={(alarmName) => {this.setState({alarmName})}}
@@ -133,8 +134,6 @@ export default class extends React.Component {
         <Directions handleChange={this.handleChange}/>
       </ScrollView>
     )
-
-
 	}
 }
 
@@ -144,8 +143,6 @@ const timeFormat=(date) =>{
   let min = date[1];
   return hours+':'+min;
 }
-
-
 
 
 const styles = StyleSheet.create({
