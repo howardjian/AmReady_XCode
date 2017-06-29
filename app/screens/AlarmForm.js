@@ -138,7 +138,7 @@ export default class extends React.Component {
 }
 
 const timeFormat=(date) =>{
-  date = date.split(':');
+  date = date.toString().split(':');
   let hours = date[0].slice(date[0].length-2,date[0].length);
   let min = date[1];
   return hours+':'+min;

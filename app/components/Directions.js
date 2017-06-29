@@ -20,6 +20,7 @@ export default class extends Component {
         }
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     createStartAndEndLatLong(directionsObj){
@@ -30,7 +31,7 @@ export default class extends Component {
         end_long:directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-    
+
     decode(encoded){
       var points=[ ]
       var index = 0, len = encoded.length;
@@ -54,12 +55,12 @@ export default class extends Component {
           result |= (b & 0x1f) << shift;
           shift += 5;
           } while (b >= 0x20);
-        
+
         var dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
         lng += dlng;
-      
-        points.push({latitude:( lat / 1E5),longitude:( lng / 1E5)})  
-  
+
+        points.push({latitude:( lat / 1E5),longitude:( lng / 1E5)})
+
       }
       return points
     }
@@ -70,7 +71,7 @@ export default class extends Component {
         googleDirectionsQuery+= `origin=${this.state.start}&`;
         googleDirectionsQuery+= `destination=${this.state.end}&`;
         googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyDeLijmYBeZMZA2UN2vAB_AYj9PHya8JjY";
-        
+
         fetch(
           googleDirectionsQuery,
           { mode: 'no-cors' }
@@ -93,13 +94,13 @@ export default class extends Component {
                 }
               }
               let latLongObject = this.createStartAndEndLatLong(JSON.parse(responseText['_bodyInit']));
-              
+
               let start_lat = latLongObject.start_lat;
               let end_lat = latLongObject.end_lat;
               let start_long = latLongObject.start_long;
               let end_long = latLongObject.end_long;
               tmpOptions = tmpOptions.filter(option => option != undefined)
-              
+
               this.setState(
                 {
                   start_lat,
@@ -112,12 +113,27 @@ export default class extends Component {
               )
             }
         )
+        .then(this.handleChange)
         .catch(
             (error) => {
                 console.warn('hi', error);
             }
         );
         }
+    }
+
+    handleChange() {
+      this.props.handleChange({
+        start: this.state.start,
+        end: this.state.end,
+        start_lat: this.state.start_lat,
+        start_long: this.state.start_long,
+        end_lat: this.state.end_lat ,
+        end_long: this.state.end_long,
+        directions: this.state.directions,
+        trainOptions: this.state.trainOptions,
+        routeSelected: this.state.routeSelected
+      })
     }
 
     selectRoute(index){
@@ -130,61 +146,58 @@ export default class extends Component {
 
     render(){
         return (
-            <View>
+          <View>
             {
-                this.state.directions ?
-                <View>
-                  {
-                    this.state.routeSelected ?
-
-
-                      <Map start_lat={this.state.start_lat} 
-                        start_long={this.state.start_long}  
-                        end_lat={this.state.end_lat}
-                        end_long={this.state.end_long}
-                        polylines={this.state.trainOptions[this.state.routeIndex]["polylines"]}
-                        />
-
-                    :
-                    <Map start_lat={this.state.start_lat} 
-                      start_long={this.state.start_long}  
+              <View>
+                   <TextInput
+                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                       onChangeText={(start) => {
+                         this.setState({start})
+                       }}
+                       value={this.state.start}
+                       />
+                   <TextInput
+                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                       onChangeText={(end) => this.setState({end})}
+                       value={this.state.end}
+                       />
+                   <Button onPress={this.getDirections}  title="Get Directions"
+                   />
+              </View>
+            }{
+              this.state.directions && (
+              <View>
+                {
+                  this.state.routeSelected ?
+                    <Map start_lat={this.state.start_lat}
+                      start_long={this.state.start_long}
                       end_lat={this.state.end_lat}
                       end_long={this.state.end_long}
+                      polylines={this.state.trainOptions[this.state.routeIndex]["polylines"]}
                       />
-                  }       
-                <View>
-                      {
-                        this.state.trainOptions.length
-                        ?
-                        this.state.trainOptions.map((option,index) => (
-                          <RouteOptions key={index} transit={option.short_name} 
-                          icon={option.icon} index={index} selectRoute={this.selectRoute}
-                          duration ={option.duration}/>
-                        ))
-                        :
-                        <Text>NO Routes Available</Text>
-                      }
-                    </View>
-                 </View>
-                 :
-                 <View>
-                    <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={(start) => {
-                          this.setState({start})
-                        }}
-                        value={this.state.start}
-                        />
-                    <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={(end) => this.setState({end})}
-                        value={this.state.end}
-                        />
-                    <Button onPress={this.getDirections}  title="Get Directions"
+                  :
+                  <Map start_lat={this.state.start_lat}
+                    start_long={this.state.start_long}
+                    end_lat={this.state.end_lat}
+                    end_long={this.state.end_long}
                     />
-                </View>
-            }
-            </View>
+                }
+                  <View>
+                    {
+                      this.state.trainOptions.length
+                      ?
+                      this.state.trainOptions.map((option,index) => (
+                        <RouteOptions key={index} transit={option.short_name}
+                        icon={option.icon} index={index} selectRoute={this.selectRoute}
+                        duration ={option.duration}/>
+                      ))
+                      :
+                      <Text>NO Routes Available</Text>
+                    }
+                  </View>
+              </View>)
+              }
+          </View>
         )
     }
 }
