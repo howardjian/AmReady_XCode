@@ -6,7 +6,7 @@ import Map  from './Map';
 export default class extends Component {
     constructor(props){
         super(props);
-                
+
         const defaultState = {
             start:null,
             end:null,
@@ -21,7 +21,7 @@ export default class extends Component {
             routeIndex:null,
             responseObjRoutes: {}
         }
-        
+
         if(props.alarmInfo) {
             this.state = Object.assign({}, defaultState, {...props.alarmInfo});
         }else {
@@ -87,12 +87,9 @@ export default class extends Component {
         )
         .then(
             (responseText) => {
-
                 let routes = JSON.parse(responseText['_bodyInit'])["routes"];
 
-
               this.setState({responseObjRoutes: routes})
-              // console.error(routes)
               let tmpOptions = [];
               for(let j = 0; j < routes.length; j++) {
                 let duration = routes[j].legs[0].duration
