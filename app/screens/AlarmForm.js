@@ -28,7 +28,7 @@ export default class extends React.Component  {
       end_long: -122.4324,
       directions:false,
       trainOptions: [],
-      routeSelected: false,
+      routeSelectedBool: false,
       routeIndex: null,
       prepTime: ''
     }
@@ -38,13 +38,16 @@ export default class extends React.Component  {
     this.saveNewAlarm = this.saveNewAlarm.bind(this);
 	}
 
+  componentWillMount() {
+    let selectedUserData = this.props.navigation.state.params
+    if(selectedUserData) {
+      this.setState(stateifyDbData(selectedUserData));
+    }
+  }
+
   handleChange(changedState) {
-
-    // let newState = Object.assign({}, this.props.navigation.state.params.data, changedState);
-
-
-    this.setState(changedState);
-    // console.log('newState', this.state);
+    let newState = Object.assign({}, this.state, changedState)
+    this.setState(newState);
   }
 
   saveNewAlarm() {
@@ -53,29 +56,22 @@ export default class extends React.Component  {
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
-    // console.warn("SSSSSTATE", this.state);
+
     let db = JSON.parse(this.props.navigation.state.params.data);
-    console.warn("BEFORE", db);
     db.alarms.push(this.state);
-    console.warn("AFTER", db);
     AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
       if(err){
         console.warn("ERRROR", err);
       }
-      console.warn(result);
     })
-    // //AsyncStorage.setItem(this.state);
     AsyncStorage.getItem('data', (err, result) => {
       if(err){
         console.error(err);
       }
-      console.warn("AFTER", result);
     })
-
   }
 
 	saveDetails() {
-    // alert('Save Details');
     this.saveNewAlarm();
     this.props.navigation.dispatch(NavigationActions.reset(
       {
@@ -86,10 +82,6 @@ export default class extends React.Component  {
       }));
   }
 
-
-  // componentWillMount(){
-  //     console.error(JSON.parse(this.props.navigation.state.params.data));
-  // }
   onDateChange (date) {
     this.setState({date: date});
   }
@@ -97,8 +89,6 @@ export default class extends React.Component  {
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.saveDetails });
   }
-
-
 
   AsyncStorageFormat(){
     const currentAlarm = this.state;
@@ -117,7 +107,7 @@ export default class extends React.Component  {
            start: currentAlarm.start,
            end: currentAlarm.end
          },
-         routeSelected: currentAlarm.routeSelected
+         routeSelectedBool: currentAlarm.routeSelectedBool
         //  routeIndex: null
       },
       prepTime: currentAlarm.prepTime,
@@ -153,23 +143,39 @@ export default class extends React.Component  {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange}/>
+        <Directions handleChange={this.handleChange} alarmInfo={this.state} />
       </ScrollView>
     )
 	}
 }
 
-const timeFormat=(date) =>{
+const timeFormat=(date) => {
   date = date.toString().split(':');
   let hours = date[0].slice(date[0].length-2,date[0].length);
   let min = date[1];
   return hours+':'+min;
 }
 
+const stateifyDbData = (data) => {
+  let route = data.route;
+  let newState = Object.assign({}, {
+    alarmName: data.alarmName,
+    arrivalTime: data.arrivalTime,
+    prepTime: data.prepTime.toString(),
+    start: route.address.start,
+    end: route.address.end,
+    start_lat: route.start_lat,
+    start_long: route.start_long,
+    end_lat: route.end_lat,
+    end_long: route.end_long
+  })
+  return newState;
+}
+
 
 const styles = StyleSheet.create({
   window:{
-    color: 'green'
+    borderColor: 'green'
   },
   container: {
    flex: 1,

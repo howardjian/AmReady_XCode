@@ -17,19 +17,12 @@ module.exports = StackNavigator({
 		})
 	},
 	alarmDetail: {
-
 		screen: AlarmForm,
 		navigationOptions: ({ navigation }) => ({
 			title: navigation.state.params.alarmName,
 			params: navigation.state,
 			headerRight: <Button title={'Save'} onPress={ () =>
 				navigation.state.params.handleSave() } />
-
 		})
 	}
 });
-
-
-// 5 Hanover Square, New York, NY 10004
-// Forest Hills, NY 11375
-

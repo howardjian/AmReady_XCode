@@ -34,7 +34,6 @@ export default class Home extends React.Component {
             setData = {this.setData}
             navigation = {this.props.navigation}
          />
-
       );
    }
 }
