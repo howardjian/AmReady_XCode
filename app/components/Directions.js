@@ -25,6 +25,12 @@ export default class extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentWillMount() {
+      if(this.props.loadedState) {
+        this.setState(this.props.loadedState);
+      }
+    }
+
     createStartAndEndLatLong(directionsObj){
       return {
         start_lat: directionsObj["routes"][0]["legs"][0]["start_location"].lat,
@@ -80,7 +86,10 @@ export default class extends Component {
         )
         .then(
             (responseText) => {
-              let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+
+                let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+
+
               this.setState({responseObjRoutes: routes})
               // console.error(routes)
               let tmpOptions = [];
