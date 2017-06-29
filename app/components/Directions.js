@@ -15,8 +15,10 @@ export default class extends Component {
             end_long: -122.4324,
             directions:false,
             trainOptions: [],
-            routeSelected:false,
-            routeIndex:null
+            routeSelectedBool:false,
+            routeSelectedHash: '',
+            routeIndex:null,
+            responseObjRoutes: {}
         }
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
@@ -25,10 +27,10 @@ export default class extends Component {
 
     createStartAndEndLatLong(directionsObj){
       return {
-        start_lat:directionsObj["routes"][0]["legs"][0]["start_location"].lat,
-        start_long:directionsObj["routes"][0]["legs"][0]["start_location"].lng,
-        end_lat:directionsObj["routes"][0]["legs"][0]["end_location"].lat,
-        end_long:directionsObj["routes"][0]["legs"][0]["end_location"].lng
+        start_lat: directionsObj["routes"][0]["legs"][0]["start_location"].lat,
+        start_long: directionsObj["routes"][0]["legs"][0]["start_location"].lng,
+        end_lat: directionsObj["routes"][0]["legs"][0]["end_location"].lat,
+        end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
 
@@ -78,7 +80,9 @@ export default class extends Component {
         )
         .then(
             (responseText) => {
-              let routes = JSON.parse(responseText['_bodyInit'])["routes"]
+              let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+              this.setState({responseObjRoutes: routes})
+              // console.error(routes)
               let tmpOptions = [];
               for(let j = 0; j < routes.length; j++) {
                 let duration = routes[j].legs[0].duration
@@ -132,17 +136,22 @@ export default class extends Component {
         end_long: this.state.end_long,
         directions: this.state.directions,
         trainOptions: this.state.trainOptions,
-        routeSelected: this.state.routeSelected
+        routeIndex: this.state.routeIndex,
+        routeSelectedHash: this.state.trainOptions[this.state.routeIndex],
+        routeSelectedBool: this.state.routeSelectedBool
       })
     }
 
     selectRoute(index){
+      this.props.handleChange({
+        routeIndex: index,
+        routeSelectedHash: this.state.responseObjRoutes[+index]["overview_polyline"]["points"]
+      })
       this.setState({
-        routeSelected:true,
-        routeIndex:index
+        routeSelectedBool: true,
+        routeIndex: index
       })
     }
-
 
     render(){
         return (
@@ -168,7 +177,7 @@ export default class extends Component {
               this.state.directions && (
               <View>
                 {
-                  this.state.routeSelected ?
+                  this.state.routeSelectedBool ?
                     <Map start_lat={this.state.start_lat}
                       start_long={this.state.start_long}
                       end_lat={this.state.end_lat}
@@ -187,9 +196,12 @@ export default class extends Component {
                       this.state.trainOptions.length
                       ?
                       this.state.trainOptions.map((option,index) => (
-                        <RouteOptions key={index} transit={option.short_name}
-                        icon={option.icon} index={index} selectRoute={this.selectRoute}
-                        duration ={option.duration}/>
+                        <RouteOptions
+                          key={index}
+                          transit={option.short_name}
+                          icon={option.icon} index={index} selectRoute={this.selectRoute}
+                          duration ={option.duration}
+                        />
                       ))
                       :
                       <Text>NO Routes Available</Text>

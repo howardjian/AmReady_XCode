@@ -28,7 +28,7 @@ export default class extends React.Component {
       end_long: -122.4324,
       directions:false,
       trainOptions: [],
-      routeSelected: false,
+      routeSelectedBool: false,
       routeIndex: null,
       prepTime: ''
     }
@@ -39,9 +39,8 @@ export default class extends React.Component {
 	}
 
   handleChange(changedState) {
-    let newState = Object.assign({}, this.state, changedState)
+    let newState = Object.assign({}, this.state, changedState, {trainOptions: []})
     this.setState(newState);
-    // console.log('newState', this.state);
     this.saveNewAlarm();
   }
 
@@ -52,13 +51,13 @@ export default class extends React.Component {
     // 4. stringify alarms
     // 5. set item
     AsyncStorage.getItem('alarms', (err, result) => {
-      console.log(result);
+      console.warn(result);
     })
   }
 
 	saveDetails() {
     // alert('Save Details');
-    AsyncStorage.setItem(this.state);
+    console.error(this.state);
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
@@ -95,7 +94,7 @@ export default class extends React.Component {
            start: currentAlarm.start,
            end: currentAlarm.end
          },
-         routeSelected: currentAlarm.routeSelected
+         routeSelectedBool: currentAlarm.routeSelectedBool
         //  routeIndex: null
       },
       prepTime: currentAlarm.prepTime,
@@ -147,7 +146,7 @@ const timeFormat=(date) =>{
 
 const styles = StyleSheet.create({
   window:{
-    color: 'green'
+    borderColor: 'green'
   },
   container: {
    flex: 1,
