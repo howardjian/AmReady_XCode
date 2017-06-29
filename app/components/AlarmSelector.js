@@ -20,7 +20,7 @@ export default function ({data, setData, navigation}) {
 							onPress={ () => navigation.navigate('alarmDetail', alarm) }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-							<Text style={styles.item}>{alarm.daysOfWeek.join(', ')}</Text>
+								<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(', ') : null}</Text>
 						</Button>
 					)
 				}

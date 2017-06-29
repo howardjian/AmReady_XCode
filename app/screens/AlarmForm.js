@@ -12,16 +12,16 @@ import {
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 
-export default class extends React.Component {
-	constructor () {
-		super();
+export default class extends React.Component  {
+	constructor (props) {
+		super(props);
 
     this.state ={
       date: new Date(),
       alarmName: '',
       start:null,
       end:null,
-      daysOfWeek: '',
+      daysOfWeek: 'Sun, Mon',
       start_lat: 37.78825,
       start_long: -122.4324,
       end_lat: 37.78825 ,
@@ -39,10 +39,12 @@ export default class extends React.Component {
 	}
 
   handleChange(changedState) {
-    let newState = Object.assign({}, this.state, changedState)
-    this.setState(newState);
+
+    // let newState = Object.assign({}, this.props.navigation.state.params.data, changedState);
+
+
+    this.setState(changedState);
     // console.log('newState', this.state);
-    this.saveNewAlarm();
   }
 
   saveNewAlarm() {
@@ -51,14 +53,30 @@ export default class extends React.Component {
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
-    AsyncStorage.getItem('alarms', (err, result) => {
-      console.log(result);
+    // console.warn("SSSSSTATE", this.state);
+    let db = JSON.parse(this.props.navigation.state.params.data);
+    console.warn("BEFORE", db);
+    db.alarms.push(this.state);
+    console.warn("AFTER", db);
+    AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
+      if(err){
+        console.warn("ERRROR", err);
+      }
+      console.warn(result);
     })
+    // //AsyncStorage.setItem(this.state);
+    AsyncStorage.getItem('data', (err, result) => {
+      if(err){
+        console.error(err);
+      }
+      console.warn("AFTER", result);
+    })
+
   }
 
 	saveDetails() {
     // alert('Save Details');
-    AsyncStorage.setItem(this.state);
+    this.saveNewAlarm();
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
@@ -69,7 +87,9 @@ export default class extends React.Component {
   }
 
 
-
+  // componentWillMount(){
+  //     console.error(JSON.parse(this.props.navigation.state.params.data));
+  // }
   onDateChange (date) {
     this.setState({date: date});
   }
@@ -77,6 +97,8 @@ export default class extends React.Component {
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.saveDetails });
   }
+
+
 
   AsyncStorageFormat(){
     const currentAlarm = this.state;
