@@ -22,7 +22,7 @@ export default function ({data, setData, navigation}) {
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-								<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(', ') : null}</Text>
+
 						</Button>
 					)
 				}
@@ -45,3 +45,6 @@ const styles = StyleSheet.create({
     height: 44,
   }
 })
+/*
+<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(',') : null}</Text>
+*/

@@ -21,7 +21,6 @@ export default class extends React.Component  {
       alarmName: '',
       start:null,
       end:null,
-      daysOfWeek: 'Sun, Mon',
       start_lat: 37.78825,
       start_long: -122.4324,
       end_lat: 37.78825 ,
@@ -40,7 +39,8 @@ export default class extends React.Component  {
 
   componentWillMount() {
     let selectedUserData = this.props.navigation.state.params
-    if(selectedUserData) {
+    console.log(selectedUserData)
+    if(!JSON.parse(selectedUserData.data).name) {
       this.setState(stateifyDbData(selectedUserData));
     }
   }
