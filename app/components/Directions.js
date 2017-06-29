@@ -6,7 +6,8 @@ import Map  from './Map';
 export default class extends Component {
     constructor(props){
         super(props);
-        this.state = {
+                
+        const defaultState = {
             start:null,
             end:null,
             start_lat: 37.78825,
@@ -19,6 +20,12 @@ export default class extends Component {
             routeSelectedHash: '',
             routeIndex:null,
             responseObjRoutes: {}
+        }
+        
+        if(props.alarmInfo) {
+            this.state = Object.assign({}, defaultState, {...props.alarmInfo});
+        }else {
+            this.state = defaultState;
         }
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
@@ -80,7 +87,10 @@ export default class extends Component {
         )
         .then(
             (responseText) => {
-              let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+
+                let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+
+
               this.setState({responseObjRoutes: routes})
               // console.error(routes)
               let tmpOptions = [];

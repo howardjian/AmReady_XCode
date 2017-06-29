@@ -38,6 +38,13 @@ export default class extends React.Component {
     this.saveNewAlarm = this.saveNewAlarm.bind(this);
 	}
 
+  componentWillMount() {
+    let selectedUserData = this.props.navigation.state.params
+    if(selectedUserData) {
+      this.setState(stateifyDbData(selectedUserData));
+    }
+  }
+
   handleChange(changedState) {
     let newState = Object.assign({}, this.state, changedState, {trainOptions: []})
     this.setState(newState);
@@ -57,7 +64,6 @@ export default class extends React.Component {
 
 	saveDetails() {
     // alert('Save Details');
-    console.error(this.state);
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
@@ -66,8 +72,6 @@ export default class extends React.Component {
         ]
       }));
   }
-
-
 
   onDateChange (date) {
     this.setState({date: date});
@@ -130,17 +134,33 @@ export default class extends React.Component {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange}/>
+        <Directions handleChange={this.handleChange} alarmInfo={this.state} />
       </ScrollView>
     )
 	}
 }
 
-const timeFormat=(date) =>{
+const timeFormat=(date) => {
   date = date.toString().split(':');
   let hours = date[0].slice(date[0].length-2,date[0].length);
   let min = date[1];
   return hours+':'+min;
+}
+
+const stateifyDbData = (data) => {
+  let route = data.route;
+  let newState = Object.assign({}, {
+    alarmName: data.alarmName,
+    arrivalTime: data.arrivalTime,
+    prepTime: data.prepTime.toString(),
+    start: route.address.start,
+    end: route.address.end,
+    start_lat: route.start_lat,
+    start_long: route.start_long,
+    end_lat: route.end_lat,
+    end_long: route.end_long
+  })
+  return newState;
 }
 
 
