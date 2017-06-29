@@ -69,6 +69,7 @@ export default class extends React.Component {
 
 
   onDateChange (date) {
+    console.log(date);
     this.setState({date: date});
   }
 

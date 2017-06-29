@@ -8,7 +8,7 @@ export default class Home extends React.Component {
    constructor () {
       super();
       this.state = {
-         'data': initialState
+         data: initialState
       }
    }
    componentWillMount () {
@@ -29,7 +29,14 @@ export default class Home extends React.Component {
    render() {
       return (
          <View>
-            <Clock />
+            {JSON.parse(this.state.data).alarms.map(alarm => (
+               <Clock 
+                  arrivalTime={alarm.arrivalTime}
+                  prepTime={alarm.prepTime}
+                  duration={alarm.route.duration}
+                />
+               )
+            )}
             <AlarmSelector
                data = {JSON.parse(this.state.data)}
                setData = {this.setData}
@@ -37,5 +44,6 @@ export default class Home extends React.Component {
             />
          </View>
       );
+      // return <Clock />
    }
 }
