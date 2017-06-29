@@ -12,16 +12,15 @@ import {
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 
-export default class extends React.Component {
-	constructor () {
-		super();
+export default class extends React.Component  {
+	constructor (props) {
+		super(props);
 
     this.state ={
       date: new Date(),
       alarmName: '',
       start:null,
       end:null,
-      daysOfWeek: '',
       start_lat: 37.78825,
       start_long: -122.4324,
       end_lat: 37.78825 ,
@@ -40,15 +39,15 @@ export default class extends React.Component {
 
   componentWillMount() {
     let selectedUserData = this.props.navigation.state.params
-    if(selectedUserData) {
+    console.log(selectedUserData)
+    if(!JSON.parse(selectedUserData.data).name) {
       this.setState(stateifyDbData(selectedUserData));
     }
   }
 
   handleChange(changedState) {
-    let newState = Object.assign({}, this.state, changedState, {trainOptions: []})
+    let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
-    this.saveNewAlarm();
   }
 
   saveNewAlarm() {
@@ -57,13 +56,23 @@ export default class extends React.Component {
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
-    AsyncStorage.getItem('alarms', (err, result) => {
-      console.warn(result);
+
+    let db = JSON.parse(this.props.navigation.state.params.data);
+    db.alarms.push(this.state);
+    AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
+      if(err){
+        console.warn("ERRROR", err);
+      }
+    })
+    AsyncStorage.getItem('data', (err, result) => {
+      if(err){
+        console.error(err);
+      }
     })
   }
 
 	saveDetails() {
-    // alert('Save Details');
+    this.saveNewAlarm();
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,

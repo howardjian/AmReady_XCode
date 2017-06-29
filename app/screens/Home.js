@@ -1,6 +1,7 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
+// import AlarmForm from '../components/AlarmForm';
 import initialState from '../../seed';
 
 export default class Home extends React.Component {
@@ -11,7 +12,7 @@ export default class Home extends React.Component {
       }
    }
    componentWillMount () {
-      this.setData(this.state.data); // use this while testing to initialize local storage
+      //this.setData(this.state.data); // use this while testing to initialize local storage
    }
 
    componentDidMount() {
@@ -26,7 +27,7 @@ export default class Home extends React.Component {
    }
 
    render() {
-     ourData.stuff = this.state.data
+      alarmsData.userAlarms = this.state.data;
       return (
          <AlarmSelector
             data = {JSON.parse(this.state.data)}
@@ -37,6 +38,6 @@ export default class Home extends React.Component {
    }
 }
 
-export function ourData() {
-  this.stuff = '';
+export function alarmsData() {
+  this.userAlarms = '';
 }
