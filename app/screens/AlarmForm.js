@@ -29,18 +29,20 @@ export default class extends React.Component  {
       trainOptions: [],
       routeSelectedBool: false,
       routeIndex: null,
-      prepTime: ''
+      prepTime: '',
+
     }
 		this.saveDetails = this.saveDetails.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.saveNewAlarm = this.saveNewAlarm.bind(this);
+    this.AsyncStorageFormat = this.AsyncStorageFormat.bind(this);
 	}
 
   componentWillMount() {
     let selectedUserData = this.props.navigation.state.params
-    console.log(selectedUserData)
-    if(!JSON.parse(selectedUserData.data).name) {
+    console.log(selectedUserData);
+    if(!selectedUserData.data) {
       this.setState(stateifyDbData(selectedUserData));
     }
   }
@@ -58,7 +60,7 @@ export default class extends React.Component  {
     // 5. set item
 
     let db = JSON.parse(this.props.navigation.state.params.data);
-    db.alarms.push(this.state);
+    db.alarms.push(this.AsyncStorageFormat());
     AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
       if(err){
         console.warn("ERRROR", err);
@@ -92,6 +94,7 @@ export default class extends React.Component  {
 
   AsyncStorageFormat(){
     const currentAlarm = this.state;
+
     return {
       alarmName: currentAlarm.alarmName,
       isRecurring: 1,
@@ -111,7 +114,7 @@ export default class extends React.Component  {
         //  routeIndex: null
       },
       prepTime: currentAlarm.prepTime,
-      arrivalTime: timeFormat(currentAlarm.arrivalTime),
+      arrivalTime: timeFormat(currentAlarm.date),
       contacts: [
          {
             user: 56,
