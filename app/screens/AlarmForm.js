@@ -134,7 +134,7 @@ export default class extends React.Component {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange} loadedState={this.state} />
+        <Directions handleChange={this.handleChange} alarmInfo={this.state} />
       </ScrollView>
     )
 	}
