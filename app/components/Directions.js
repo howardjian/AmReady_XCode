@@ -6,7 +6,8 @@ import Map  from './Map';
 export default class extends Component {
     constructor(props){
         super(props);
-        this.state = {
+                
+        const defaultState = {
             start:null,
             end:null,
             start_lat: 37.78825,
@@ -20,15 +21,15 @@ export default class extends Component {
             routeIndex:null,
             responseObjRoutes: {}
         }
+        
+        if(props.alarmInfo) {
+            this.state = Object.assign({}, defaultState, {...props.alarmInfo});
+        }else {
+            this.state = defaultState;
+        }
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    componentWillMount() {
-      if(this.props.loadedState) {
-        this.setState(this.props.loadedState);
-      }
     }
 
     createStartAndEndLatLong(directionsObj){
