@@ -39,7 +39,6 @@ export default class extends React.Component {
 	}
 
   componentWillMount() {
-    // console.log('dung smoothie', this.props.navigation.state.params);
     let selectedUserData = this.props.navigation.state.params
     if(selectedUserData) {
       this.setState(stateifyDbData(selectedUserData));
