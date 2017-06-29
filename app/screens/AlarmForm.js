@@ -149,9 +149,9 @@ const timeFormat=(date) =>{
 
 
 const styles = StyleSheet.create({
-  window:{
-    color: 'green'
-  },
+  // window:{
+  //   color: 'green'
+  // },
   container: {
    flex: 1,
    paddingTop: 22

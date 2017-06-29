@@ -1,7 +1,8 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, View } from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
 import initialState from '../../seed';
+import Clock from '../components/Clock';
 
 export default class Home extends React.Component {
    constructor () {
@@ -27,11 +28,14 @@ export default class Home extends React.Component {
 
    render() {
       return (
-         <AlarmSelector
-            data = {JSON.parse(this.state.data)}
-            setData = {this.setData}
-            navigation = {this.props.navigation}
-         />
+         <View>
+            <Clock />
+            <AlarmSelector
+               data = {JSON.parse(this.state.data)}
+               setData = {this.setData}
+               navigation = {this.props.navigation}
+            />
+         </View>
       );
    }
 }
