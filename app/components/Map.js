@@ -4,8 +4,6 @@ import MapView from 'react-native-maps';
 
 
 export default function({start_lat,start_long,end_lat,end_long, polylines}){
-
-
     return (
         <MapView
             style={{
@@ -31,7 +29,6 @@ export default function({start_lat,start_long,end_lat,end_long, polylines}){
                 :
                 null
         }
-
             <MapView.Marker
             coordinate={{ longitude: start_long,
                             latitude: start_lat

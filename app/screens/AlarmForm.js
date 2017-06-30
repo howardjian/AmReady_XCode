@@ -12,51 +12,72 @@ import {
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 
-export default class extends React.Component {
-	constructor () {
-		super();
+export default class extends React.Component  {
+	constructor (props) {
+		super(props);
 
     this.state ={
       date: new Date(),
       alarmName: '',
       start:null,
       end:null,
-      daysOfWeek: '',
       start_lat: 37.78825,
       start_long: -122.4324,
       end_lat: 37.78825 ,
       end_long: -122.4324,
       directions:false,
       trainOptions: [],
-      routeSelected: false,
+      routeSelectedBool: false,
       routeIndex: null,
-      prepTime: ''
+      prepTime: '',
+      duration:''
     }
+
 		this.saveDetails = this.saveDetails.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.saveNewAlarm = this.saveNewAlarm.bind(this);
+    this.AsyncStorageFormat = this.AsyncStorageFormat.bind(this);
+    this.getDuration = this.getDuration.bind(this);
 	}
+
+  componentWillMount() {
+    let selectedUserData = this.props.navigation.state.params
+    if(selectedUserData.alarm) {
+      this.setState(stateifyDbData(selectedUserData.alarm));
+    }
+  }
 
   handleChange(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
-    // console.log('newState', this.state);
   }
-
-	saveDetails() {
-    // alert('Save Details');
-
+  getDuration(duration){
+    console.warn(duration);
+    this.setState({duration})
+  }
+  saveNewAlarm() {
     // 1. Get old alarms
-
-
     // 2. convert old alarms to JSON
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
+    let db = this.props.navigation.state.params.data;
+    db.alarms.push(this.AsyncStorageFormat());
+    AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
+      if(err){
+        console.warn("ERRROR", err);
+      }
+    })
+    AsyncStorage.getItem('data', (err, result) => {
+      if(err){
+        console.error(err);
+      }
+    })
+  }
 
-
-
-    AsyncStorage.setItem(this.state);
+	saveDetails() {
+    this.saveNewAlarm();
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
@@ -65,8 +86,6 @@ export default class extends React.Component {
         ]
       }));
   }
-
-
 
   onDateChange (date) {
     console.log(date);
@@ -79,6 +98,7 @@ export default class extends React.Component {
 
   AsyncStorageFormat(){
     const currentAlarm = this.state;
+
     return {
       alarmName: currentAlarm.alarmName,
       isRecurring: 1,
@@ -94,11 +114,11 @@ export default class extends React.Component {
            start: currentAlarm.start,
            end: currentAlarm.end
          },
-         routeSelected: currentAlarm.routeSelected
+         routeSelectedBool: currentAlarm.routeSelectedBool
         //  routeIndex: null
       },
       prepTime: currentAlarm.prepTime,
-      arrivalTime: timeFormat(currentAlarm.arrivalTime),
+      arrivalTime: timeFormat(currentAlarm.date),
       contacts: [
          {
             user: 56,
@@ -110,7 +130,6 @@ export default class extends React.Component {
 
 	render () {
 		return (
-
       <ScrollView style={styles.window}>
         <TextInput
           onChangeText={(alarmName) => {this.setState({alarmName})}}
@@ -131,28 +150,40 @@ export default class extends React.Component {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange}/>
+        <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
       </ScrollView>
     )
-
-
 	}
 }
 
-const timeFormat=(date) =>{
-  date = date.split(':');
+const timeFormat=(date) => {
+  date = date.toString().split(':');
   let hours = date[0].slice(date[0].length-2,date[0].length);
   let min = date[1];
   return hours+':'+min;
 }
 
-
+const stateifyDbData = (data) => {
+  let route = data.route;
+  let newState = Object.assign({}, {
+    alarmName: data.alarmName,
+    arrivalTime: data.arrivalTime,
+    prepTime: data.prepTime.toString(),
+    start: route.address.start,
+    end: route.address.end,
+    start_lat: route.start_lat,
+    start_long: route.start_long,
+    end_lat: route.end_lat,
+    end_long: route.end_long
+  })
+  return newState;
+}
 
 
 const styles = StyleSheet.create({
-  // window:{
-  //   color: 'green'
-  // },
+  window:{
+    borderColor: 'green'
+  },
   container: {
    flex: 1,
    paddingTop: 22

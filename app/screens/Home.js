@@ -1,6 +1,7 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
+// import AlarmForm from '../components/AlarmForm';
 import initialState from '../../seed';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
@@ -36,7 +37,7 @@ export default class Home extends React.Component {
       NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    componentWillMount () {
-      this.setData(this.state.data); // use this while testing to initialize local storage
+      //this.setData(this.state.data); // use this while testing to initialize local storage
    }
 
    componentDidMount() {
@@ -51,6 +52,7 @@ export default class Home extends React.Component {
    }
 
    render() {
+      alarmsData.userAlarms = JSON.parse(this.state.data);
       if (this.state.notification) {
          return <Clock />
       } else {
@@ -63,4 +65,8 @@ export default class Home extends React.Component {
          )
       }
    }
+}
+
+export function alarmsData() {
+  this.userAlarms = '';
 }
