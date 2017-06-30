@@ -87,7 +87,7 @@ export default class extends Component {
         )
         .then(
             (responseText) => {
-                let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+              let routes = JSON.parse(responseText['_bodyInit'])["routes"];
 
               this.setState({responseObjRoutes: routes})
               let tmpOptions = [];
@@ -99,7 +99,7 @@ export default class extends Component {
                   if(currentRoute[i]["travel_mode"] === "TRANSIT"){
                     let tmpObj = currentRoute[i]["transit_details"].line;
                     tmpObj.polylines = polylines;
-                    tmpObj.duration = duration.text;
+                    tmpObj.duration = duration.value;
                     tmpOptions.push(tmpObj);
                   }
                 }
@@ -158,6 +158,13 @@ export default class extends Component {
         routeSelectedBool: true,
         routeIndex: index
       })
+      const routeDuration = this.state.responseObjRoutes[+index].legs[0].duration.value;
+      console.warn('ROUTE DURATION:', routeDuration);
+      this.props.getDuration(routeDuration);
+    }
+    componentWillUnMount(){
+      // console.warn(this.state.trainOptions.duration);
+      this.props.getDuration(this.state.trainOptions.duration);
     }
 
     render(){

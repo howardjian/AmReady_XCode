@@ -27,7 +27,7 @@ export default class Home extends React.Component {
    }
 
    render() {
-      alarmsData.userAlarms = this.state.data;
+      alarmsData.userAlarms = JSON.parse(this.state.data);
       return (
          <AlarmSelector
             data = {JSON.parse(this.state.data)}
