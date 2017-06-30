@@ -13,6 +13,7 @@ export default class Home extends React.Component {
          data: initialState,
          notification: null
       }
+      this.clearAlarm = this.clearAlarm.bind(this);
       NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground.bind(this));
       NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceivedBackground.bind(this));
       NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
@@ -51,10 +52,14 @@ export default class Home extends React.Component {
       this.setState({data: value});
    }
 
+   clearAlarm () {
+      this.setState({notification: null})
+   }
+
    render() {
       alarmsData.userAlarms = JSON.parse(this.state.data);
       if (this.state.notification) {
-         return <Clock timerId={1} notification={this.state.notification} navigation={this.props.navigation} />
+         return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
       } else {
          return (
             <AlarmSelector
