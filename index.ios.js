@@ -15,6 +15,15 @@ import MapView from 'react-native-maps';
 import MainNavigator from './config/router';
 
 export default class project extends Component {
+  componentDidMount(){
+    fetch('http://web.mta.info/status/serviceStatus.txt')
+    .then(info => {
+      console.warn(info)
+    })
+    .catch(err => {
+      console.warn(err)
+    })
+  }
   render() {
     return (
       <MainNavigator /> 
