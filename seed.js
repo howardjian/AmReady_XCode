@@ -2,6 +2,7 @@ module.exports = JSON.stringify({
    name: 'Candice',
    alarms: [
       {
+         timerId: null,
          alarmName: 'Class',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri'],
@@ -17,10 +18,11 @@ module.exports = JSON.stringify({
               end: ''
             },
             routeSelected: false,
-            routeIndex: null
+            routeIndex: null,
+            duration: 50
          },
-         prepTime: 10000,
-         arrivalTime: '9:30',
+         prepTime: 10,
+         arrivalTime: 'Thu Jun 29 2017 17:00:00 GMT-0400 (EDT)',
          contacts: [
             {
                user: 56,
@@ -29,6 +31,7 @@ module.exports = JSON.stringify({
          ]
       },
       {
+         timerId: 1,
          alarmName: 'Gym',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Thurs', 'Fri'],
@@ -44,10 +47,11 @@ module.exports = JSON.stringify({
               end: '95 Wall Street'
             },
             routeSelected: false,
-            routeIndex: null
+            routeIndex: null,
+            duration: 34
          },
-         prepTime: 10000,
-         arrivalTime: '9:30',
+         prepTime: 10,
+         arrivalTime: 'Thu Jun 29 2017 17:00:00 GMT-0400 (EDT)',
          contacts: [
             {
                user: 56,
@@ -56,6 +60,7 @@ module.exports = JSON.stringify({
          ]
       },
       {
+         timerId: null,
          alarmName: 'Demo-Day',
          isRecurring: 1,
          daysOfWeek: ['Thurs'],
@@ -71,10 +76,11 @@ module.exports = JSON.stringify({
               end: ''
             },
             routeSelected: false,
-            routeIndex: null
+            routeIndex: null,
+            duration: 10
          },
-         prepTime: 10000,
-         arrivalTime: '9:30',
+         prepTime: 10,
+         arrivalTime: 'Thu Jun 29 2017 17:00:00 GMT-0400 (EDT)',
          contacts: [
             {
                user: 56,
