@@ -10,22 +10,12 @@ export default class extends React.Component {
 
 	dismissAlarm () {
 		stopAudio(1, this.props.notification); // this needs to sync up with the timerId on the alarm (passed from Home)
-		this.navigateHome();
+		this.props.clearAlarm();
 	}
 
 	snoozeAlarm () {
 		stopAudio(1, this.props.notification, 5000); // 2nd arg is snooze interval
-		this.navigateHome();
-	}
-
-	navigateHome () {
-		this.props.navigation.dispatch(NavigationActions.reset(
-	      {
-	        index: 0,
-	        actions: [
-	          NavigationActions.navigate({ routeName: 'home'})
-	        ]
-	      }));
+		this.props.clearAlarm();
 	}
 
 	render () {
