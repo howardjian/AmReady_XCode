@@ -3,7 +3,6 @@ import { StyleSheet, Text, View , Button,TextInput, Image } from 'react-native';
 
 
 export default function({transit,icon, index, selectRoute, duration}) {
-  console.warn('DURATION', duration);
   return (
     <View>
       <Text>{transit} </Text>

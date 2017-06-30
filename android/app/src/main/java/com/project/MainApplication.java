@@ -5,6 +5,11 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.github.wumke.RNLocalNotifications.RNLocalNotificationsPackage;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -24,9 +29,14 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
             new MapsPackage(),
             new VectorIconsPackage()
+            new RNLocalNotificationsPackage(),
+            new RNNotificationsPackage(),
+            new MapsPackage(),
+            new BackgroundTimerPackage(),
+            new RNSoundPackage()
       );
     }
   };

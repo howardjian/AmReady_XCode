@@ -9,8 +9,8 @@ export default class extends Component {
         super(props);
 
         const defaultState = {
-            start:null,
-            end:null,
+            start: null,
+            end: null,
             start_lat: 37.78825,
             start_long: -122.4324,
             end_lat: 37.78825 ,
@@ -23,7 +23,7 @@ export default class extends Component {
             responseObjRoutes: {}
         }
 
-        if(props.alarmInfo) {
+        if(props.alarmInfo.alarmName) {
             this.state = Object.assign({}, defaultState, {...props.alarmInfo});
         }else {
             this.state = defaultState;
@@ -128,7 +128,7 @@ export default class extends Component {
         .then(this.handleChange)
         .catch(
             (error) => {
-                console.warn('hi', error);
+                console.warn('Error', error);
             }
         );
         }
@@ -160,11 +160,9 @@ export default class extends Component {
         routeIndex: index
       })
       const routeDuration = this.state.responseObjRoutes[+index].legs[0].duration.value;
-      console.warn('ROUTE DURATION:', routeDuration);
       this.props.getDuration(routeDuration);
     }
     componentWillUnMount(){
-      // console.warn(this.state.trainOptions.duration);
       this.props.getDuration(this.state.trainOptions.duration);
     }
 
