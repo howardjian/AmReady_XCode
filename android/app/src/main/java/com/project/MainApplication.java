@@ -3,6 +3,7 @@ package com.project;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.github.wumke.RNLocalNotifications.RNLocalNotificationsPackage;
 import com.wix.reactnativenotifications.RNNotificationsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
             new RNLocalNotificationsPackage(),
             new RNNotificationsPackage(),
             new MapsPackage(),

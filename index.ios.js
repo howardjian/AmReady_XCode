@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+//var XMLParser = require('react-xml-parser');
 import {
   AppRegistry,
   StyleSheet,
@@ -18,7 +19,8 @@ export default class project extends Component {
   componentDidMount(){
     fetch('http://web.mta.info/status/serviceStatus.txt')
     .then(info => {
-      console.warn(info)
+      //let test = XMLParser().parseFromString(info["_bodyInit"]);
+      console.error('hi', info["_bodyInit"].replace("\r\n", "").split(" "))
     })
     .catch(err => {
       console.warn(err)
@@ -26,7 +28,7 @@ export default class project extends Component {
   }
   render() {
     return (
-      <MainNavigator /> 
+      <MainNavigator />
     );
   }
 }
