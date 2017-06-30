@@ -3,16 +3,17 @@ import { StyleSheet, Text, View , Button,TextInput, Image } from 'react-native';
 
 
 export default function({transit,icon, index, selectRoute, duration}) {
+  console.warn('DURATION', duration);
   return (
     <View>
       <Text>{transit} </Text>
 
       <Text>Duration</Text>
       <Text> {duration} </Text>
-      
-      <Image  
+
+      <Image
       style={{width: 20, height: 20}}
-      source = {{uri: `https:${icon}`}} 
+      source = {{uri: `https:${icon}`}}
       />
       <Button  title="Select Route"   onPress={() => { selectRoute(index)}}/>
     </View>

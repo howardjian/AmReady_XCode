@@ -41,8 +41,8 @@ module.exports = JSON.stringify({
             modeOfTransport: 'Train',
             preferredRoute: '423dsfr3r32sf',
             address: {
-              start: '',
-              end: ''
+              start: '5 Hanover Square',
+              end: '95 Wall Street'
             },
             routeSelected: false,
             routeIndex: null,

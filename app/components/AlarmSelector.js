@@ -17,10 +17,12 @@ export default function ({data, setData, navigation}) {
 					return (
 						<Button style={styles.list}
 							title={item.key}
-							onPress={ () => navigation.navigate('alarmDetail', alarm) }
+							onPress={ () => {
+								navigation.navigate('alarmDetail', {alarm: alarm, data:data})
+							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-							<Text style={styles.item}>{alarm.daysOfWeek.join(', ')}</Text>
+
 						</Button>
 					)
 				}
@@ -43,3 +45,6 @@ const styles = StyleSheet.create({
     height: 44,
   }
 })
+/*
+<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(',') : null}</Text>
+*/
