@@ -3,6 +3,7 @@ package com.project;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.github.wumke.RNLocalNotifications.RNLocalNotificationsPackage;
 import com.wix.reactnativenotifications.RNNotificationsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNLocalNotificationsPackage(),
             new RNNotificationsPackage(),
             new MapsPackage(),
             new BackgroundTimerPackage(),

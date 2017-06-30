@@ -32,30 +32,9 @@ export function playAudio () {
     sound.setPan(1);
     // Loop indefinitely until stop() is called
     // sound.setNumberOfLoops(-1);
-    // Get properties of the player instance
-    console.log('volume: ' + sound.getVolume());
-    console.log('pan: ' + sound.getPan());
-    console.log('loops: ' + sound.getNumberOfLoops());
-    // sound.stopAudio = () => {
-        sound.stop();
-    // }
-    // console.log("ORIG SOUND", sound);
   });
   return sound;
 }
-
-// export function stopAudio (sound) {
-//     console.warn("NEW SOUND", JSON.stringify(sound));
-//     sound.stop(() => {
-//       console.warn('SOUND SHOULD HAVE STOPPED');
-//     }); 
-//     sound.release(); // Release the audio player resource
-// }
-
-// export function stopAudio(sound) {
-//   console.warn("NEW SOUND", sound._loaded, sound.stop);
-//   sound.stop();
-// }
 
 export function setTimer() {
     return BackgroundTimer.setInterval(() => {
@@ -69,12 +48,3 @@ export function stopAudio(backgroundTimerId) {
     BackgroundTimer.clearInterval(backgroundTimerId);
     cancelNotification(notification);
 }
-
-  // // Seek to a specific point in seconds
-  // whoosh.setCurrentTime(2.5);
-
-  // // Get the current playback point in seconds
-  // whoosh.getCurrentTime((seconds) => console.log('at ' + seconds));
-
-  // // Pause the sound
-  // whoosh.pause();

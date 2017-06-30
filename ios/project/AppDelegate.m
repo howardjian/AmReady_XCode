@@ -58,10 +58,40 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
   [RNNotifications didReceiveLocalNotification:notification];
+
 }
+
 // Required for showing notifications in the foreground.
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
   completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
 }
+// This is for react-native-local-notifications
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //Allways reset number of notifications shown at the icon
+  for (UILocalNotification * notification in [[UIApplication sharedApplication] scheduledLocalNotifications]) { //Also remove all shown notifications
+    if ([notification.fireDate compare:[NSDate date]] == NSOrderedAscending) {
+      [[UIApplication sharedApplication] cancelLocalNotification:notification];
+    }
+  }
+}
+
+
+//-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+//{
+//  
+////  UIApplicationState state = [application applicationState];
+////  if (state == UIApplicationStateActive) {
+//  
+//    
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"KNIP"
+//                                                    message:notification.alertBody
+//                                                   delegate:self cancelButtonTitle:@"Close"
+//                                          otherButtonTitles:nil];
+//    
+//    [alert show];
+//    
+////  }
+//}
 
 @end
