@@ -30,20 +30,21 @@ export default class extends React.Component  {
       routeSelectedBool: false,
       routeIndex: null,
       prepTime: '',
-
+      duration:''
     }
+
 		this.saveDetails = this.saveDetails.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.saveNewAlarm = this.saveNewAlarm.bind(this);
     this.AsyncStorageFormat = this.AsyncStorageFormat.bind(this);
+    this.getDuration = this.getDuration.bind(this);
 	}
 
   componentWillMount() {
     let selectedUserData = this.props.navigation.state.params
-    console.log(selectedUserData);
-    if(!selectedUserData.data) {
-      this.setState(stateifyDbData(selectedUserData));
+    if(selectedUserData.alarm) {
+      this.setState(stateifyDbData(selectedUserData.alarm));
     }
   }
 
@@ -51,15 +52,17 @@ export default class extends React.Component  {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
-
+  getDuration(duration){
+    console.warn(duration);
+    this.setState({duration})
+  }
   saveNewAlarm() {
     // 1. Get old alarms
     // 2. convert old alarms to JSON
     // 3. push new alarm to alarms array
     // 4. stringify alarms
     // 5. set item
-
-    let db = JSON.parse(this.props.navigation.state.params.data);
+    let db = this.props.navigation.state.params.data;
     db.alarms.push(this.AsyncStorageFormat());
     AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
       if(err){
@@ -146,7 +149,7 @@ export default class extends React.Component  {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange} alarmInfo={this.state} />
+        <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
       </ScrollView>
     )
 	}
