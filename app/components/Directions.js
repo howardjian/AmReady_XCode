@@ -8,8 +8,8 @@ export default class extends Component {
         super(props);
 
         const defaultState = {
-            start:'Union Square, NY ',
-            end:'Times Square, NY ',
+            start: null,
+            end: null,
             start_lat: 37.78825,
             start_long: -122.4324,
             end_lat: 37.78825 ,
