@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View , Button,TextInput } from 'react-native';
+import { StyleSheet, Text, View ,TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map  from './Map';
+import { FormInput, FormLabel, SearchBar, Button, Divider } from 'react-native-elements';
 
 export default class extends Component {
     constructor(props){
@@ -172,19 +173,33 @@ export default class extends Component {
           <View>
             {
               <View>
-                   <TextInput
-                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                 <SearchBar
+                       containerStyle={{width: 350, position: 'relative', alignSelf: 'center'}}
+                       inputStyle={{width: 330, color: '#ADFF2F'}}
+                       placeholder="From"
                        onChangeText={(start) => {
                          this.setState({start})
                        }}
                        value={this.state.start}
-                       />
-                   <TextInput
-                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                   />
+                  <Divider style={{height: 5, backgroundColor: '#2e2e2e'}}/>
+                   <SearchBar
+                       containerStyle={{width: 350, position: 'relative', alignSelf: 'center'}}
+                       inputStyle={{width: 330, color: '#ADFF2F'}}
+                       placeholder="To"
                        onChangeText={(end) => this.setState({end})}
                        value={this.state.end}
                        />
-                   <Button onPress={this.getDirections}  title="Get Directions"
+
+                    <Divider style={{height: 5, backgroundColor: '#2e2e2e'}}/>
+
+
+                   <Button
+                    iconRight
+                    icon={{name: 'directions'}}
+
+                    onPress={this.getDirections}
+                    title="Get Directions"
                    />
               </View>
             }{
@@ -218,7 +233,7 @@ export default class extends Component {
                         />
                       ))
                       :
-                      <Text>NO Routes Available</Text>
+                      <FormLabel>NO Routes Available</FormLabel>
                     }
                   </View>
               </View>)
@@ -227,6 +242,23 @@ export default class extends Component {
         )
     }
 }
+
+
+//  <TextInput
+//                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+//                        onChangeText={(start) => {
+//                          this.setState({start})
+//                        }}
+//                        value={this.state.start}
+//                        />
+//                    <TextInput
+//                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+//                        onChangeText={(end) => this.setState({end})}
+//                        value={this.state.end}
+//                        />
+
+
+
 
 // # Guide on Google Maps API
 //

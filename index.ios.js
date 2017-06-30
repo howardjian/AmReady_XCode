@@ -17,7 +17,7 @@ import MainNavigator from './config/router';
 export default class project extends Component {
   render() {
     return (
-      <MainNavigator /> 
+      <MainNavigator />
     );
   }
 }
