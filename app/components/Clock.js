@@ -1,56 +1,39 @@
 import React from 'react';
 import { Text, View, Button } from 'react-native';
-import {setTimer, stopAudio} from '../features/Audio';
+import {stopAudio} from '../features/Audio';
+import { NavigationActions } from 'react-navigation';
 
 export default class extends React.Component {
 	constructor (props) {
 		super(props);
-		const estimatedTime = this.calcTimeInMin(this.props.arrivalTime)
-			- this.props.prepTime
-			- this.props.duration
-			- this.calcTimeInMin();
-	
-		this.state = {
-			time: estimatedTime,
-			backgroundTimerId: null
-		}
-	}
-
-	componentDidMount() {
-		console.log("THIS IS THE STATE:", this.state);
-		this.setState({backgroundTimerId: setTimer()});
-	}
-
-	calcTimeInMin (time) {
-		const dateObj = time ? new Date(time) : new Date();
-		return dateObj.getHours() * 60 + dateObj.getMinutes();
 	}
 
 	dismissAlarm () {
-		this.setState({time:false});
-		stopAudio(this.state.backgroundTimerId);
+		stopAudio(1, this.props.notification); // this needs to sync up with the timerId on the alarm (passed from Home)
+		this.navigateHome();
 	}
 
-	snoozeAlarm (sound) {
-		this.setState({ time: false });
-		// this.setTimer(5000);
-		if (sound) stopAudio(sound);
+	snoozeAlarm () {
+		stopAudio(1, this.props.notification, 5000); // 2nd arg is snooze interval
+		this.navigateHome();
+	}
+
+	navigateHome () {
+		this.props.navigation.dispatch(NavigationActions.reset(
+	      {
+	        index: 0,
+	        actions: [
+	          NavigationActions.navigate({ routeName: 'home'})
+	        ]
+	      }));
 	}
 
 	render () {
 		return (
 			<View>
-			{
-				this.state.time ?
-					<View>
-						<Text>{String(new Date())}</Text>
-						<Button title="I'm Ready!" onPress={() => this.dismissAlarm()}></Button>
-						<Button title="I'm not Ready!" onPress={() => this.snoozeAlarm()}></Button>
-					</View>
-					:
-					<Text>{String(new Date())}</Text>
-
-			}
+				<Text>Alarm is ringing!</Text>
+				<Button title="I'm Ready!" onPress={() => this.dismissAlarm()}></Button>
+				<Button title="I'm not Ready!" onPress={() => this.snoozeAlarm()}></Button>
 			</View>
 		)
 	}
