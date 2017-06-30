@@ -2,6 +2,7 @@ module.exports = JSON.stringify({
    name: 'Candice',
    alarms: [
       {
+         timerId: null,
          alarmName: 'Class',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri'],
@@ -30,6 +31,7 @@ module.exports = JSON.stringify({
          ]
       },
       {
+         timerId: 1,
          alarmName: 'Gym',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Thurs', 'Fri'],
@@ -58,6 +60,7 @@ module.exports = JSON.stringify({
          ]
       },
       {
+         timerId: null,
          alarmName: 'Demo-Day',
          isRecurring: 1,
          daysOfWeek: ['Thurs'],

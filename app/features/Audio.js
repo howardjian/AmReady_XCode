@@ -3,8 +3,6 @@ import Sound from 'react-native-sound';
 import BackgroundTimer from 'react-native-background-timer';
 import {createLocalNotification, cancelNotification} from './Notifications';
 
-let notification = null;
-
 export function playAudio () {
   // Enable playback in silence mode (iOS only)
   Sound.setCategory('Playback');
@@ -36,15 +34,29 @@ export function playAudio () {
   return sound;
 }
 
-export function setTimer() {
-    return BackgroundTimer.setInterval(() => {
-         playAudio();
-         notification = createLocalNotification();
-         console.log("NOTIFICATION", notification);
-      }, 5000);
-}
-
-export function stopAudio(backgroundTimerId) {
+export function stopAudio(backgroundTimerId, notification, snoozeTime) {
+    // add in snooze
     BackgroundTimer.clearInterval(backgroundTimerId);
     cancelNotification(notification);
 }
+
+export function setTimer (arrivalTimeStr, prepTime, duration) {
+    let timeInMinUntilAlarmTriggers = calcTimeInMin(arrivalTimeStr)
+      - prepTime // in min
+      - (duration / 60) // in sec, convert to min
+      - calcTimeInMin();
+
+    // setInterval does not like negative numbers
+    timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers < 0 ? 0 : timeInMinUntilAlarmTriggers;
+
+    return BackgroundTimer.setInterval(() => {
+         playAudio();
+         createLocalNotification();
+      }, timeInMinUntilAlarmTriggers * 60000);
+}
+
+function calcTimeInMin (time) {
+    const dateObj = time ? new Date(time) : new Date();
+    return dateObj.getHours() * 60 + dateObj.getMinutes();
+}
+

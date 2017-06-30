@@ -37,7 +37,7 @@ export default class Home extends React.Component {
       NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    componentWillMount () {
-      //this.setData(this.state.data); // use this while testing to initialize local storage
+      // this.setData(this.state.data); // use this while testing to initialize local storage
    }
 
    componentDidMount() {
@@ -54,7 +54,7 @@ export default class Home extends React.Component {
    render() {
       alarmsData.userAlarms = JSON.parse(this.state.data);
       if (this.state.notification) {
-         return <Clock />
+         return <Clock timerId={1} notification={this.state.notification} navigation={this.props.navigation} />
       } else {
          return (
             <AlarmSelector

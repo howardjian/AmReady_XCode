@@ -11,13 +11,13 @@ import {
   DatePickerIOS } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
+import {setTimer} from '../features/Audio';
 
 export default class extends React.Component  {
 	constructor (props) {
 		super(props);
 
     this.state ={
-      date: new Date(),
       alarmName: '',
       start:null,
       end:null,
@@ -30,7 +30,9 @@ export default class extends React.Component  {
       routeSelectedBool: false,
       routeIndex: null,
       prepTime: '',
-      duration:''
+      duration:'',
+      arrivalTime: new Date(),
+      timerId: null
     }
 
 		this.saveDetails = this.saveDetails.bind(this);
@@ -53,7 +55,6 @@ export default class extends React.Component  {
     this.setState(newState);
   }
   getDuration(duration){
-    console.warn(duration);
     this.setState({duration})
   }
   saveNewAlarm() {
@@ -64,20 +65,30 @@ export default class extends React.Component  {
     // 5. set item
     let db = this.props.navigation.state.params.data;
     db.alarms.push(this.AsyncStorageFormat());
-    AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
-      if(err){
-        console.warn("ERRROR", err);
+    return AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
+      if (err){
+        console.warn("ERROR", err);
       }
-    })
-    AsyncStorage.getItem('data', (err, result) => {
-      if(err){
-        console.error(err);
-      }
+      return result;
     })
   }
 
 	saveDetails() {
-    this.saveNewAlarm();
+    this.saveNewAlarm()
+    .then((result) => {
+      // console.error(result);
+      // set background timer
+      if (!this.state.timerId) {
+        const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
+        this.setState({timerId}, () => {
+            this.saveNewAlarm();
+        });
+        console.warn('CREATED TIMER ID', timerId);
+      } else {
+        console.warn('TIMER ID', timerId);
+      }
+      // need to write in case where we are editing an alarm
+    });
     this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
@@ -89,7 +100,7 @@ export default class extends React.Component  {
 
   onDateChange (date) {
     console.log(date);
-    this.setState({date: date});
+    this.setState({arrivalTime: date});
   }
 
   componentDidMount() {
@@ -100,6 +111,7 @@ export default class extends React.Component  {
     const currentAlarm = this.state;
 
     return {
+      timerId: currentAlarm.timerId,
       alarmName: currentAlarm.alarmName,
       isRecurring: 1,
       daysOfWeek: [currentAlarm.daysOfWeek],
@@ -118,7 +130,7 @@ export default class extends React.Component  {
         //  routeIndex: null
       },
       prepTime: currentAlarm.prepTime,
-      arrivalTime: timeFormat(currentAlarm.date),
+      arrivalTime: currentAlarm.arrivalTime,
       contacts: [
          {
             user: 56,
@@ -139,7 +151,7 @@ export default class extends React.Component  {
         </TextInput>
         <Text style={styles.item}>Arrival Time</Text>
         <DatePickerIOS
-          date={this.state.date}
+          date={new Date(this.state.arrivalTime)}
           mode='time'
           timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
           onDateChange={this.onDateChange}
@@ -156,13 +168,6 @@ export default class extends React.Component  {
 	}
 }
 
-const timeFormat=(date) => {
-  date = date.toString().split(':');
-  let hours = date[0].slice(date[0].length-2,date[0].length);
-  let min = date[1];
-  return hours+':'+min;
-}
-
 const stateifyDbData = (data) => {
   let route = data.route;
   let newState = Object.assign({}, {
@@ -174,7 +179,8 @@ const stateifyDbData = (data) => {
     start_lat: route.start_lat,
     start_long: route.start_long,
     end_lat: route.end_lat,
-    end_long: route.end_long
+    end_long: route.end_long,
+    timerId: data.timerId
   })
   return newState;
 }

@@ -11,6 +11,7 @@ export function createLocalNotification () {
 	});
 }
 
-export function cancelNotication (localNotification) {
-	NotificationsIOS.cancelLocalNotification(localNotification);
+export function cancelNotification (localNotification) {
+	// NotificationsIOS.cancelLocalNotification(localNotification);
+	NotificationsIOS.cancelAllLocalNotifications(); // temporary fix
 }
