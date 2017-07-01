@@ -1,7 +1,6 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
-// import AlarmForm from '../components/AlarmForm';
 import initialState from '../../seed';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';

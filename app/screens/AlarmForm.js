@@ -4,14 +4,13 @@ import {
   Text,
   TextInput,
   ScrollView,
-  View,
-  FlatList,
   StyleSheet,
   Button,
   DatePickerIOS } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 import {setTimer} from '../features/Audio';
+import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 
 export default class extends React.Component  {
 	constructor (props) {
@@ -39,7 +38,6 @@ export default class extends React.Component  {
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.saveNewAlarm = this.saveNewAlarm.bind(this);
-    this.AsyncStorageFormat = this.AsyncStorageFormat.bind(this);
     this.getDuration = this.getDuration.bind(this);
 	}
 
@@ -54,9 +52,12 @@ export default class extends React.Component  {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
+
+  // Need to somehow fix this for DRY purposes
   getDuration(duration){
     this.setState({duration})
   }
+
   saveNewAlarm() {
     // 1. Get old alarms
     // 2. convert old alarms to JSON
@@ -64,7 +65,7 @@ export default class extends React.Component  {
     // 4. stringify alarms
     // 5. set item
     let db = this.props.navigation.state.params.data;
-    db.alarms.push(this.AsyncStorageFormat());
+    db.alarms.push(AsyncStorageFormat());
     return AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
       if (err){
         console.warn("ERROR", err);
@@ -76,7 +77,6 @@ export default class extends React.Component  {
 	saveDetails() {
     this.saveNewAlarm()
     .then((result) => {
-      // console.error(result);
       // set background timer
       if (!this.state.timerId) {
         const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
@@ -99,45 +99,11 @@ export default class extends React.Component  {
   }
 
   onDateChange (date) {
-    console.log(date);
     this.setState({arrivalTime: date});
   }
 
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.saveDetails });
-  }
-
-  AsyncStorageFormat(){
-    const currentAlarm = this.state;
-
-    return {
-      timerId: currentAlarm.timerId,
-      alarmName: currentAlarm.alarmName,
-      isRecurring: 1,
-      daysOfWeek: [currentAlarm.daysOfWeek],
-      route: {
-         start_lat: currentAlarm.start_lat,
-         start_long: currentAlarm.start_long,
-         end_lat: currentAlarm.end_lat,
-         end_long: currentAlarm.end_long,
-         modeOfTransport: 'Train',
-         preferredRoute: 'need_to_figure_out',
-         address: {
-           start: currentAlarm.start,
-           end: currentAlarm.end
-         },
-         routeSelectedBool: currentAlarm.routeSelectedBool
-        //  routeIndex: null
-      },
-      prepTime: currentAlarm.prepTime,
-      arrivalTime: currentAlarm.arrivalTime,
-      contacts: [
-         {
-            user: 56,
-            type: 'email'
-         }
-      ]
-    }
   }
 
 	render () {
@@ -167,24 +133,6 @@ export default class extends React.Component  {
     )
 	}
 }
-
-const stateifyDbData = (data) => {
-  let route = data.route;
-  let newState = Object.assign({}, {
-    alarmName: data.alarmName,
-    arrivalTime: data.arrivalTime,
-    prepTime: data.prepTime.toString(),
-    start: route.address.start,
-    end: route.address.end,
-    start_lat: route.start_lat,
-    start_long: route.start_long,
-    end_lat: route.end_lat,
-    end_long: route.end_long,
-    timerId: data.timerId
-  })
-  return newState;
-}
-
 
 const styles = StyleSheet.create({
   window:{

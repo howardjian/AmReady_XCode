@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View , Button,TextInput } from 'react-native';
+import { Text, View , Button,TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
-import Map  from './Map';
+import Map from './Map';
+import { decode } from '../../utils/utils';
 
 export default class extends Component {
     constructor(props){
@@ -41,39 +42,6 @@ export default class extends Component {
       }
     }
 
-    decode(encoded){
-      var points=[ ]
-      var index = 0, len = encoded.length;
-      var lat = 0, lng = 0;
-      while (index < len) {
-        var b, shift = 0, result = 0;
-
-        do {
-          b = encoded.charAt(index++).charCodeAt(0) - 63;//finds ascii                                                                                    //and substract it by 63
-                    result |= (b & 0x1f) << shift;
-                    shift += 5;
-        } while (b >= 0x20);
-
-        var dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-        lat += dlat;
-        shift = 0;
-        result = 0;
-
-        do {
-          b = encoded.charAt(index++).charCodeAt(0) - 63;
-          result |= (b & 0x1f) << shift;
-          shift += 5;
-          } while (b >= 0x20);
-
-        var dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-        lng += dlng;
-
-        points.push({latitude:( lat / 1E5),longitude:( lng / 1E5)})
-
-      }
-      return points
-    }
-
     getDirections(){
       if(this.state.start && this.state.end){
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -94,7 +62,7 @@ export default class extends Component {
               for(let j = 0; j < routes.length; j++) {
                 let duration = routes[j].legs[0].duration
                 let currentRoute = routes[j].legs[0].steps
-                let polylines = this.decode(routes[j]["overview_polyline"]["points"])
+                let polylines = decode(routes[j]["overview_polyline"]["points"])
                 for(let i = 0; i < currentRoute.length; i++) {
                   if(currentRoute[i]["travel_mode"] === "TRANSIT"){
                     let tmpObj = currentRoute[i]["transit_details"].line;
@@ -130,7 +98,7 @@ export default class extends Component {
                 console.warn('Error', error);
             }
         );
-        }
+      }
     }
 
     handleChange() {

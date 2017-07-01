@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View , Button,TextInput } from 'react-native';
 import MapView from 'react-native-maps';
-
 
 export default function({start_lat,start_long,end_lat,end_long, polylines}){
     return (
