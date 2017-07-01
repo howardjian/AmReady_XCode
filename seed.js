@@ -1,4 +1,4 @@
-module.exports = JSON.stringify({
+module.exports = {
    name: 'Candice',
    alarms: [
       {
@@ -99,4 +99,4 @@ module.exports = JSON.stringify({
          type: 'home'
       }
    ]
-});
+};
