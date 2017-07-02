@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {SearchBar, Divider, Button} from 'react-native-elements';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map from './Map';
 import { decode } from '../../utils/utils';
