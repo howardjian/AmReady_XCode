@@ -28,7 +28,6 @@ class AlarmForm extends React.Component  {
       directions:false,
       trainOptions: [],
       routeSelectedBool: false,
-      routeIndex: null,
       prepTime: '',
       duration:'',
       arrivalTime: new Date(),
@@ -38,8 +37,7 @@ class AlarmForm extends React.Component  {
 		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.getDuration = this.getDuration.bind(this);
+    this.updateNewState = this.updateNewState.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
 	}
 
@@ -52,20 +50,17 @@ class AlarmForm extends React.Component  {
 
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.handleSave });
+    // console.log(this.props);
+    // console.log(this.state);
   }
 
   componentWillUnmount() {
     this.props.unselectAlarm();
   }
 
-  handleChange(changedState) {
+  updateNewState(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
-  }
-
-  // Need to somehow fix this for DRY purposes
-  getDuration(duration){
-    this.setState({duration})
   }
 
 	saveAlarmDetails() {
@@ -95,11 +90,10 @@ class AlarmForm extends React.Component  {
         });
         console.warn('CREATED TIMER ID', timerId);
       } else {
-        // need to write in case where we are editing an alarm
+        // need to be able to kill current timer and create a new one
+        this.saveAlarmDetails();
         console.warn('TIMER ID', this.state.timerId);
       }
-      // this.props.unselectAlarm(); // testing this in componentWillUnmount
-
       this.navigateHome();
   }
 
@@ -118,6 +112,8 @@ class AlarmForm extends React.Component  {
   }
 
 	render () {
+    // console.log('1',this.props);
+    // console.log('1',this.state);
 		return (
       <ScrollView style={styles.window}>
         <TextInput
@@ -139,7 +135,7 @@ class AlarmForm extends React.Component  {
           style={styles.input}
           placeholder="Prep time">
         </TextInput>
-        <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
+        <Directions updateNewState={this.updateNewState} alarmInfo={this.state} />
       </ScrollView>
     )
 	}

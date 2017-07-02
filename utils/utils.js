@@ -10,7 +10,8 @@ export const stateifyDbData = (data) => {
     start_long: route.start_long,
     end_lat: route.end_lat,
     end_long: route.end_long,
-    timerId: data.timerId
+    timerId: data.timerId,
+    duration: route.duration
   })
   return newState;
 }
@@ -67,7 +68,8 @@ export const AsyncStorageFormat = (currentAlarm) => {
          start: currentAlarm.start,
          end: currentAlarm.end
        },
-       routeSelectedBool: currentAlarm.routeSelectedBool
+       routeSelectedBool: currentAlarm.routeSelectedBool,
+       duration: currentAlarm.duration
     },
     prepTime: currentAlarm.prepTime,
     arrivalTime: currentAlarm.arrivalTime,

@@ -15,22 +15,23 @@ export default class extends Component {
             start_long: -122.4324,
             end_lat: 37.78825 ,
             end_long: -122.4324,
-            directions:false,
+            directions: false,
             trainOptions: [],
-            routeSelectedBool:false,
+            routeSelectedBool: false,
             routeSelectedHash: '',
-            routeIndex:null,
+            routeIndex: null,
+            duration: '',
             responseObjRoutes: {}
         }
 
         if(props.alarmInfo.alarmName) {
             this.state = Object.assign({}, defaultState, {...props.alarmInfo});
-        }else {
+        } else {
             this.state = defaultState;
         }
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.updateNewState = this.updateNewState.bind(this);
     }
 
     createStartAndEndLatLong(directionsObj){
@@ -92,7 +93,7 @@ export default class extends Component {
               )
             }
         )
-        .then(this.handleChange)
+        .then(this.updateNewState)
         .catch(
             (error) => {
                 console.warn('Error', error);
@@ -101,8 +102,8 @@ export default class extends Component {
       }
     }
 
-    handleChange() {
-      this.props.handleChange({
+    updateNewState() {
+      this.props.updateNewState({
         start: this.state.start,
         end: this.state.end,
         start_lat: this.state.start_lat,
@@ -117,20 +118,17 @@ export default class extends Component {
       })
     }
 
-    selectRoute(index){
-      this.props.handleChange({
+    selectRoute(index, duration){
+      this.props.updateNewState({
         routeIndex: index,
-        routeSelectedHash: this.state.responseObjRoutes[+index]["overview_polyline"]["points"]
+        routeSelectedHash: this.state.responseObjRoutes[+index]["overview_polyline"]["points"],
+        duration
       })
       this.setState({
         routeSelectedBool: true,
-        routeIndex: index
+        routeIndex: index,
+        duration
       })
-      const routeDuration = this.state.responseObjRoutes[+index].legs[0].duration.value;
-      this.props.getDuration(routeDuration);
-    }
-    componentWillUnMount(){
-      this.props.getDuration(this.state.trainOptions.duration);
     }
 
     render(){
