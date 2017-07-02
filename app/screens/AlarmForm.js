@@ -11,8 +11,10 @@ import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 import {setTimer} from '../features/Audio';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
+import { connect } from 'react-redux';
+import { updateAlarm, createAlarm, unselectAlarm } from '../redux';
 
-export default class extends React.Component  {
+class AlarmForm extends React.Component  {
 	constructor (props) {
 		super(props);
 
@@ -43,9 +45,10 @@ export default class extends React.Component  {
 	}
 
   componentWillMount() {
-    let selectedUserData = this.props.navigation.state.params
-    if (selectedUserData.alarm) {
-      this.setState(stateifyDbData(selectedUserData.alarm));
+    // let selectedUserData = this.props.navigation.state.params
+    console.log(this.props.currentAlarm);
+    if (this.props.currentAlarm.alarmInfo.alarmName) {
+      this.setState(stateifyDbData(this.props.currentAlarm.alarmInfo));
     }
   }
 
@@ -60,18 +63,18 @@ export default class extends React.Component  {
   }
 
 	saveAlarmDetails() {
-    const alarms = this.props.screenProps.alarms;
-    const alarmIndex = this.props.screenProps.currentAlarm.index;
+    const alarms = this.props.alarms;
+    const alarmIndex = this.props.currentAlarm.index;
     const currentAlarm = AsyncStorageFormat(this.state);
     if (alarms.length) {
         console.log('we are saving!', alarms, currentAlarm, alarmIndex);
-        this.props.screenProps.updateAlarm(alarms, currentAlarm, alarmIndex)
+        this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
         .then((result) => {
           this.setTimer();
           this.navigateHome();
         })
     } else {
-        this.props.screenProps.createAlarm(currentAlarm)
+        this.props.createAlarm(currentAlarm)
         .then((result) => {
           this.setTimer();
           this.navigateHome();
@@ -90,6 +93,7 @@ export default class extends React.Component  {
       } else {
         console.warn('TIMER ID', this.state.timerId);
       }
+      this.props.unselectAlarm();
       // need to write in case where we are editing an alarm
       this.navigateHome();
   }
@@ -139,6 +143,20 @@ export default class extends React.Component  {
     )
 	}
 }
+
+const mapStateToProps = ({alarms, currentAlarm}) => {
+   return {alarms, currentAlarm}
+}
+
+const mapDispatchToProps = (dispatch) => {
+   return {
+        updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
+        createAlarm: (alarm) => dispatch(createAlarm(alarm)),
+        unselectAlarm: () => dispatch(unselectAlarm())
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlarmForm);
 
 const styles = StyleSheet.create({
   window:{

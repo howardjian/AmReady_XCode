@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
+import { selectAlarm } from '../redux';
 
-export default class Home extends React.Component {
+class Home extends React.Component {
    constructor (props) {
       super(props);
       this.state = {
@@ -46,12 +48,12 @@ export default class Home extends React.Component {
       console.log(this.props);
       if (this.state.notification) {
          return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
-      } else if (this.props.screenProps.alarms) {
+      } else if (this.props.alarms) {
          return (
             <AlarmSelector
-                  alarms = {this.props.screenProps.alarms}
+                  alarms = {this.props.alarms}
                   navigation = {this.props.navigation}
-                  setCurrentAlarm = {this.props.screenProps.setCurrentAlarm}
+                  setCurrentAlarm = {this.props.setCurrentAlarm}
                />
          )
       } else {
@@ -59,3 +61,15 @@ export default class Home extends React.Component {
       }
    }
 }
+
+const mapStateToProps = ({alarms}) => {
+   return {alarms}
+}
+
+const mapDispatchToProps = (dispatch) => {
+   return {
+      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

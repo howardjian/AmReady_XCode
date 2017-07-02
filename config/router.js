@@ -4,7 +4,7 @@ import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Button } from 'react-native';
 import Home from '../app/screens/Home';
 import AlarmForm from '../app/screens/AlarmForm';
-import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage, selectAlarm, updateAlarm, createAlarm } from '../app/redux';
+import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../app/redux';
 
 class MainNavigator extends React.Component {
 	constructor(props) {
@@ -53,10 +53,7 @@ const mapStateToProps = ({name, alarms, locations, currentAlarm}) => {
 
 const mapDispatchToProps = (dispatch) => ({
 	getAlarms: () => dispatch(getAlarmsFromAsyncStorage()),
-	setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
-	seedDatabase: (alarms) => dispatch(createAlarmsInAsyncStorage(alarms)),
-	updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
-	createAlarm: (alarm) => dispatch(createAlarm(alarm))
+	seedDatabase: (alarms) => dispatch(createAlarmsInAsyncStorage(alarms))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainNavigator);

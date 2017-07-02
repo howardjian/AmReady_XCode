@@ -3,10 +3,12 @@ import { AsyncStorage } from 'react-native';
 /* ------------------------------- ACTIONS ------------------------------- */
 export const SET_ALARMS = 'SET_ALARMS';
 export const SET_CURRENT_ALARM = 'SET_CURRENT_ALARM';
+export const UNSET_CURRENT_ALARM = 'UNSET_CURRENT_ALARM';
 
 /* --------------------------- ACTION-CREATORS --------------------------- */
 export const setAlarms = (alarms) => ({ type: SET_ALARMS, alarms });
 export const setCurrentAlarm = (alarm, alarmIndex) => ({ type: SET_CURRENT_ALARM, alarm, alarmIndex });
+export const unsetCurrentAlarm = () => ({ type: UNSET_CURRENT_ALARM });
 
 /* ------------------------------- REDUCERS ------------------------------- */
 const initialState = {
@@ -28,6 +30,9 @@ export default (state = initialState, action) => {
 		case SET_CURRENT_ALARM:
 			newState.currentAlarm.alarmInfo = action.alarm;
 			newState.currentAlarm.index = action.alarmIndex;
+			break;
+		case UNSET_CURRENT_ALARM:
+			newState.currentAlarm = {index: null, alarmInfo: {}};
 			break;
 		default:
 			break;
@@ -60,6 +65,10 @@ export const updateAlarm = (currentAlarms, updatedAlarm, alarmIndex) => {
 
 export const selectAlarm = (alarm, alarmIndex) => {
 	return setCurrentAlarm(alarm, alarmIndex);
+}
+
+export const unselectAlarm = () => {
+	return unsetCurrentAlarm();
 }
 
 export const deleteSelectedAlarm = (currentAlarms, alarmIndex) => {

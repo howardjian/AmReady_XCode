@@ -17,7 +17,7 @@ export default function ({alarms, navigation, setCurrentAlarm}) {
 							title={alarm.alarmName}
 							onPress={ () => {
 								setCurrentAlarm(alarm, index);
-								navigation.navigate('alarmDetail', {alarm, alarmIndex: index})
+								navigation.navigate('alarmDetail', {alarm})
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
