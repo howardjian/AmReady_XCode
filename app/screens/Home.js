@@ -4,49 +4,32 @@ import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
-import { selectAlarm } from '../redux';
+import { selectAlarm, triggerAlarm, silenceAlarm } from '../redux';
 
 class Home extends React.Component {
    constructor (props) {
       super(props);
-      this.state = {
-         notification: null
-      }
-      this.clearAlarm = this.clearAlarm.bind(this);
-      NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground.bind(this));
-      NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceivedBackground.bind(this));
-      NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
+      NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
+      NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
+      // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
-   onNotificationReceivedForeground(notification) {
-      console.log("Notification Received - Foreground", notification);
-      this.setState({notification: notification});
-   }
-
-   onNotificationReceivedBackground(notification) {
-      console.log("Notification Received - Background", notification);
-   }
-
-   onNotificationOpened(notification) {
-      console.log("Notification opened by device user", notification);
+   onNotificationReceived(notification) {
+      console.warn("Notification Received", JSON.stringify(notification));
+      const alarm = notification.data.alarm;
+      const alarmIndex = notification.data.alarmIndex;
+      this.props.triggerAlarm(alarm, alarmIndex);
    }
 
    componentWillUnmount() {
       // Don't forget to remove the event listeners to prevent memory leaks!
-      NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground.bind(this));
-      NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceivedBackground.bind(this));
-      NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
-   }
-   componentWillMount () {
-      // this.setData(initialState); // use this while testing to initialize local storage
-   }
-
-   clearAlarm () {
-      this.setState({notification: null})
+      NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
+      NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
+      // NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
 
    render() {
-      if (this.state.notification) {
-         return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
+      if (this.props.alarmRinging.index !== null) {
+         return <Clock timerId={1} notification={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
       } else if (this.props.alarms) {
          return (
             <AlarmSelector
@@ -61,13 +44,15 @@ class Home extends React.Component {
    }
 }
 
-const mapStateToProps = ({alarms}) => {
-   return {alarms}
+const mapStateToProps = ({alarms, alarmRinging}) => {
+   return {alarms, alarmRinging}
 }
 
 const mapDispatchToProps = (dispatch) => {
    return {
-      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
+      triggerAlarm: (alarm, alarmIndex) => dispatch(triggerAlarm(alarm, alarmIndex)),
+      silenceAlarm: () => dispatch(silenceAlarm())
    }
 }
 

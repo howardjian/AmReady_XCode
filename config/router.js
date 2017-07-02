@@ -35,8 +35,11 @@ const Navigator = StackNavigator({
 		screen: AlarmForm,
 		navigationOptions: ({ navigation, screenProps }) => (
 		{
-			// the below causes adding a New Alarm to break as there is no alarm set
-			// title: navigation.state.params.alarm.alarmName,
+			title: navigation.state.params ? 
+				(navigation.state.params.alarm ? 
+				navigation.state.params.alarm.alarmName 
+				: 'Create New Alarm') 
+				: 'Create New Alarm',
 			headerRight: <Button title={'Save'} onPress={ () => {
 				navigation.state.params.handleSave();
 			}} />
