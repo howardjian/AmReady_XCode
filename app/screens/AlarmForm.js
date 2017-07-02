@@ -1,23 +1,21 @@
 import React from 'react';
 import {
-  AsyncStorage,
   Text,
   TextInput,
   ScrollView,
-  View,
-  FlatList,
   StyleSheet,
   Button,
   DatePickerIOS } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
 import {setTimer} from '../features/Audio';
-
+import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
+import { connect } from 'react-redux';
+import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
 import { Divider } from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
 
-
-export default class extends React.Component  {
+class AlarmForm extends React.Component  {
 	constructor (props) {
 		super(props);
 
@@ -25,75 +23,84 @@ export default class extends React.Component  {
       alarmName: '',
       start:null,
       end:null,
-      start_lat: 37.78825,
-      start_long: -122.4324,
-      end_lat: 37.78825 ,
-      end_long: -122.4324,
+      start_lat: 40.7051,
+      start_long: -74.0092,
+      end_lat: 40.7051,
+      end_long: -74.0092,
       directions:false,
       trainOptions: [],
       routeSelectedBool: false,
-      routeIndex: null,
       prepTime: '',
       duration:'',
       arrivalTime: new Date(),
       timerId: null
     }
 
-		this.saveDetails = this.saveDetails.bind(this);
+		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.saveNewAlarm = this.saveNewAlarm.bind(this);
-    this.AsyncStorageFormat = this.AsyncStorageFormat.bind(this);
-    this.getDuration = this.getDuration.bind(this);
+    this.updateNewState = this.updateNewState.bind(this);
+    this.navigateHome = this.navigateHome.bind(this);
 	}
 
   componentWillMount() {
-    let selectedUserData = this.props.navigation.state.params
-    if(selectedUserData.alarm) {
-      this.setState(stateifyDbData(selectedUserData.alarm));
+    // let selectedUserData = this.props.navigation.state.params
+    if (this.props.currentAlarm.alarmInfo.alarmName) {
+      this.setState(stateifyDbData(this.props.currentAlarm.alarmInfo));
     }
   }
 
-  handleChange(changedState) {
+  componentDidMount() {
+    this.props.navigation.setParams({ handleSave: this.handleSave });
+    // console.log(this.props);
+    // console.log(this.state);
+  }
+
+  componentWillUnmount() {
+    this.props.unselectAlarm();
+  }
+
+  updateNewState(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
-  getDuration(duration){
-    this.setState({duration})
-  }
-  saveNewAlarm() {
-    // 1. Get old alarms
-    // 2. convert old alarms to JSON
-    // 3. push new alarm to alarms array
-    // 4. stringify alarms
-    // 5. set item
-    let db = this.props.navigation.state.params.data;
-    db.alarms.push(this.AsyncStorageFormat());
-    return AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
-      if (err){
-        console.warn("ERROR", err);
-      }
-      return result;
-    })
+
+	saveAlarmDetails() {
+    const alarms = this.props.alarms;
+    const alarmIndex = this.props.currentAlarm.index;
+    const currentAlarm = AsyncStorageFormat(this.state);
+    if (alarmIndex !== null) {
+        console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
+        this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
+        .then((result) => {
+          this.setTimer();
+        })
+    } else {
+        this.props.saveAlarm(alarms, currentAlarm)
+        .then((result) => {
+          this.setTimer();
+        })
+    }
   }
 
-	saveDetails() {
-    this.saveNewAlarm()
-    .then((result) => {
-      // console.error(result);
-      // set background timer
+  handleSave() {
+          // set background timer
       if (!this.state.timerId) {
         const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
         this.setState({timerId}, () => {
-            this.saveNewAlarm();
+            this.saveAlarmDetails();
         });
         console.warn('CREATED TIMER ID', timerId);
       } else {
-        console.warn('TIMER ID', timerId);
+        // need to be able to kill current timer and create a new one
+        this.saveAlarmDetails();
+        console.warn('TIMER ID', this.state.timerId);
       }
-      // need to write in case where we are editing an alarm
-    });
-    this.props.navigation.dispatch(NavigationActions.reset(
+      this.navigateHome();
+  }
+
+  navigateHome() {
+      this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
         actions: [
@@ -103,45 +110,7 @@ export default class extends React.Component  {
   }
 
   onDateChange (date) {
-    console.log(date);
     this.setState({arrivalTime: date});
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ handleSave: this.saveDetails });
-  }
-
-  AsyncStorageFormat(){
-    const currentAlarm = this.state;
-
-    return {
-      timerId: currentAlarm.timerId,
-      alarmName: currentAlarm.alarmName,
-      isRecurring: 1,
-      daysOfWeek: [currentAlarm.daysOfWeek],
-      route: {
-         start_lat: currentAlarm.start_lat,
-         start_long: currentAlarm.start_long,
-         end_lat: currentAlarm.end_lat,
-         end_long: currentAlarm.end_long,
-         modeOfTransport: 'Train',
-         preferredRoute: 'need_to_figure_out',
-         address: {
-           start: currentAlarm.start,
-           end: currentAlarm.end
-         },
-         routeSelectedBool: currentAlarm.routeSelectedBool
-        //  routeIndex: null
-      },
-      prepTime: currentAlarm.prepTime,
-      arrivalTime: currentAlarm.arrivalTime,
-      contacts: [
-         {
-            user: 56,
-            type: 'email'
-         }
-      ]
-    }
   }
 
 	render () {
@@ -176,7 +145,7 @@ export default class extends React.Component  {
               </Item>
 
               <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
-              <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
+              <Directions updateNewState={this.updateNewState} alarmInfo={this.state} />
 
             </Form>
           </Content>
@@ -185,7 +154,6 @@ export default class extends React.Component  {
     )
 	}
 }
-
 
 const styles = StyleSheet.create({
   window: { backgroundColor: '#333333' },
@@ -218,49 +186,16 @@ const styles = StyleSheet.create({
 //       </ScrollView>
 
 
-
-
-
-const stateifyDbData = (data) => {
-  let route = data.route;
-  let newState = Object.assign({}, {
-    alarmName: data.alarmName,
-    arrivalTime: data.arrivalTime,
-    prepTime: data.prepTime.toString(),
-    start: route.address.start,
-    end: route.address.end,
-    start_lat: route.start_lat,
-    start_long: route.start_long,
-    end_lat: route.end_lat,
-    end_long: route.end_long,
-    timerId: data.timerId
-  })
-  return newState;
+const mapStateToProps = ({alarms, currentAlarm}) => {
+   return {alarms, currentAlarm}
 }
 
+const mapDispatchToProps = (dispatch) => {
+   return {
+        updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
+        saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
+        unselectAlarm: () => dispatch(unselectAlarm())
+   }
+}
 
-// const styles = StyleSheet.create({
-//   window:{
-//     borderColor: 'green'
-//   },
-//   container: {
-//    flex: 1,
-//    paddingTop: 22
-//   },
-//   list: {
-//     padding: 10,
-//   },
-//   item: {
-//     fontSize: 18,
-//     height: 44,
-//   },
-//   input: {
-//     paddingLeft: 15,
-//     height: 40,
-//     alignSelf: 'center',
-//     width: '90%',
-//     borderRadius: 7,
-//     borderColor: 'gray',
-//     borderWidth: 2
-//   }
-// })
+export default connect(mapStateToProps, mapDispatchToProps)(AlarmForm);

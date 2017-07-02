@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View , Button,TextInput, Image } from 'react-native';
+import {Text, View , Button, Image } from 'react-native';
 
 
 export default function({transit,icon, index, selectRoute, duration}) {
@@ -14,10 +14,7 @@ export default function({transit,icon, index, selectRoute, duration}) {
       style={{width: 20, height: 20}}
       source = {{uri: `https:${icon}`}}
       />
-      <Button  title="Select Route"   onPress={() => { selectRoute(index)}}/>
+    <Button  title="Select Route"   onPress={() => { selectRoute(index, duration)}}/>
     </View>
   )
 }
-
-
-// <Text>"Duration: " {props.duration}</Text>

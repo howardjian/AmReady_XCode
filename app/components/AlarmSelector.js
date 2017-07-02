@@ -4,53 +4,28 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
 
 
-export default function ({data, setData, navigation}) {
-	const alarmInfo = {};
-	const alarmKeys = data && data.alarms ? data.alarms.map((alarm) => {
-		alarmInfo[alarm.alarmName] = alarm;
-		return {key: alarm.alarmName}
-	}) : null;
+export default function ({alarms, navigation, setCurrentAlarm}) {
+	const alarmKeys = alarms.map((alarm, index) => {
+		return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
+	});
 	return (
 		<View style={styles.container}>
 			{
-				alarmKeys ?
+				alarmKeys.length ?
 				<FlatList data={alarmKeys}
-				renderItem={({item}) => {
-					const alarm = alarmInfo[item.key];
+				renderItem={({item, index}) => {
+					const alarm = JSON.parse(item.key);
 					return (
-						<View style={styles.container}>
-							{
-								alarmKeys ?
-										<Container>
-												<Content>
-												<Button bordered>
-													<Text>{item.key}</Text>
-												</Button>
-												</Content>
-										</Container>
+						<Button style={styles.list}
+							title={alarm.alarmName}
+							onPress={ () => {
+								setCurrentAlarm(alarm, index);
+								navigation.navigate('alarmDetail', {alarm})
+							} }
+							accessibilityLabel={`Click to view ${item.key} alarm details`}>
+							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
 
-
-
-		// 		renderItem={({item}) => {
-		// 			const alarm = alarmInfo[item.key];
-		// 			return (
-		// 				<Button style={styles.list}
-		// 					title={item.key}
-		// 					onPress={ () => {
-		// 						navigation.navigate('alarmDetail', {alarm: alarm, data:data})
-		// 					} }
-		// 					accessibilityLabel={`Click to view ${item.key} alarm details`}>
-		// 					<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-
-		// 				</Button>
-
-
-
-
-
-
-
-
+						</Button>
 					)
 				}
 				} /> : null
@@ -133,6 +108,3 @@ const styles = StyleSheet.create({
     height: 44,
   }
 })
-/*
-<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(',') : null}</Text>
-*/

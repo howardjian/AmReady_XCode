@@ -1,16 +1,15 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+import { connect } from 'react-redux';
+import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
-// import AlarmForm from '../components/AlarmForm';
-import initialState from '../../seed';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
+import { selectAlarm } from '../redux';
 
-export default class Home extends React.Component {
-   constructor () {
-      super();
+class Home extends React.Component {
+   constructor (props) {
+      super(props);
       this.state = {
-         data: initialState,
          notification: null
       }
       this.clearAlarm = this.clearAlarm.bind(this);
@@ -38,18 +37,7 @@ export default class Home extends React.Component {
       NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    componentWillMount () {
-      // this.setData(this.state.data); // use this while testing to initialize local storage
-   }
-
-   componentDidMount() {
-      AsyncStorage.getItem('data').then((value) => {
-         this.setState({data: value});
-      });
-   }
-
-   setData (value) {
-      AsyncStorage.setItem('data', value);
-      this.setState({data: value});
+      // this.setData(initialState); // use this while testing to initialize local storage
    }
 
    clearAlarm () {
@@ -57,21 +45,30 @@ export default class Home extends React.Component {
    }
 
    render() {
-      alarmsData.userAlarms = JSON.parse(this.state.data);
       if (this.state.notification) {
          return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
-      } else {
+      } else if (this.props.alarms) {
          return (
             <AlarmSelector
-                  data = {JSON.parse(this.state.data)}
-                  setData = {this.setData}
+                  alarms = {this.props.alarms}
                   navigation = {this.props.navigation}
-            />
+                  setCurrentAlarm = {this.props.setCurrentAlarm}
+               />
          )
+      } else {
+         return <View />
       }
    }
 }
 
-export function alarmsData() {
-  this.userAlarms = '';
+const mapStateToProps = ({alarms}) => {
+   return {alarms}
 }
+
+const mapDispatchToProps = (dispatch) => {
+   return {
+      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

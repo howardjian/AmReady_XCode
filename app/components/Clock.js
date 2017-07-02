@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View, Button } from 'react-native';
 import {stopAudio} from '../features/Audio';
-import { NavigationActions } from 'react-navigation';
 
 export default class extends React.Component {
 	constructor (props) {
