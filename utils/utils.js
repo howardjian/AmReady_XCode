@@ -50,9 +50,7 @@ export const decode = (encoded) => {
   return points
 }
 
-export const AsyncStorageFormat = () => {
-  const currentAlarm = this.state;
-
+export const AsyncStorageFormat = (currentAlarm) => {
   return {
     timerId: currentAlarm.timerId,
     alarmName: currentAlarm.alarmName,

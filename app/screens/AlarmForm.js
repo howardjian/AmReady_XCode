@@ -34,16 +34,17 @@ export default class extends React.Component  {
       timerId: null
     }
 
-		this.saveDetails = this.saveDetails.bind(this);
+		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.saveNewAlarm = this.saveNewAlarm.bind(this);
     this.getDuration = this.getDuration.bind(this);
+    this.navigateHome = this.navigateHome.bind(this);
 	}
 
   componentWillMount() {
     let selectedUserData = this.props.navigation.state.params
-    if(selectedUserData.alarm) {
+    if (selectedUserData.alarm) {
       this.setState(stateifyDbData(selectedUserData.alarm));
     }
   }
@@ -58,38 +59,43 @@ export default class extends React.Component  {
     this.setState({duration})
   }
 
-  saveNewAlarm() {
-    // 1. Get old alarms
-    // 2. convert old alarms to JSON
-    // 3. push new alarm to alarms array
-    // 4. stringify alarms
-    // 5. set item
-    let db = this.props.navigation.state.params.data;
-    db.alarms.push(AsyncStorageFormat());
-    return AsyncStorage.mergeItem('data', JSON.stringify(db), (err, result) => {
-      if (err){
-        console.warn("ERROR", err);
-      }
-      return result;
-    })
+	saveAlarmDetails() {
+    const alarms = this.props.screenProps.alarms;
+    const alarmIndex = this.props.screenProps.currentAlarm.index;
+    const currentAlarm = AsyncStorageFormat(this.state);
+    if (alarms.length) {
+        console.log('we are saving!', alarms, currentAlarm, alarmIndex);
+        this.props.screenProps.updateAlarm(alarms, currentAlarm, alarmIndex)
+        .then((result) => {
+          this.setTimer();
+          this.navigateHome();
+        })
+    } else {
+        this.props.screenProps.createAlarm(currentAlarm)
+        .then((result) => {
+          this.setTimer();
+          this.navigateHome();
+        })
+    }
   }
 
-	saveDetails() {
-    this.saveNewAlarm()
-    .then((result) => {
-      // set background timer
+  handleSave() {
+          // set background timer
       if (!this.state.timerId) {
         const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
         this.setState({timerId}, () => {
-            this.saveNewAlarm();
+            this.saveAlarmDetails();
         });
         console.warn('CREATED TIMER ID', timerId);
       } else {
-        console.warn('TIMER ID', timerId);
+        console.warn('TIMER ID', this.state.timerId);
       }
       // need to write in case where we are editing an alarm
-    });
-    this.props.navigation.dispatch(NavigationActions.reset(
+      this.navigateHome();
+  }
+
+  navigateHome() {
+      this.props.navigation.dispatch(NavigationActions.reset(
       {
         index: 0,
         actions: [
@@ -103,7 +109,7 @@ export default class extends React.Component  {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleSave: this.saveDetails });
+    this.props.navigation.setParams({ handleSave: this.handleSave });
   }
 
 	render () {
