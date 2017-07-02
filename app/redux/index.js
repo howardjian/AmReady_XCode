@@ -89,13 +89,11 @@ export const createAlarmsInAsyncStorage = (alarms) => {
 }
 
 const updateAlarmsInAsyncStorage = (alarms) => {
-	console.warn('i should be here', alarms);
 	return dispatch => {
 		return AsyncStorage.setItem('alarms', JSON.stringify(alarms), (err) => {
 	      if (err){
 	        console.error(err);
 	      }
-				console.warn('inside',alarms);
 	      dispatch(setAlarms(alarms));
 	    })
 	}

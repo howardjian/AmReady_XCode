@@ -38,7 +38,6 @@ class Home extends React.Component {
    }
    componentWillMount () {
       // this.setData(initialState); // use this while testing to initialize local storage
-      console.warn(JSON.stringify(this.props));
    }
 
    clearAlarm () {
@@ -46,7 +45,6 @@ class Home extends React.Component {
    }
 
    render() {
-      console.log('home', this.props);
       if (this.state.notification) {
          return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
       } else if (this.props.alarms) {

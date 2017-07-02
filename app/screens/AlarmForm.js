@@ -72,7 +72,6 @@ class AlarmForm extends React.Component  {
     const alarms = this.props.alarms;
     const alarmIndex = this.props.currentAlarm.index;
     const currentAlarm = AsyncStorageFormat(this.state);
-    console.warn(typeof alarmIndex, alarmIndex === null );
     if (alarmIndex !== null) {
         console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
         this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
@@ -80,7 +79,6 @@ class AlarmForm extends React.Component  {
           this.setTimer();
         })
     } else {
-        console.warn('bahhhh', alarms, 'INDEX', alarmIndex, 'new alarm',currentAlarm)
         this.props.saveAlarm(alarms, currentAlarm)
         .then((result) => {
           this.setTimer();
@@ -97,12 +95,11 @@ class AlarmForm extends React.Component  {
         });
         console.warn('CREATED TIMER ID', timerId);
       } else {
+        // need to write in case where we are editing an alarm
         console.warn('TIMER ID', this.state.timerId);
       }
       // this.props.unselectAlarm(); // testing this in componentWillUnmount
-      // need to write in case where we are editing an alarm
 
-      console.warn('tis the end', this.props)
       this.navigateHome();
   }
 
