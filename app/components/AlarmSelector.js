@@ -1,27 +1,28 @@
 import React from 'react';
 import { Text, View, FlatList, StyleSheet, Button } from 'react-native';
 
-export default function ({data, setData, navigation}) {
-	const alarmInfo = {};
-	const alarmKeys = data && data.alarms ? data.alarms.map((alarm) => {
-		alarmInfo[alarm.alarmName] = alarm;
-		return {key: alarm.alarmName}
-	}) : null;
+export default function ({alarms, navigation}) {
+	console.log('alarm arr?', alarms);
+	const alarmInfo = [];
+	const alarmKeys = alarms.map((alarm, index) => {
+		alarmInfo.push(alarm);
+		return {key: index}
+	});
 	return (
 		<View style={styles.container}>
 			{
-				alarmKeys ?
+				alarmKeys.length ?
 				<FlatList data={alarmKeys}
 				renderItem={({item}) => {
 					const alarm = alarmInfo[item.key];
 					return (
 						<Button style={styles.list}
-							title={item.key}
+							title={alarm.alarmName}
 							onPress={ () => {
-								navigation.navigate('alarmDetail', {alarm: alarm, data:data})
+								navigation.navigate('alarmDetail', {alarm: alarm, alarmIndex: item.key})
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
-							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
+							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
 
 						</Button>
 					)

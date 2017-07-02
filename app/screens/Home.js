@@ -1,18 +1,14 @@
 import React from 'react';
+import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
-import initialState from '../../seed';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
 
 export default class Home extends React.Component {
-   constructor () {
-      super();
-      const {name, alarms, locations} = initialState;
+   constructor (props) {
+      super(props);
       this.state = {
-         notification: null,
-         name,
-         alarms,
-         locations
+         notification: null
       }
       this.clearAlarm = this.clearAlarm.bind(this);
       NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground.bind(this));
@@ -39,18 +35,7 @@ export default class Home extends React.Component {
       NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    componentWillMount () {
-      this.setData(initialState); // use this while testing to initialize local storage
-   }
-
-   componentDidMount() {
-      AsyncStorage.getItem('data').then((value) => {
-         this.setState({data: value});
-      });
-   }
-
-   setData (value) {
-      AsyncStorage.setItem('data', value);
-      this.setState({data: value});
+      // this.setData(initialState); // use this while testing to initialize local storage
    }
 
    clearAlarm () {
@@ -58,21 +43,19 @@ export default class Home extends React.Component {
    }
 
    render() {
-      alarmsData.userAlarms = JSON.parse(this.state.data);
+      console.log('PROPS', this.props);
+      console.log('NAV', this.props.navigation.state.params);
       if (this.state.notification) {
          return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
-      } else {
+      } else if (this.props.alarms) {
          return (
             <AlarmSelector
-                  data = {JSON.parse(this.state.data)}
-                  setData = {this.setData}
+                  alarms = {this.props.alarms}
                   navigation = {this.props.navigation}
-            />
+               />
          )
+      } else {
+         return <View />
       }
    }
-}
-
-export function alarmsData() {
-  this.userAlarms = '';
 }
