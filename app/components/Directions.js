@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Text, View , Button,TextInput } from 'react-native';
+import {SearchBar, Divider, Button} from 'react-native-elements';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map from './Map';
 import { decode } from '../../utils/utils';
@@ -136,19 +137,34 @@ export default class extends Component {
           <View>
             {
               <View>
-                   <TextInput
-                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                   <SearchBar
+                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
+                       inputStyle={{backgroundColor: '#333333', color: 'white' }}
                        onChangeText={(start) => {
                          this.setState({start})
                        }}
+                       placeholder='From...'
                        value={this.state.start}
-                       />
-                   <TextInput
-                       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                    />
+                    <Divider style={{width: 340, alignSelf:'center'}}/>
+                    <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+
+                   <SearchBar
+                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
+                       inputStyle={{backgroundColor: '#333333', color: 'white'}}
                        onChangeText={(end) => this.setState({end})}
+                       placeholder='To...'
                        value={this.state.end}
                        />
-                   <Button onPress={this.getDirections}  title="Get Directions"
+                  <Divider style={{width: 340, alignSelf:'center'}}/>
+
+                  <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+
+                   <Button
+                    large
+                    icon={{name: 'subway'}}
+                    onPress={this.getDirections}
+                    title="Get Directions"
                    />
               </View>
             }{
