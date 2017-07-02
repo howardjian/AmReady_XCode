@@ -1,25 +1,23 @@
 import React from 'react';
 import { Text, View, FlatList, StyleSheet, Button } from 'react-native';
 
-export default function ({alarms, navigation}) {
-	console.log('alarm arr?', alarms);
-	const alarmInfo = [];
+export default function ({alarms, navigation, setCurrentAlarm}) {
 	const alarmKeys = alarms.map((alarm, index) => {
-		alarmInfo.push(alarm);
-		return {key: index}
+		return {key: JSON.stringify(alarm)} // need to stringify values because flatlist thinks objects are identical, and only renders first
 	});
 	return (
 		<View style={styles.container}>
 			{
 				alarmKeys.length ?
 				<FlatList data={alarmKeys}
-				renderItem={({item}) => {
-					const alarm = alarmInfo[item.key];
+				renderItem={({item, alarmIndex}) => {
+					const alarm = JSON.parse(item.key);
 					return (
 						<Button style={styles.list}
 							title={alarm.alarmName}
 							onPress={ () => {
-								navigation.navigate('alarmDetail', {alarm: alarm, alarmIndex: item.key})
+								setCurrentAlarm(alarm, alarmIndex);
+								navigation.navigate('alarmDetail', {alarm, alarmIndex})
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
@@ -46,6 +44,3 @@ const styles = StyleSheet.create({
     height: 44,
   }
 })
-/*
-<Text style={styles.item}>{alarm.daysOfWeek ? alarm.daysOfWeek.join(',') : null}</Text>
-*/

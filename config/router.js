@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Button } from 'react-native';
 import Home from '../app/screens/Home';
 import AlarmForm from '../app/screens/AlarmForm';
-import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../app/redux';
+import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage, selectAlarm } from '../app/redux';
 
 class MainNavigator extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 
 	componentDidMount () {
 		this.props.seedDatabase(require('../seed').alarms); // only need to do this once for seeding async storage
@@ -14,18 +17,17 @@ class MainNavigator extends React.Component {
 	}
 
 	render () {
-		return <Navigator />
+		return <Navigator screenProps={{...this.props}} />
 	}
 }
 
 const Navigator = StackNavigator({
 	home: {
 		screen: Home,
-		navigationOptions: ({ navigation }) => ({
+		navigationOptions: ({navigation}) => ({
 			title: 'My Alarms',
-			params: navigation.state,
 			headerRight: <Button title={'+'} onPress={ () =>
-				navigation.navigate('alarmDetail', {alarms: this.state.alarms})
+				navigation.navigate('alarmDetail', {alarms: null})
 			} />
 		})
 	},
@@ -33,23 +35,24 @@ const Navigator = StackNavigator({
 		screen: AlarmForm,
 		navigationOptions: ({ navigation }) => ({
 			title: navigation.state.params.alarmName,
-			params: navigation.state,
 			headerRight: <Button title={'Save'} onPress={ () =>
 				navigation.state.params.handleSave() } />
 		})
 	}
 })
 
-const mapStateToProps = ({name, alarms, locations}) => {
+const mapStateToProps = ({name, alarms, locations, currentAlarm}) => {
 	return {
 		name,
 		alarms,
-		locations
+		locations,
+		currentAlarm
 	}
 }
 
 const mapDispatchToProps = (dispatch) => ({
 	getAlarms: () => dispatch(getAlarmsFromAsyncStorage()),
+	setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
 	seedDatabase: (alarms) => dispatch(createAlarmsInAsyncStorage(alarms))
 })
 

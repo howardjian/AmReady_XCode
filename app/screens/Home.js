@@ -43,15 +43,15 @@ export default class Home extends React.Component {
    }
 
    render() {
-      console.log('PROPS', this.props);
-      console.log('NAV', this.props.navigation.state.params);
+      console.log(this.props);
       if (this.state.notification) {
          return <Clock timerId={1} notification={this.state.notification} clearAlarm={this.clearAlarm} />
-      } else if (this.props.alarms) {
+      } else if (this.props.screenProps.alarms) {
          return (
             <AlarmSelector
-                  alarms = {this.props.alarms}
+                  alarms = {this.props.screenProps.alarms}
                   navigation = {this.props.navigation}
+                  setCurrentAlarm = {this.props.screenProps.setCurrentAlarm}
                />
          )
       } else {
