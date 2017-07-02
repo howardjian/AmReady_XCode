@@ -45,6 +45,7 @@ export const getAlarmsFromAsyncStorage = () => {
 	return dispatch => {
 		AsyncStorage.getItem('alarms')
 		.then((alarms) => {
+			// console.error('1', alarms);
 			alarms = alarms || '[]';
         	dispatch(setAlarms(JSON.parse(alarms)));
     	})
@@ -53,9 +54,9 @@ export const getAlarmsFromAsyncStorage = () => {
 }
 
 export const saveNewAlarm = (currentAlarms, newAlarm) => {
-	const updatedAlarms = currentAlarms.push(newAlarm);
+	currentAlarms.push(newAlarm);
 	return !currentAlarms.length ?
-		createAlarmsInAsyncStorage(updatedAlarms) : updateAlarmsInAsyncStorage(updatedAlarms);
+		createAlarmsInAsyncStorage(currentAlarms) : updateAlarmsInAsyncStorage(currentAlarms);
 }
 
 export const updateAlarm = (currentAlarms, updatedAlarm, alarmIndex) => {
@@ -78,7 +79,7 @@ export const deleteSelectedAlarm = (currentAlarms, alarmIndex) => {
 
 export const createAlarmsInAsyncStorage = (alarms) => {
 	return dispatch => {
-		AsyncStorage.setItem('alarms', JSON.stringify(alarms), (err) => {
+		return AsyncStorage.setItem('alarms', JSON.stringify(alarms), (err) => {
 	      if (err){
 	        console.error(err);
 	      }
@@ -88,11 +89,13 @@ export const createAlarmsInAsyncStorage = (alarms) => {
 }
 
 const updateAlarmsInAsyncStorage = (alarms) => {
+	console.warn('i should be here', alarms);
 	return dispatch => {
 		return AsyncStorage.setItem('alarms', JSON.stringify(alarms), (err) => {
 	      if (err){
 	        console.error(err);
 	      }
+				console.warn('inside',alarms);
 	      dispatch(setAlarms(alarms));
 	    })
 	}

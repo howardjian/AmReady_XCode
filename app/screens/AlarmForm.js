@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AsyncStorage,
   Text,
   TextInput,
   ScrollView,
@@ -12,7 +11,7 @@ import Directions from '../components/Directions';
 import {setTimer} from '../features/Audio';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
-import { updateAlarm, createAlarm, unselectAlarm } from '../redux';
+import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
 
 class AlarmForm extends React.Component  {
 	constructor (props) {
@@ -46,10 +45,17 @@ class AlarmForm extends React.Component  {
 
   componentWillMount() {
     // let selectedUserData = this.props.navigation.state.params
-    console.log(this.props.currentAlarm);
     if (this.props.currentAlarm.alarmInfo.alarmName) {
       this.setState(stateifyDbData(this.props.currentAlarm.alarmInfo));
     }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ handleSave: this.handleSave });
+  }
+
+  componentWillUnmount() {
+    this.props.unselectAlarm();
   }
 
   handleChange(changedState) {
@@ -66,18 +72,18 @@ class AlarmForm extends React.Component  {
     const alarms = this.props.alarms;
     const alarmIndex = this.props.currentAlarm.index;
     const currentAlarm = AsyncStorageFormat(this.state);
-    if (alarms.length) {
-        console.log('we are saving!', alarms, currentAlarm, alarmIndex);
+    console.warn(typeof alarmIndex, alarmIndex === null );
+    if (alarmIndex !== null) {
+        console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
         this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
         .then((result) => {
           this.setTimer();
-          this.navigateHome();
         })
     } else {
-        this.props.createAlarm(currentAlarm)
+        console.warn('bahhhh', alarms, 'INDEX', alarmIndex, 'new alarm',currentAlarm)
+        this.props.saveAlarm(alarms, currentAlarm)
         .then((result) => {
           this.setTimer();
-          this.navigateHome();
         })
     }
   }
@@ -93,8 +99,10 @@ class AlarmForm extends React.Component  {
       } else {
         console.warn('TIMER ID', this.state.timerId);
       }
-      this.props.unselectAlarm();
+      // this.props.unselectAlarm(); // testing this in componentWillUnmount
       // need to write in case where we are editing an alarm
+
+      console.warn('tis the end', this.props)
       this.navigateHome();
   }
 
@@ -110,10 +118,6 @@ class AlarmForm extends React.Component  {
 
   onDateChange (date) {
     this.setState({arrivalTime: date});
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ handleSave: this.handleSave });
   }
 
 	render () {
@@ -151,7 +155,7 @@ const mapStateToProps = ({alarms, currentAlarm}) => {
 const mapDispatchToProps = (dispatch) => {
    return {
         updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
-        createAlarm: (alarm) => dispatch(createAlarm(alarm)),
+        saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
         unselectAlarm: () => dispatch(unselectAlarm())
    }
 }
