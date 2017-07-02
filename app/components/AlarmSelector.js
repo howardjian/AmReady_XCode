@@ -1,5 +1,8 @@
 import React from 'react';
-import { Text, View, FlatList, StyleSheet, Button } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
+// import { Container, Content, Card, CardItem, Body } from 'native-base';
+import { Container, Content, Button, Text } from 'native-base';
+
 
 export default function ({data, setData, navigation}) {
 	const alarmInfo = {};
@@ -15,15 +18,39 @@ export default function ({data, setData, navigation}) {
 				renderItem={({item}) => {
 					const alarm = alarmInfo[item.key];
 					return (
-						<Button style={styles.list}
-							title={item.key}
-							onPress={ () => {
-								navigation.navigate('alarmDetail', {alarm: alarm, data:data})
-							} }
-							accessibilityLabel={`Click to view ${item.key} alarm details`}>
-							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
+						<View style={styles.container}>
+							{
+								alarmKeys ?
+										<Container>
+												<Content>
+												<Button bordered>
+													<Text>{item.key}</Text>
+												</Button>
+												</Content>
+										</Container>
 
-						</Button>
+
+
+		// 		renderItem={({item}) => {
+		// 			const alarm = alarmInfo[item.key];
+		// 			return (
+		// 				<Button style={styles.list}
+		// 					title={item.key}
+		// 					onPress={ () => {
+		// 						navigation.navigate('alarmDetail', {alarm: alarm, data:data})
+		// 					} }
+		// 					accessibilityLabel={`Click to view ${item.key} alarm details`}>
+		// 					<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
+
+		// 				</Button>
+
+
+
+
+
+
+
+
 					)
 				}
 				} /> : null
@@ -31,6 +58,67 @@ export default function ({data, setData, navigation}) {
 		</View>
 	)
 }
+
+
+
+// <Container>
+// 									<Button>
+// 										<Content>
+// 											<Card>
+// 												<CardItem header>
+// 													<Text>NativeBase</Text>
+// 												</CardItem>
+// 												<CardItem>
+// 													<Body>
+// 														<Text>
+// 															//Your text here
+// 														</Text>
+// 													</Body>
+// 												</CardItem>
+// 												<CardItem footer>
+// 													<Text>GeekyAnts</Text>
+// 												</CardItem>
+// 										</Card>
+// 										</Content>
+// 									</Button>
+// 									</Container>
+
+
+
+// <Item floatingLabel style={{ width: 340 }}>
+//                 <Label style={{color: '#5e5e5e', fontWeight: 'bold'}}>Alarm Name</Label>
+//                 <Input
+//                  style={{ color: 'white' }}
+//                  onChangeText={(alarmName) => {this.setState({alarmName})}}
+//                  value={this.state.alarmName}
+//                 />
+//               </Item>
+
+
+
+		// <View style={styles.container}>
+		// 	{
+		// 		alarmKeys ?
+		// 		<FlatList data={alarmKeys}
+		// 		renderItem={({item}) => {
+		// 			const alarm = alarmInfo[item.key];
+		// 			return (
+		// 				<Button style={styles.list}
+		// 					title={item.key}
+		// 					onPress={ () => {
+		// 						navigation.navigate('alarmDetail', {alarm: alarm, data:data})
+		// 					} }
+		// 					accessibilityLabel={`Click to view ${item.key} alarm details`}>
+		// 					<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
+
+		// 				</Button>
+		// 			)
+		// 		}
+		// 		} /> : null
+		// 	}
+		// </View>
+
+
 
 const styles = StyleSheet.create({
   container: {
