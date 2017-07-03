@@ -4,6 +4,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import {createLocalNotification, cancelNotification} from './Notifications';
 
 let audioId = null;
+let localNotification = null;
 
 export function playAudio () {
   // Enable playback in silence mode (iOS only)
@@ -40,7 +41,7 @@ export function stopAudio(backgroundTimerId, snoozeTime) {
     // add in snooze
     console.warn('CLEARING TIME', backgroundTimerId);
     BackgroundTimer.clearTimeout(backgroundTimerId);
-    cancelNotification();
+    cancelNotification(localNotification);
     console.warn('AUDIO SOUND', audioId);
     audioId.stop();
 }
@@ -67,13 +68,19 @@ export function setTimer (alarm, alarmIndex) {
     // the BackgroundTimer id is returned from setTimeout, but we don't have access to it inside of the callback function
     // to get the id, we can auto-increment the BackgroundTimer uniqueId, which is exactly what happens inside
     // of setTimeout before the timerId is returned
-    const nextBackgroundTimerId = BackgroundTimer.uniqueId++;
-    const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId: nextBackgroundTimerId });
+    // const nextBackgroundTimerId = BackgroundTimer.uniqueId++;
+    // const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId: nextBackgroundTimerId });
 
     return BackgroundTimer.setTimeout(function () {
-         audioId = playAudio();
-         createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
+        return (timerId) => {
+          console.warn('timer id from inside timer function', timerId);
+          audioId = playAudio();
+          // localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
+          localNotification = createLocalNotification(timerId, alarmIndex);
+        }
       }, timeInMinUntilAlarmTriggers * 60000);
+
+    // save background timer id AND notification id in database
 }
 
 function calcTimeInMin (time) {

@@ -39,7 +39,6 @@ class AlarmForm extends React.Component  {
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.getDuration = this.getDuration.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
 	}
 
@@ -61,11 +60,6 @@ class AlarmForm extends React.Component  {
   handleChange(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
-  }
-
-  // Need to somehow fix this for DRY purposes
-  getDuration(duration){
-    this.setState({duration})
   }
 
 	saveAlarmDetails() {

@@ -15,6 +15,7 @@ export function createLocalNotification (alarm, alarmIndex) {
 }
 
 export function cancelNotification (localNotification) {
-	// NotificationsIOS.cancelLocalNotification(localNotification);
-	NotificationsIOS.cancelAllLocalNotifications(); // temporary fix
+	console.log('LOCAL NOTIFICATION', localNotification);
+	NotificationsIOS.cancelLocalNotification(localNotification);
+	// NotificationsIOS.cancelAllLocalNotifications(); // temporary fix
 }
