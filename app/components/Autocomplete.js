@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {SearchBar, Divider, Button, TouchableHightLight} from 'react-native-elements';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import {SearchBar, Button} from 'react-native-elements';
+import { View } from 'react-native';
 
 
 
@@ -8,9 +8,9 @@ export default class extends Component {
     constructor(props){
         super(props);
         this.state = {
-            searchText:'',
             userLocation:'',
-            possibleLocations:[]
+            possibleLocations:[],
+            currentValue:''
         }
      
     }
@@ -41,6 +41,7 @@ export default class extends Component {
         return (
             <View>
                 <SearchBar 
+                    placeHolder={this.props.placeHolder}
                     ref='searchBar'
                     value={this.state.currentTerm}   
                     onChangeText={text => {this.textChange(text)}}
@@ -51,7 +52,11 @@ export default class extends Component {
                             return (
                                 <Button small key={places.id}
                                 title={places.description}
-                                onPress={()=>{this.setState({currentTerm:places.description, possibleLocations:null})}}
+                                onPress={()=>{this.setState({
+                                    currentTerm:places.structured_formatting.main_text, 
+                                    possibleLocations:null,
+                                    currentValue:places.description
+                                    })}}
                                 />
                             )
                         })

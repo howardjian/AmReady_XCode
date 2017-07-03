@@ -16,7 +16,6 @@
     "react-native-local-notifications": "^0.1.0",
     "react-native-maps": "^0.15.2",
     "react-native-notifications": "^1.1.11",
-    "react-native-places-autocomplete": "^1.5.2",
     "react-native-sound": "^0.10.3",
     "react-native-vector-icons": "^4.2.0",
     "react-navigation": "^1.0.0-beta.11",
