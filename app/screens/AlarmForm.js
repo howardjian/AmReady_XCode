@@ -62,10 +62,7 @@ class AlarmForm extends React.Component  {
     this.setState(newState);
   }
 
-	saveAlarmDetails() {
-    const alarms = this.props.alarms;
-    const alarmIndex = this.props.currentAlarm.index;
-    const currentAlarm = AsyncStorageFormat(this.state);
+	saveAlarmDetails(alarms, currentAlarm, alarmIndex) {
     if (alarmIndex !== null) {
         console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
         return this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
@@ -75,22 +72,24 @@ class AlarmForm extends React.Component  {
   }
 
   handleSave() {
+      const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
       // save in async storage
-      this.saveAlarmDetails()
+      this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
       .then((result) => {
           console.log('RESULT', result);
-          if (!this.state.timerId) {
+          if (!currentAlarm.timerId) {
               const timerId = setTimer(currentAlarm, alarmIndex);
               this.setState({timerId}, () => {
-                  this.saveAlarmDetails();
+                  this.props.updateAlarm(alarms, currentAlarm, alarmIndex);
                   console.warn('CREATED TIMER ID', timerId);
               });
           } else {
               console.warn('TIMER ID', this.state.timerId);
           }
       })
+      // .catch(console.error().bind(this));
       this.navigateHome();
   }
 

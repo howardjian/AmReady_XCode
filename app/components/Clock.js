@@ -1,14 +1,14 @@
 import React from 'react';
 import { Text, View, Button } from 'react-native';
-import {stopAudio} from '../features/Audio';
+import { resetAlarm } from '../features/Audio';
 
 const dismissAlarm = (timerId) => {
 	console.warn('DISMISSING', timerId);
-	stopAudio(timerId);
+	resetAlarm(timerId);
 }
 
-const snoozeAlarm = (timerId) => {
-	stopAudio(timerId, 5000); // 2nd arg is snooze interval
+const snoozeAlarm = (alarm) => {
+	resetAlarm(alarm.alarmInfo.timerId, true, alarm.alarmInfo, alarm.alarmIndex); // 2nd arg is isSnooze
 }
 
 export default (props) => {
@@ -21,7 +21,7 @@ export default (props) => {
 			}}>
 			</Button>
 			<Button title="I'm not Ready!" onPress={() => {
-				snoozeAlarm(props.alarm.alarmInfo.timerId)
+				snoozeAlarm(props.alarm)
 				props.clearAlarm();
 			}}></Button>
 		</View>
