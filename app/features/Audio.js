@@ -3,7 +3,7 @@ import Sound from 'react-native-sound';
 import BackgroundTimer from 'react-native-background-timer';
 import {createLocalNotification, cancelNotification} from './Notifications';
 
-const SNOOZE_TIME_IN_MIN = 5;
+const SNOOZE_TIME_IN_MIN = 0.1;
 
 let audioId = null;
 let localNotification = null;
@@ -78,9 +78,8 @@ export function setTimer (alarm, alarmIndex, setSnooze = false) {
     return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
           console.warn('timer id from inside timer function', timerId);
-          audioId = playAudio();
-          // localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
           const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
+          audioId = playAudio();
           localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
         }
       }, timeInMinUntilAlarmTriggers * 60000);

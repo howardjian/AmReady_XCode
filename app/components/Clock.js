@@ -8,7 +8,8 @@ const dismissAlarm = (timerId) => {
 }
 
 const snoozeAlarm = (alarm) => {
-	resetAlarm(alarm.alarmInfo.timerId, true, alarm.alarmInfo, alarm.alarmIndex); // 2nd arg is isSnooze
+	console.warn('alarm index in snooze', JSON.stringify(alarm));
+	resetAlarm(alarm.alarmInfo.timerId, true, alarm.alarmInfo, alarm.index); // 2nd arg is isSnooze
 }
 
 export default (props) => {

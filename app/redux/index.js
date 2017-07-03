@@ -11,7 +11,7 @@ const UNSET_ALARM_RINGING = 'UNSET_ALARM_RINGING';
 const setAlarms = (alarms) => ({ type: SET_ALARMS, alarms });
 const setCurrentAlarm = (alarm, alarmIndex) => ({ type: SET_CURRENT_ALARM, alarm, alarmIndex });
 const unsetCurrentAlarm = () => ({ type: UNSET_CURRENT_ALARM });
-const setAlarmRinging = (alarm) => ({ type: SET_ALARM_RINGING, alarm });
+const setAlarmRinging = (alarm, alarmIndex) => ({ type: SET_ALARM_RINGING, alarm, alarmIndex });
 const unsetAlarmRinging = () => ({ type: UNSET_ALARM_RINGING });
 
 /* ------------------------------- REDUCERS ------------------------------- */
@@ -53,6 +53,7 @@ export default (state = initialState, action) => {
 		default:
 			break;
 	}
+	console.log('i am your new state', newState.alarmRinging);
 	return newState;
 }
 
@@ -115,8 +116,8 @@ const updateAlarmsInAsyncStorage = (alarms) => {
 	}
 }
 
-export const triggerAlarm = (alarm) => {
-	return setAlarmRinging(alarm);
+export const triggerAlarm = (alarm, alarmIndex) => {
+	return setAlarmRinging(alarm, alarmIndex);
 }
 
 export const silenceAlarm = () => {
