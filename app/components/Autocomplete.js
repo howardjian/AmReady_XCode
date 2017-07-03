@@ -1,6 +1,5 @@
-import PlacesAutoComplete from 'react-native-places-autocomplete';
 import React, {Component} from 'react';
-import {SearchBar, Divider, Button} from 'react-native-elements';
+import {SearchBar, Divider, Button, TouchableHightLight} from 'react-native-elements';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 
 
@@ -10,16 +9,17 @@ export default class extends Component {
         super(props);
         this.state = {
             searchText:'',
-            userLocation:''
+            userLocation:'',
+            possibleLocations:[]
         }
      
     }
 
-    componentDidMount(){
+    componentDidMount(){  
         navigator.geolocation.getCurrentPosition(
             (location)=>{this.setState({userLocation:location})
         })
-    }//this.state.userLocation.longitude
+    }
     textChange(string){
         let baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
         let url = `input=${string}&types=establishment&location=
@@ -32,23 +32,33 @@ export default class extends Component {
         .then(data => {
             return data.json();
         })
-        .then(object => {
-            console.log(object)
+        .then(locations => {
+            this.setState({currentTerm:string,possibleLocations:locations.predictions})
         })
     }
-    //AIzaSyDfu6FrpQXz4TaxbnOzWVb69YFVSBNPFo0
+
     render(){
         return (
-            <SearchBar
-            ref='searchBar'
-            placeholder='Search'
-            onChangeText={text => {
-                this.textChange(text);
-                }}
-                onSearchButtonPress={()=> {}}
-                
-                onCancelButtonPress={()=> {}}
-                />
+            <View>
+                <SearchBar 
+                    ref='searchBar'
+                    value={this.state.currentTerm}   
+                    onChangeText={text => {this.textChange(text)}}
+                    />
+                    {
+                        this.state.possibleLocations ? 
+                        this.state.possibleLocations.map(places => {
+                            return (
+                                <Button small key={places.id}
+                                title={places.description}
+                                onPress={()=>{this.setState({currentTerm:places.description, possibleLocations:null})}}
+                                />
+                            )
+                        })
+                        :
+                        null
+                    }
+            </View>
         )
     }
 }
