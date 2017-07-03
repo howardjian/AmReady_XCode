@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map from './Map';
 import { decode } from '../../utils/utils';
+import PlacesAutoComplete from 'react-native-places-autocomplete';
 
 export default class extends Component {
     constructor(props){
@@ -43,7 +44,7 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-
+    //AIzaSyDeLijmYBeZMZA2UN2vAB_AYj9PHya8JjY
     getDirections(){
       if(this.state.start && this.state.end){
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
