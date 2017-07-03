@@ -9,12 +9,12 @@ export default function({transit,icon, index, selectRoute, duration}) {
 
       <Text>Duration</Text>
       <Text> {duration} </Text>
-      
+
       <Image
       style={{width: 20, height: 20}}
       source = {{uri: `https:${icon}`}}
       />
-      <Button  title="Select Route"   onPress={() => { selectRoute(index)}}/>
+    <Button  title="Select Route"   onPress={() => { selectRoute(index, duration)}}/>
     </View>
   )
 }

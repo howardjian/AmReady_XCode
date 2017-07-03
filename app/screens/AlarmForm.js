@@ -12,6 +12,8 @@ import {setTimer} from '../features/Audio';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
+import { Divider } from 'react-native-elements';
+import { Container, Content, Form, Item, Input, Label } from 'native-base';
 
 class AlarmForm extends React.Component  {
 	constructor (props) {
@@ -28,7 +30,6 @@ class AlarmForm extends React.Component  {
       directions:false,
       trainOptions: [],
       routeSelectedBool: false,
-      routeIndex: null,
       prepTime: '',
       duration:'',
       arrivalTime: new Date(),
@@ -51,20 +52,21 @@ class AlarmForm extends React.Component  {
 
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.handleSave });
+    // console.log(this.props);
+    // console.log(this.state);
   }
 
   componentWillUnmount() {
     this.props.unselectAlarm();
   }
 
-  handleChange(changedState) {
+  updateNewState(changedState) {
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
 
 	saveAlarmDetails(alarms, currentAlarm, alarmIndex) {
     if (alarmIndex !== null) {
-        console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
         return this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
     } else {
         return this.props.saveAlarm(alarms, currentAlarm)
@@ -89,7 +91,6 @@ class AlarmForm extends React.Component  {
               console.warn('TIMER ID', this.state.timerId);
           }
       })
-      // .catch(console.error().bind(this));
       this.navigateHome();
   }
 
@@ -109,31 +110,76 @@ class AlarmForm extends React.Component  {
 
 	render () {
 		return (
-      <ScrollView style={styles.window}>
-        <TextInput
-          onChangeText={(alarmName) => {this.setState({alarmName})}}
-          value={this.state.alarmName}
-          style={styles.input}
-          placeholder="Alarm Name">
-        </TextInput>
-        <Text style={styles.item}>Arrival Time</Text>
-        <DatePickerIOS
-          date={new Date(this.state.arrivalTime)}
-          mode='time'
-          timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
-          onDateChange={this.onDateChange}
-          />
-        <TextInput
-          onChangeText={(prepTime) => {this.setState({prepTime})}}
-          value={this.state.prepTime}
-          style={styles.input}
-          placeholder="Prep time">
-        </TextInput>
-        <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
+      <ScrollView>
+        <Container style={{backgroundColor: '#333333'}}>
+          <Content>
+            <Form>
+              <Item floatingLabel style={{ width: 340 }}>
+                <Label style={{color: '#5e5e5e', fontWeight: 'bold'}}>Alarm Name</Label>
+                <Input
+                 style={{ color: 'white' }}
+                 onChangeText={(alarmName) => {this.setState({alarmName})}}
+                 value={this.state.alarmName}
+                />
+              </Item>
+              <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+              <Text style={{color: '#5e5e5e', fontSize: 18, paddingLeft: 15}}>Arrival Time</Text>
+              <DatePickerIOS
+                date={new Date(this.state.arrivalTime)}
+                mode='time'
+                timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
+                onDateChange={this.onDateChange}
+              />
+              <Item floatingLabel style={{ width: 340 }}>
+                <Label style={{color: '#5e5e5e'}}>Preparation Time</Label>
+                <Input
+                 style={{color: 'white' }}
+                 onChangeText={(prepTime) => {this.setState({prepTime})}}
+                 value={this.state.prepTime}
+                />
+              </Item>
+
+              <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+              <Directions updateNewState={this.updateNewState} alarmInfo={this.state} />
+
+            </Form>
+          </Content>
+        </Container>
       </ScrollView>
     )
 	}
 }
+
+const styles = StyleSheet.create({
+  window: { backgroundColor: '#333333' },
+  item: { width: 340 },
+  label: { color: '#5e5e5e' },
+  input: { color: 'white' }
+})
+
+// <ScrollView style={styles.window}>
+//         <FormInput
+//           onChangeText={(alarmName) => {this.setState({alarmName})}}
+//           value={this.state.alarmName}
+//           // style={styles.input}
+//           placeholder="Alarm Name">
+//         </FormInput>
+//         <Text style={styles.item}>Arrival Time</Text>
+//         <DatePickerIOS
+//           date={new Date(this.state.arrivalTime)}
+//           mode='time'
+//           timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
+//           onDateChange={this.onDateChange}
+//           />
+//         <TextInput
+//           onChangeText={(prepTime) => {this.setState({prepTime})}}
+//           value={this.state.prepTime}
+//           style={styles.input}
+//           placeholder="Prep time">
+//         </TextInput>
+//         <Directions handleChange={this.handleChange} getDuration={this.getDuration} alarmInfo={this.state} />
+//       </ScrollView>
+
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}
@@ -148,29 +194,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlarmForm);
-
-const styles = StyleSheet.create({
-  window:{
-    borderColor: 'green'
-  },
-  container: {
-   flex: 1,
-   paddingTop: 22
-  },
-  list: {
-    padding: 10,
-  },
-  item: {
-    fontSize: 18,
-    height: 44,
-  },
-  input: {
-    paddingLeft: 15,
-    height: 40,
-    alignSelf: 'center',
-    width: '90%',
-    borderRadius: 7,
-    borderColor: 'gray',
-    borderWidth: 2
-  }
-})
