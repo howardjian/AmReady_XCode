@@ -74,32 +74,29 @@ class AlarmForm extends React.Component  {
     const currentAlarm = AsyncStorageFormat(this.state);
     if (alarmIndex !== null) {
         console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
-        this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
     } else {
-        this.props.saveAlarm(alarms, currentAlarm)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
 
   handleSave() {
-          // set background timer
-      if (!this.state.timerId) {
-        const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
-        this.setState({timerId}, () => {
-            this.saveAlarmDetails();
-        });
-        console.warn('CREATED TIMER ID', timerId);
-      } else {
-        // need to write in case where we are editing an alarm
-        console.warn('TIMER ID', this.state.timerId);
-      }
-      // this.props.unselectAlarm(); // testing this in componentWillUnmount
-
+      const alarmIndex = this.props.currentAlarm.index;
+      const currentAlarm = AsyncStorageFormat(this.state);
+      // save in async storage
+      this.saveAlarmDetails()
+      .then((result) => {
+          console.log('RESULT', result);
+          if (!this.state.timerId) {
+              const timerId = setTimer(currentAlarm, alarmIndex);
+              this.setState({timerId}, () => {
+                  this.saveAlarmDetails();
+                  console.warn('CREATED TIMER ID', timerId);
+              });
+          } else {
+              console.warn('TIMER ID', this.state.timerId);
+          }
+      })
       this.navigateHome();
   }
 

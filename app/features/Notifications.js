@@ -8,8 +8,8 @@ export function createLocalNotification (alarm, alarmIndex) {
 	    soundName: 'chime.aiff',
 	    category: '',
 	    userInfo: {
-	    	alarm,
-	    	alarmIndex
+	    	alarm: JSON.stringify(alarm),
+	    	alarmIndex: String(alarmIndex)
 	    }
 	});
 }

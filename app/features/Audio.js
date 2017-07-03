@@ -3,6 +3,8 @@ import Sound from 'react-native-sound';
 import BackgroundTimer from 'react-native-background-timer';
 import {createLocalNotification, cancelNotification} from './Notifications';
 
+let audioId = null;
+
 export function playAudio () {
   // Enable playback in silence mode (iOS only)
   Sound.setCategory('Playback');
@@ -29,18 +31,27 @@ export function playAudio () {
     // Position the sound to the full right in a stereo field
     sound.setPan(1);
     // Loop indefinitely until stop() is called
-    // sound.setNumberOfLoops(-1);
+    sound.setNumberOfLoops(-1);
   });
   return sound;
 }
 
-export function stopAudio(backgroundTimerId, notification, snoozeTime) {
+export function stopAudio(backgroundTimerId, snoozeTime) {
     // add in snooze
-    BackgroundTimer.clearInterval(backgroundTimerId);
-    cancelNotification(notification);
+    console.warn('CLEARING TIME', backgroundTimerId);
+    BackgroundTimer.clearTimeout(backgroundTimerId);
+    cancelNotification();
+    console.warn('AUDIO SOUND', audioId);
+    audioId.stop();
 }
 
-export function setTimer (arrivalTimeStr, prepTime, duration) {
+export function setTimer (alarm, alarmIndex) {
+    const arrivalTimeStr = alarm.arrivalTime;
+    const prepTime = +alarm.prepTime || 0;
+    const duration = +alarm.route.duration || 0;
+
+    console.warn(arrivalTimeStr, prepTime, duration);
+
     let timeInMinUntilAlarmTriggers = calcTimeInMin(arrivalTimeStr)
       - prepTime // in min
       - (duration / 60) // in sec, convert to min
@@ -48,10 +59,20 @@ export function setTimer (arrivalTimeStr, prepTime, duration) {
 
     // setInterval does not like negative numbers
     timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers < 0 ? 0 : timeInMinUntilAlarmTriggers;
+    
+    console.warn('TIME', timeInMinUntilAlarmTriggers);
+    
+    // this is a bit hacky
+    // we need to pass the timerId to the notification object so the timer can be turned off eventually
+    // the BackgroundTimer id is returned from setTimeout, but we don't have access to it inside of the callback function
+    // to get the id, we can auto-increment the BackgroundTimer uniqueId, which is exactly what happens inside
+    // of setTimeout before the timerId is returned
+    const nextBackgroundTimerId = BackgroundTimer.uniqueId++;
+    const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId: nextBackgroundTimerId });
 
-    return BackgroundTimer.setInterval(() => {
-         playAudio();
-         createLocalNotification();
+    return BackgroundTimer.setTimeout(function () {
+         audioId = playAudio();
+         createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
       }, timeInMinUntilAlarmTriggers * 60000);
 }
 

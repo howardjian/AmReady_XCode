@@ -14,9 +14,9 @@ class Home extends React.Component {
       // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    onNotificationReceived(notification) {
-      console.warn("Notification Received", JSON.stringify(notification));
-      const alarm = notification.data.alarm;
-      const alarmIndex = notification.data.alarmIndex;
+      console.warn("Notification Received", notification);
+      const alarm = JSON.parse(notification._data.alarm);
+      const alarmIndex = +notification._data.alarmIndex;
       this.props.triggerAlarm(alarm, alarmIndex);
    }
 
@@ -29,7 +29,7 @@ class Home extends React.Component {
 
    render() {
       if (this.props.alarmRinging.index !== null) {
-         return <Clock timerId={1} notification={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
+         return <Clock alarm={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
       } else if (this.props.alarms) {
          return (
             <AlarmSelector
