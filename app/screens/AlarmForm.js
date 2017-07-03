@@ -39,7 +39,7 @@ class AlarmForm extends React.Component  {
 		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
-    this.updateNewState = this.updateNewState.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
 	}
 
@@ -65,37 +65,32 @@ class AlarmForm extends React.Component  {
     this.setState(newState);
   }
 
-	saveAlarmDetails() {
-    const alarms = this.props.alarms;
-    const alarmIndex = this.props.currentAlarm.index;
-    const currentAlarm = AsyncStorageFormat(this.state);
+	saveAlarmDetails(alarms, currentAlarm, alarmIndex) {
     if (alarmIndex !== null) {
-        console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
-        this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
     } else {
-        this.props.saveAlarm(alarms, currentAlarm)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
 
   handleSave() {
-          // set background timer
-      if (!this.state.timerId) {
-        const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
-        this.setState({timerId}, () => {
-            this.saveAlarmDetails();
-        });
-        console.warn('CREATED TIMER ID', timerId);
-      } else {
-        // need to be able to kill current timer and create a new one
-        this.saveAlarmDetails();
-        console.warn('TIMER ID', this.state.timerId);
-      }
+      const alarms = this.props.alarms;
+      const alarmIndex = this.props.currentAlarm.index;
+      const currentAlarm = AsyncStorageFormat(this.state);
+      // save in async storage
+      this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
+      .then((result) => {
+          console.log('RESULT', result);
+          if (!currentAlarm.timerId) {
+              const timerId = setTimer(currentAlarm, alarmIndex);
+              this.setState({timerId}, () => {
+                  this.props.updateAlarm(alarms, currentAlarm, alarmIndex);
+                  console.warn('CREATED TIMER ID', timerId);
+              });
+          } else {
+              console.warn('TIMER ID', this.state.timerId);
+          }
+      })
       this.navigateHome();
   }
 
