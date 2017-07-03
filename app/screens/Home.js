@@ -9,7 +9,7 @@ import { selectAlarm, triggerAlarm, silenceAlarm } from '../redux';
 class Home extends React.Component {
    constructor (props) {
       super(props);
-      NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
+      NotificationsIOS.addEventListener('notificationReceivedForeground', this.confirmUnmounted.bind(this));
       // NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
       // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
@@ -26,6 +26,10 @@ class Home extends React.Component {
       NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
       // NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
       // NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
+   }
+
+   confirmUnmounted () {
+      console.warn('component unmounted');
    }
 
    render() {
