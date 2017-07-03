@@ -39,7 +39,7 @@ class AlarmForm extends React.Component  {
 		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.updateNewState = this.updateNewState.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
 	}
 
