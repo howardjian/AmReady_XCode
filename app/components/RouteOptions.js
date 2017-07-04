@@ -1,20 +1,28 @@
-import React, {Component} from 'react';
-import {Text, View , Button, Image } from 'react-native';
+import React from 'react';
+import {Text, View, Image } from 'react-native';
+import { Button } from 'native-base';
+import { Divider} from 'react-native-elements';
+
+export default ({icon, duration}) => {
+
+ const d = Math.ceil(duration / 60);
+
+ return (
+   <View >
 
 
-export default function({transit,icon, index, selectRoute, duration}) {
-  return (
-    <View>
-      <Text>{transit} </Text>
+     <Button  style={{width: 340, alignSelf: 'center', backgroundColor: '#878787', borderRadius: 3}}>
+       <Text style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}> <Image
+       style={{width: 20, height: 20}}
+        source = {{uri: `https:${icon}`}}
+     /> Duration: <Text style={{color: 'white', fontSize: 18, paddingLeft: 15}}> {' ' + d +' minutes'} </Text></Text>
 
-      <Text>Duration</Text>
-      <Text> {duration} </Text>
+     </Button>
 
-      <Image
-      style={{width: 20, height: 20}}
-      source = {{uri: `https:${icon}`}}
-      />
-    <Button  title="Select Route"   onPress={() => { selectRoute(index, duration)}}/>
-    </View>
-  )
+
+     <Divider style={{paddingTop: 8, backgroundColor: '#333333'}} />
+
+
+   </View>
+ )
 }

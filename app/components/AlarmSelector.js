@@ -1,14 +1,63 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-// import { Container, Content, Card, CardItem, Body } from 'native-base';
-import { Container, Content, Button, Text } from 'native-base';
+import { View, FlatList, StyleSheet, Text, Button} from 'react-native';
+import { connect } from 'react-redux';
+import { deleteSelectedAlarm, setCurrentAlarm } from '../redux';
+import Swipeout from 'react-native-swipeout';
 
+class AlarmSelector extends React.Component   {
+		constructor (props) {
+			super(props);
+			this.state = {
+				alarms: this.props.alarms
+			}
 
-export default function ({alarms, navigation, setCurrentAlarm}) {
-	const alarmKeys = alarms.map((alarm, index) => {
-		return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
-	});
-	return (
+			this.deleteAlarm = this.deleteAlarm.bind(this);
+		}
+
+	componentWillMount(){
+
+	}
+
+	componentDidMount () {
+
+	}
+
+	  // renderRow(rowData) {
+    // let swipeBtns = [{
+    //   text: 'Delete',
+    //   backgroundColor: 'red',
+    //   underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+    //   onPress: () => { this.deleteNote(rowData) }
+    // }];
+
+    // return (
+    //   <Swipeout right={swipeBtns}
+    //     autoClose='true'
+    //     backgroundColor= 'transparent'>
+    //     <TouchableHighlight
+    //       underlayColor='rgba(192,192,192,1,0.6)'
+    //       onPress={this.viewNote.bind(this, rowData)} >
+    //       <View>
+    //         <View style={styles.rowContainer}>
+    //           <Text style={styles.note}> {rowData} </Text>
+    //         </View>
+    //         <Divider />
+    //       </View>
+    //     </TouchableHighlight>
+    //   </Swipeout>
+    // )
+		// }
+
+	deleteAlarm(){
+
+	}
+
+	render(){
+			const alarmKeys = this.props.alarms.map((alarm, index) => {
+				return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
+			});
+
+			return (
 		<View style={styles.container}>
 			{
 				alarmKeys.length ?
@@ -20,7 +69,7 @@ export default function ({alarms, navigation, setCurrentAlarm}) {
 							title={alarm.alarmName}
 							onPress={ () => {
 								setCurrentAlarm(alarm, index);
-								navigation.navigate('alarmDetail', {alarm})
+								this.props.navigation.navigate('alarmDetail', {alarm})
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
 							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
@@ -32,79 +81,52 @@ export default function ({alarms, navigation, setCurrentAlarm}) {
 			}
 		</View>
 	)
+
+		}
+  }
+
+
+const mapStateToProps = ({alarms, currentAlarm}) => {
+   return {alarms, currentAlarm}
 }
 
+const mapDispatchToProps = (dispatch) => {
+   return {
+		 		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm)
+   }
+}
 
-
-// <Container>
-// 									<Button>
-// 										<Content>
-// 											<Card>
-// 												<CardItem header>
-// 													<Text>NativeBase</Text>
-// 												</CardItem>
-// 												<CardItem>
-// 													<Body>
-// 														<Text>
-// 															//Your text here
-// 														</Text>
-// 													</Body>
-// 												</CardItem>
-// 												<CardItem footer>
-// 													<Text>GeekyAnts</Text>
-// 												</CardItem>
-// 										</Card>
-// 										</Content>
-// 									</Button>
-// 									</Container>
+export default connect(mapStateToProps, mapDispatchToProps)(AlarmSelector);
 
 
 
-// <Item floatingLabel style={{ width: 340 }}>
-//                 <Label style={{color: '#5e5e5e', fontWeight: 'bold'}}>Alarm Name</Label>
-//                 <Input
-//                  style={{ color: 'white' }}
-//                  onChangeText={(alarmName) => {this.setState({alarmName})}}
-//                  value={this.state.alarmName}
-//                 />
-//               </Item>
 
 
 
-		// <View style={styles.container}>
-		// 	{
-		// 		alarmKeys ?
-		// 		<FlatList data={alarmKeys}
-		// 		renderItem={({item}) => {
-		// 			const alarm = alarmInfo[item.key];
-		// 			return (
-		// 				<Button style={styles.list}
-		// 					title={item.key}
-		// 					onPress={ () => {
-		// 						navigation.navigate('alarmDetail', {alarm: alarm, data:data})
-		// 					} }
-		// 					accessibilityLabel={`Click to view ${item.key} alarm details`}>
-		// 					<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-
-		// 				</Button>
-		// 			)
-		// 		}
-		// 		} /> : null
-		// 	}
-		// </View>
-
-
-
-const styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
-   flex: 1,
-   paddingTop: 22
+    marginTop: 65,
+    flex: 1,
   },
-  list: {
+  titleText: {
     padding: 10,
-  },
-  item: {
     fontSize: 18,
-    height: 44,
-  }
-})
+    color: '#111',
+    flex: 1
+  },
+  noteText: {
+    padding: 10,
+    flex: 18
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white'
+  },
+  button: {
+    height: 60,
+    backgroundColor: '#48BBEC',
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
