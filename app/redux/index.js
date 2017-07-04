@@ -32,6 +32,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	let newState = Object.assign({}, state);
+	newState.alarmRinging = Object.assign({}, newState.alarmRinging);
+	newState.currentAlarm = Object.assign({}, newState.currentAlarm);
 	switch (action.type) {
 		case SET_ALARMS:
 			newState.alarms = action.alarms;
@@ -53,7 +55,6 @@ export default (state = initialState, action) => {
 		default:
 			break;
 	}
-	console.log('i am your new state', newState.alarmRinging);
 	return newState;
 }
 
@@ -62,7 +63,6 @@ export const getAlarmsFromAsyncStorage = () => {
 	return dispatch => {
 		AsyncStorage.getItem('alarms')
 		.then((alarms) => {
-			// console.error('1', alarms);
 			alarms = alarms || '[]';
         	dispatch(setAlarms(JSON.parse(alarms)));
     	})

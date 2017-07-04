@@ -8,7 +8,7 @@ import {
   DatePickerIOS } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
-import {setTimer} from '../features/Audio';
+import { setTimer, clearBackgroundTimer } from '../features/Audio';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
@@ -77,16 +77,19 @@ class AlarmForm extends React.Component  {
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
       .then((result) => {
-          console.log('RESULT', result);
-          if (!currentAlarm.timerId) {
-              const timerId = setTimer(currentAlarm, alarmIndex);
-              this.setState({timerId}, () => {
-                  this.props.updateAlarm(alarms, currentAlarm, alarmIndex);
-                  console.warn('CREATED TIMER ID', timerId);
-              });
-          } else {
-              console.warn('TIMER ID', this.state.timerId);
+          // if there exists a background timer already, clear it and create a new one
+          // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
+          // we will reset after each edit)
+          if (currentAlarm.timerId) {
+              console.warn('resetting the background timer', currentAlarm.timerId);
+              clearBackgroundTimer(currentAlarm.timerId);
           }
+          const timerId = setTimer(currentAlarm, alarmIndex);
+          console.log('timerId', timerId);
+          this.setState({timerId}, () => {
+              this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
+              console.warn('CREATED TIMER ID', timerId);
+          });
       })
       this.navigateHome();
   }

@@ -14,11 +14,13 @@ class Home extends React.Component {
       // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    onNotificationReceived(notification) {
-      console.warn("Notification Received", notification);
-      const alarm = JSON.parse(notification._data.alarm);
-      const alarmIndex = +notification._data.alarmIndex;
-      console.warn('ALARM INDEX:', alarmIndex);
-      this.props.triggerAlarm(alarm, alarmIndex);
+      // only do this if there is no alarm ringing currently
+      if (this.props.alarmRinging.index === null) {
+         console.warn("Notification Received", notification);
+         const alarm = JSON.parse(notification._data.alarm);
+         const alarmIndex = +notification._data.alarmIndex;
+         this.props.triggerAlarm(alarm, alarmIndex);
+      }
    }
 
    componentWillUnmount() {
@@ -29,7 +31,6 @@ class Home extends React.Component {
    }
 
    render() {
-      console.warn('I AM RENDERING', this.props.alarmRinging);
       if (this.props.alarmRinging.index !== null) {
          return <Clock alarm={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
       } else if (this.props.alarms) {

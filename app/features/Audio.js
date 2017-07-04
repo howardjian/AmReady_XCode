@@ -41,11 +41,15 @@ export function playAudio () {
 
 export function resetAlarm(backgroundTimerId, setSnooze, alarm, alarmIndex) {
     console.warn('CLEARING TIME', backgroundTimerId);
-    BackgroundTimer.clearTimeout(backgroundTimerId);
+    clearBackgroundTimer(backgroundTimerId);
     cancelNotification(localNotification);
     console.warn('AUDIO SOUND', audioId);
     audioId.stop();
     if (setSnooze) setTimer(alarm, alarmIndex, true);
+}
+
+export function clearBackgroundTimer(backgroundTimerId) {
+    BackgroundTimer.clearTimeout(backgroundTimerId);
 }
 
 export function setTimer (alarm, alarmIndex, setSnooze = false) {
