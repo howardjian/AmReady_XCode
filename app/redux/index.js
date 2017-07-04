@@ -53,6 +53,8 @@ export const getAlarmsFromAsyncStorage = () => {
 	}
 }
 
+// export const deleteAlarm =
+
 export const saveNewAlarm = (currentAlarms, newAlarm) => {
 	currentAlarms.push(newAlarm);
 	return !currentAlarms.length ?
