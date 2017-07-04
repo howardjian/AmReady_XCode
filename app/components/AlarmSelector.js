@@ -4,13 +4,6 @@ import { connect } from 'react-redux';
 import { updateAlarm, deleteSelectedAlarm, unselectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
 
-// import { Container, Content, Card, CardItem, Body } from 'native-base';
-// import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../redux';
-// import { Container, Content, Button, Text } from 'native-base';
-// import { List, ListItem } from 'react-native-elements'
-
-
-
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
@@ -88,14 +81,6 @@ class AlarmSelector extends React.Component   {
 			}
 		</View>
 	)
-		// 	 return (
-    //   <View style={styles.container}>
-
-    //     <ListView
-    //       dataSource={this.state.dataSource}
-    //       renderRow={this.renderRow.bind(this)} />
-    //   </View>
-    // )
 
 		}
   }
@@ -108,9 +93,6 @@ const mapStateToProps = ({alarms, currentAlarm}) => {
 const mapDispatchToProps = (dispatch) => {
    return {
 		 		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm)
-        // updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
-        // saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
-        // unselectAlarm: () => dispatch(unselectAlarm())
    }
 }
 
@@ -148,64 +130,3 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-
-
-// 		render(){
-// 			console.warn("render", this.state.alarms)
-// 			// const alarms  = this.props.alarms ? this.setState({alarms: this.props.alarms}) : null;
-// 			// this.props.alarms ? this.setState({alarms: this.props.alarms}) : '';
-// 			const alarmInfo = {};
-// 			const alarmKeys = this.props.alarms && this.props.alarms ? this.props.alarms.map((alarm) => {
-// 				console.warn("A", alarm)
-// 				alarmInfo[alarm.alarmName] = alarm;
-// 				return {key: alarm.alarmName}
-// 			}) : null;
-
-// 			return (
-
-
-// 					<View style={styles.container}>
-// 			{
-// 				alarmKeys ?
-// 				<FlatList data={alarmKeys}
-// 				renderItem={({item}) => {
-// 					const alarm = alarmInfo[item.key];
-// 					return (
-// 						<Button style={styles.list}
-// 							title={item.key}
-// 							onPress={ () => {
-// 								navigation.navigate('alarmDetail', {alarm: alarm, data:data})
-// 							} }
-// 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
-// 							<Text style={styles.item}>{item.key} | {alarm.arrivalTime}</Text>
-
-// 						</Button>
-// 					)
-// 				}
-// 				} /> : null
-// 			}
-// 		</View>
-// 		)}
-// }
-
-
-// const mapDispatchToProps = (dispatch) => ({
-// 	getAlarms: () => dispatch(getAlarmsFromAsyncStorage()),
-// 	seedDatabase: (alarms) => dispatch(createAlarmsInAsyncStorage(alarms))
-// })
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//    flex: 1,
-//    paddingTop: 22
-//   },
-//   list: {
-//     padding: 10,
-//   },
-//   item: {
-//     fontSize: 18,
-//     height: 44,
-//   }
-// })
