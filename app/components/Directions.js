@@ -149,35 +149,21 @@ export default class extends Component {
             {
               <View>
                 <Autocomplete locationChangeHandler={this.getTheStartAddress} />
-                   {/*<SearchBar
-                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-                       inputStyle={{backgroundColor: '#333333', color: 'white' }}
-                       onChangeText={(start) => {
-                         this.setState({start})
-                       }}
-                       placeholder='From...'
-                       value={this.state.start}
-                    />*/}
-                    <Divider style={{width: 340, alignSelf:'center'}}/>
-                    <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
-                    <Autocomplete locationChangeHandler={this.getTheEndAddress} />
-                   {/*<SearchBar
-                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-                       inputStyle={{backgroundColor: '#333333', color: 'white'}}
-                       onChangeText={(end) => this.setState({end})}
-                       placeholder='To...'
-                       value={this.state.end}
-                       />*/}
-                  <Divider style={{width: 340, alignSelf:'center'}}/>
 
-                  <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+                <Divider style={{width: 340, alignSelf:'center'}}/>
+                <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
 
-                   <Button
-                    large
-                    icon={{name: 'subway'}}
-                    onPress={this.getDirections}
-                    title="Get Directions"
-                   />
+                <Autocomplete locationChangeHandler={this.getTheEndAddress} />
+  
+                <Divider style={{width: 340, alignSelf:'center'}}/>
+                <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+
+                <Button
+                large
+                icon={{name: 'subway'}}
+                onPress={this.getDirections}
+                title="Get Directions"
+                />
               </View>
             }{
               this.state.directions && (
