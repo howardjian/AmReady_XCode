@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map from './Map';
 import { decode } from '../../utils/utils';
+import Autocomplete from './Autocomplete';
 
 export default class extends Component {
     constructor(props){
@@ -33,6 +34,8 @@ export default class extends Component {
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
         this.updateNewState = this.updateNewState.bind(this);
+        this.getTheStartAddress = this.getTheStartAddress.bind(this);
+        this.getTheEndAddress = this.getTheEndAddress.bind(this);
     }
 
     createStartAndEndLatLong(directionsObj){
@@ -43,7 +46,7 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-
+    
     getDirections(){
       if(this.state.start && this.state.end){
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -132,43 +135,37 @@ export default class extends Component {
       })
     }
 
+    getTheStartAddress(start){
+        this.setState({start})
+    }
+
+    getTheEndAddress(end){
+      this.setState({end})
+    }
+
     render(){
         return (
           <View>
             {
               <View>
+                <Autocomplete locationChangeHandler={this.getTheStartAddress} placeHolder='From...' />
 
-                   <SearchBar
-                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-                       inputStyle={{backgroundColor: '#333333', color: 'white' }}
-                       onChangeText={(start) => {
-                         this.setState({start})
-                       }}
-                       placeholder='From...'
-                       value={this.state.start}
-                    />
-                    <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
-                    <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
+                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-                   <SearchBar
-                       containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-                       inputStyle={{backgroundColor: '#333333', color: 'white'}}
-                       onChangeText={(end) => this.setState({end})}
-                       placeholder='To...'
-                       value={this.state.end}
-                       />
-                  <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Autocomplete locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
+  
+                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-                  <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
-
-                   <Button
-                    backgroundColor={ '#00BFFF' }
-                    small
-                    icon={{name: 'subway'}}
-                    onPress={this.getDirections}
-                    title="Get Directions"
-                   />
-                   <Divider style={{paddingTop: 5, backgroundColor: '#333333'}}/>
+               <Button
+                backgroundColor={ '#00BFFF' }
+                small
+                icon={{name: 'subway'}}
+                onPress={this.getDirections}
+                title="Get Directions"
+               />
+               <Divider style={{paddingTop: 5, backgroundColor: '#333333'}} />
               </View>
             }{
               this.state.directions && (

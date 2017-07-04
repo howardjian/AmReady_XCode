@@ -64,6 +64,7 @@
 		22E28DDF9E764FB1803FC7E9 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EA65FF43DEB4008A5C779E8 /* rubicon-icon-font.ttf */; };
 		FF306D89554D4FC5B3C296D7 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08E2C8398CA04142864F874C /* SimpleLineIcons.ttf */; };
 		0447E2D1922F4A458EE2A359 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8118CAC42BCF4BBCB2B4A214 /* Zocial.ttf */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +382,7 @@
 		8EA65FF43DEB4008A5C779E8 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		08E2C8398CA04142864F874C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		8118CAC42BCF4BBCB2B4A214 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

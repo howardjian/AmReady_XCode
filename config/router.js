@@ -6,6 +6,7 @@ import Home from '../app/screens/Home';
 import AlarmForm from '../app/screens/AlarmForm';
 import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../app/redux';
 
+
 class MainNavigator extends React.Component {
 	constructor(props) {
 		super(props);
