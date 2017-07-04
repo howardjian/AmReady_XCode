@@ -28,7 +28,7 @@ const Navigator = StackNavigator({
 		navigationOptions: ({navigation}) => ({
 			title: 'My Alarms',
 			headerRight: <Button title={'+'} onPress={ () =>
-				navigation.navigate('alarmDetail')
+				navigation.navigate('alarmDetail', this.props)
 			} />
 		})
 	},

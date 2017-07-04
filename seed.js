@@ -2,7 +2,7 @@ module.exports = {
    name: 'Candice',
    alarms: [
       {
-         timerId: null,
+         timerId: 1,
          alarmName: 'Class',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri'],
@@ -31,7 +31,7 @@ module.exports = {
          ]
       },
       {
-         timerId: 1,
+         timerId: 2,
          alarmName: 'Gym',
          isRecurring: 1,
          daysOfWeek: ['Mon', 'Tues', 'Thurs', 'Fri'],
@@ -60,7 +60,7 @@ module.exports = {
          ]
       },
       {
-         timerId: null,
+         timerId: 3,
          alarmName: 'Demo-Day',
          isRecurring: 1,
          daysOfWeek: ['Thurs'],

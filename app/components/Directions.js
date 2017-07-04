@@ -149,21 +149,40 @@ export default class extends Component {
             {
               <View>
                 <Autocomplete locationChangeHandler={this.getTheStartAddress} />
+          
+//                     <SearchBar
+//                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
+//                        inputStyle={{backgroundColor: '#333333', color: 'white' }}
+//                        onChangeText={(start) => {
+//                          this.setState({start})
+//                        }}
+//                        placeholder='From...'
+//                        value={this.state.start}
+//                     />
 
-                <Divider style={{width: 340, alignSelf:'center'}}/>
-                <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
                 <Autocomplete locationChangeHandler={this.getTheEndAddress} />
   
-                <Divider style={{width: 340, alignSelf:'center'}}/>
-                <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
+//                    <SearchBar
+//                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
+//                        inputStyle={{backgroundColor: '#333333', color: 'white'}}
+//                        onChangeText={(end) => this.setState({end})}
+//                        placeholder='To...'
+//                        value={this.state.end}
+//                        />
+                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-                <Button
-                large
+               <Button
+                backgroundColor={ '#00BFFF' }
+                small
                 icon={{name: 'subway'}}
                 onPress={this.getDirections}
                 title="Get Directions"
-                />
+               />
+               <Divider style={{paddingTop: 5, backgroundColor: '#333333'}} />
               </View>
             }{
               this.state.directions && (
@@ -183,6 +202,7 @@ export default class extends Component {
                     end_long={this.state.end_long}
                     />
                 }
+                  <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
                   <View>
                     {
                       this.state.trainOptions.length
@@ -198,7 +218,9 @@ export default class extends Component {
                       :
                       <Text>NO Routes Available</Text>
                     }
+
                   </View>
+
               </View>)
               }
           </View>
