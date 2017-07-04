@@ -52,7 +52,7 @@ export default class extends Component {
                 <SearchBar 
                     containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
                     inputStyle={{backgroundColor: '#333333', color: 'white' }}
-                    placeHolder={this.props.placeHolder}
+                    placeholder={this.props.placeHolder}
                     ref='searchBar'
                     value={this.state.currentTerm}   
                     onChangeText={text => {this.textChange(text)}}
