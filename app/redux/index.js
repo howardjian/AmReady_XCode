@@ -1,28 +1,39 @@
 import { AsyncStorage } from 'react-native';
 
 /* ------------------------------- ACTIONS ------------------------------- */
-export const SET_ALARMS = 'SET_ALARMS';
-export const SET_CURRENT_ALARM = 'SET_CURRENT_ALARM';
-export const UNSET_CURRENT_ALARM = 'UNSET_CURRENT_ALARM';
+const SET_ALARMS = 'SET_ALARMS';
+const SET_CURRENT_ALARM = 'SET_CURRENT_ALARM';
+const UNSET_CURRENT_ALARM = 'UNSET_CURRENT_ALARM';
+const SET_ALARM_RINGING = 'SET_ALARM_RINGING';
+const UNSET_ALARM_RINGING = 'UNSET_ALARM_RINGING';
 
 /* --------------------------- ACTION-CREATORS --------------------------- */
-export const setAlarms = (alarms) => ({ type: SET_ALARMS, alarms });
-export const setCurrentAlarm = (alarm, alarmIndex) => ({ type: SET_CURRENT_ALARM, alarm, alarmIndex });
-export const unsetCurrentAlarm = () => ({ type: UNSET_CURRENT_ALARM });
+const setAlarms = (alarms) => ({ type: SET_ALARMS, alarms });
+const setCurrentAlarm = (alarm, alarmIndex) => ({ type: SET_CURRENT_ALARM, alarm, alarmIndex });
+const unsetCurrentAlarm = () => ({ type: UNSET_CURRENT_ALARM });
+const setAlarmRinging = (alarm, alarmIndex) => ({ type: SET_ALARM_RINGING, alarm, alarmIndex });
+const unsetAlarmRinging = () => ({ type: UNSET_ALARM_RINGING });
 
 /* ------------------------------- REDUCERS ------------------------------- */
+const dummyAlarmObj = {
+	index: null,
+	alarmInfo: {}
+}
+
+const dummyAlarmObjCreator = () => Object.assign({}, dummyAlarmObj);
+
 const initialState = {
 	name: '',
 	alarms: [],
 	locations: [],
-	currentAlarm: {
-		index: null,
-		alarmInfo: {}
-	}
+	currentAlarm: dummyAlarmObjCreator(),
+	alarmRinging: dummyAlarmObjCreator()
 }
 
 export default (state = initialState, action) => {
 	let newState = Object.assign({}, state);
+	newState.alarmRinging = Object.assign({}, newState.alarmRinging);
+	newState.currentAlarm = Object.assign({}, newState.currentAlarm);
 	switch (action.type) {
 		case SET_ALARMS:
 			newState.alarms = action.alarms;
@@ -32,7 +43,14 @@ export default (state = initialState, action) => {
 			newState.currentAlarm.index = action.alarmIndex;
 			break;
 		case UNSET_CURRENT_ALARM:
-			newState.currentAlarm = {index: null, alarmInfo: {}};
+			newState.currentAlarm = dummyAlarmObjCreator();
+			break;
+		case SET_ALARM_RINGING:
+			newState.alarmRinging.alarmInfo = action.alarm;
+			newState.alarmRinging.index = action.alarmIndex;
+			break;
+		case UNSET_ALARM_RINGING:
+			newState.alarmRinging = dummyAlarmObjCreator();
 			break;
 		default:
 			break;
@@ -45,15 +63,12 @@ export const getAlarmsFromAsyncStorage = () => {
 	return dispatch => {
 		AsyncStorage.getItem('alarms')
 		.then((alarms) => {
-			// console.error('1', alarms);
 			alarms = alarms || '[]';
         	dispatch(setAlarms(JSON.parse(alarms)));
     	})
     	.catch(console.error.bind(console));
 	}
 }
-
-// export const deleteAlarm =
 
 export const saveNewAlarm = (currentAlarms, newAlarm) => {
 	currentAlarms.push(newAlarm);
@@ -99,4 +114,12 @@ const updateAlarmsInAsyncStorage = (alarms) => {
 	      dispatch(setAlarms(alarms));
 	    })
 	}
+}
+
+export const triggerAlarm = (alarm, alarmIndex) => {
+	return setAlarmRinging(alarm, alarmIndex);
+}
+
+export const silenceAlarm = () => {
+	return unsetAlarmRinging();
 }

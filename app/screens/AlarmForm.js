@@ -8,7 +8,7 @@ import {
   DatePickerIOS } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
-import {setTimer} from '../features/Audio';
+import { setTimer, clearBackgroundTimer } from '../features/Audio';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
@@ -41,12 +41,9 @@ class AlarmForm extends React.Component  {
     this.onDateChange = this.onDateChange.bind(this);
     this.updateNewState = this.updateNewState.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
-    // this.renderHeader = this.renderHeader.bind(this);
-    // this.renderContent = this.renderContent.bind(this);
 	}
 
   componentWillMount() {
-    // let selectedUserData = this.props.navigation.state.params
     if (this.props.currentAlarm.alarmInfo.alarmName) {
       this.setState(stateifyDbData(this.props.currentAlarm.alarmInfo));
     }
@@ -54,8 +51,6 @@ class AlarmForm extends React.Component  {
 
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.handleSave });
-    // console.log(this.props);
-    // console.log(this.state);
   }
 
   componentWillUnmount() {
@@ -67,37 +62,35 @@ class AlarmForm extends React.Component  {
     this.setState(newState);
   }
 
-	saveAlarmDetails() {
-    const alarms = this.props.alarms;
-    const alarmIndex = this.props.currentAlarm.index;
-    const currentAlarm = AsyncStorageFormat(this.state);
+	saveAlarmDetails(alarms, currentAlarm, alarmIndex) {
     if (alarmIndex !== null) {
-        console.warn('we are saving!', alarms, currentAlarm, alarmIndex);
-        this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.updateAlarm(alarms, currentAlarm, alarmIndex)
     } else {
-        this.props.saveAlarm(alarms, currentAlarm)
-        .then((result) => {
-          this.setTimer();
-        })
+        return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
 
   handleSave() {
-          // set background timer
-      if (!this.state.timerId) {
-        const timerId = setTimer(this.state.arrivalTime, +this.state.prepTime, +this.state.duration);
-        this.setState({timerId}, () => {
-            this.saveAlarmDetails();
-        });
-        console.warn('CREATED TIMER ID', timerId);
-      } else {
-        // need to be able to kill current timer and create a new one
-        this.saveAlarmDetails();
-        console.warn('TIMER ID', this.state.timerId);
-      }
+      const alarms = this.props.alarms;
+      const alarmIndex = this.props.currentAlarm.index;
+      const currentAlarm = AsyncStorageFormat(this.state);
+      // save in async storage
+      this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
+      .then((result) => {
+          // if there exists a background timer already, clear it and create a new one
+          // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
+          // we will reset after each edit)
+          if (currentAlarm.timerId) {
+              console.warn('resetting the background timer', currentAlarm.timerId);
+              clearBackgroundTimer(currentAlarm.timerId);
+          }
+          const timerId = setTimer(currentAlarm, alarmIndex);
+          console.log('timerId', timerId);
+          this.setState({timerId}, () => {
+              this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
+              console.warn('CREATED TIMER ID', timerId);
+          });
+      })
       this.navigateHome();
   }
 
@@ -121,7 +114,6 @@ class AlarmForm extends React.Component  {
 	render () {
 		return (
       <ScrollView>
-
         <Container style={{backgroundColor: '#333333'}}>
           <Content>
             <Form>
@@ -149,7 +141,7 @@ class AlarmForm extends React.Component  {
 
 
 
-              <Label style={{color: 'white', fontSize: 18, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time:</Label> {this.state.prepTime + ' minutes'}</Label>
+              <Label style={{color: 'white', fontSize: 18, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time:</Label> {+this.state.prepTime + ' minutes'}</Label>
 
               <Slider
                 minimumValue={0}
@@ -157,7 +149,7 @@ class AlarmForm extends React.Component  {
                 step={1}
                 thumbTintColor={'#00BFFF'}
                 style={{width: 340, alignSelf: 'center'}}
-                value={this.state.prepTime}
+                value={+this.state.prepTime}
                 onValueChange={(prepTime) => this.setState({prepTime})} />
 
 
@@ -172,14 +164,6 @@ class AlarmForm extends React.Component  {
 	}
 }
 
-              // <Item floatingLabel style={{ width: 340, borderColor: '#696969' }}>
-              //   <Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time</Label>
-              //   <Input
-              //    style={{color: 'white' }}
-              //    onChangeText={(prepTime) => {this.setState({prepTime})}}
-              //    value={this.state.prepTime}
-              //   />
-              // </Item>
 const styles = StyleSheet.create({
   window: { backgroundColor: '#333333' },
   item: { width: 340 },
