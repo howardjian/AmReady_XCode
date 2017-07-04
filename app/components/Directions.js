@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import RouteOptions from './RouteOptions';
 import Map from './Map';
 import { decode } from '../../utils/utils';
-import PlacesAutoComplete from 'react-native-places-autocomplete';
+import Autocomplete from './Autocomplete';
 
 export default class extends Component {
     constructor(props){
@@ -34,6 +34,8 @@ export default class extends Component {
         this.getDirections = this.getDirections.bind(this);
         this.selectRoute = this.selectRoute.bind(this);
         this.updateNewState = this.updateNewState.bind(this);
+        this.getTheStartAddress = this.getTheStartAddress.bind(this);
+        this.getTheEndAddress = this.getTheEndAddress.bind(this);
     }
 
     createStartAndEndLatLong(directionsObj){
@@ -133,12 +135,21 @@ export default class extends Component {
       })
     }
 
+    getTheStartAddress(start){
+        this.setState({start})
+    }
+
+    getTheEndAddress(end){
+      this.setState({end})
+    }
+
     render(){
         return (
           <View>
             {
               <View>
-                   <SearchBar
+                <Autocomplete locationChangeHandler={this.getTheStartAddress} />
+                   {/*<SearchBar
                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
                        inputStyle={{backgroundColor: '#333333', color: 'white' }}
                        onChangeText={(start) => {
@@ -146,17 +157,17 @@ export default class extends Component {
                        }}
                        placeholder='From...'
                        value={this.state.start}
-                    />
+                    />*/}
                     <Divider style={{width: 340, alignSelf:'center'}}/>
                     <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>
-
-                   <SearchBar
+                    <Autocomplete locationChangeHandler={this.getTheEndAddress} />
+                   {/*<SearchBar
                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
                        inputStyle={{backgroundColor: '#333333', color: 'white'}}
                        onChangeText={(end) => this.setState({end})}
                        placeholder='To...'
                        value={this.state.end}
-                       />
+                       />*/}
                   <Divider style={{width: 340, alignSelf:'center'}}/>
 
                   <Divider style={{paddingTop: 15, backgroundColor: '#333333'}}/>

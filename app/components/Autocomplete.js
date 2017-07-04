@@ -12,7 +12,7 @@ export default class extends Component {
             possibleLocations:[],
             currentValue:''
         }
-     
+     this.selectEvent = this.selectEvent.bind(this);
     }
 
     componentDidMount(){  
@@ -22,7 +22,7 @@ export default class extends Component {
     }
     textChange(string){
         let baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
-        let url = `input=${string}&types=establishment&location=
+        let url = `input=${string}&types=address&location=
                         ${this.state.userLocation.coords.latitude},
                         ${this.state.userLocation.coords.longitude}
                         &key=${"AIzaSyDfu6FrpQXz4TaxbnOzWVb69YFVSBNPFo0"}`;
@@ -33,10 +33,19 @@ export default class extends Component {
             return data.json();
         })
         .then(locations => {
+            
             this.setState({currentTerm:string,possibleLocations:locations.predictions})
         })
     }
 
+    selectEvent(places){
+         this.props.locationChangeHandler(places.description);
+         this.setState({
+             currentTerm:places.structured_formatting.main_text, 
+             possibleLocations:null,
+             currentValue:places.description
+            })
+    }
     render(){
         return (
             <View>
@@ -52,11 +61,7 @@ export default class extends Component {
                             return (
                                 <Button small key={places.id}
                                 title={places.description}
-                                onPress={()=>{this.setState({
-                                    currentTerm:places.structured_formatting.main_text, 
-                                    possibleLocations:null,
-                                    currentValue:places.description
-                                    })}}
+                                onPress={()=>{this.selectEvent(places)}}
                                 />
                             )
                         })

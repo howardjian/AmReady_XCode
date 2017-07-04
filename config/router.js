@@ -5,7 +5,7 @@ import { Button } from 'react-native';
 import Home from '../app/screens/Home';
 import AlarmForm from '../app/screens/AlarmForm';
 import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../app/redux';
-import Autocomplete from '../app/components/Autocomplete';
+
 
 class MainNavigator extends React.Component {
 	constructor(props) {
@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch) => ({
 	seedDatabase: (alarms) => dispatch(createAlarmsInAsyncStorage(alarms))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Autocomplete);
+export default connect(mapStateToProps, mapDispatchToProps)(MainNavigator);
