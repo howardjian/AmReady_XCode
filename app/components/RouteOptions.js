@@ -25,15 +25,3 @@ export default function({transit,icon, index, selectRoute, duration}) {
     </View>
   )
 }
-
-      // <Text style={{color: 'white', fontSize: 18, paddingLeft: 15}}> <Image
-      // style={{width: 20, height: 20}}
-      // source = {{uri: `https:${icon}`}}
-      // /> Duration: <Text style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}> {' ' + d +' minutes'} </Text></Text>
-
-
-
-    // <Button  title="Select Route"   onPress={() => { selectRoute(index, duration)}}/>
-
-
-      // <Text >{transit} </Text>
