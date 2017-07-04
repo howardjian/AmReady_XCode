@@ -112,9 +112,9 @@ class AlarmForm extends React.Component  {
 
 
 	render () {
+    console.log(this.state);
 		return (
       <ScrollView>
-
         <Container style={{backgroundColor: '#333333'}}>
           <Content>
             <Form>
@@ -142,7 +142,7 @@ class AlarmForm extends React.Component  {
 
 
 
-              <Label style={{color: 'white', fontSize: 18, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time:</Label> {this.state.prepTime + ' minutes'}</Label>
+              <Label style={{color: 'white', fontSize: 18, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time:</Label> {+this.state.prepTime + ' minutes'}</Label>
 
               <Slider
                 minimumValue={0}
@@ -150,7 +150,7 @@ class AlarmForm extends React.Component  {
                 step={1}
                 thumbTintColor={'#00BFFF'}
                 style={{width: 340, alignSelf: 'center'}}
-                value={this.state.prepTime}
+                value={+this.state.prepTime}
                 onValueChange={(prepTime) => this.setState({prepTime})} />
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, FlatList, StyleSheet, Text, Button} from 'react-native';
 import { connect } from 'react-redux';
-import { deleteSelectedAlarm, setCurrentAlarm } from '../redux';
+import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
 
 class AlarmSelector extends React.Component   {
@@ -68,7 +68,7 @@ class AlarmSelector extends React.Component   {
 						<Button style={styles.list}
 							title={alarm.alarmName}
 							onPress={ () => {
-								setCurrentAlarm(alarm, index);
+								this.props.selectAlarm(alarm, index);
 								this.props.navigation.navigate('alarmDetail', {alarm})
 							} }
 							accessibilityLabel={`Click to view ${item.key} alarm details`}>
@@ -92,7 +92,8 @@ const mapStateToProps = ({alarms, currentAlarm}) => {
 
 const mapDispatchToProps = (dispatch) => {
    return {
-		 		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm)
+		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm),
+		selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
    }
 }
 
