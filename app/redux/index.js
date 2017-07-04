@@ -55,7 +55,6 @@ export default (state = initialState, action) => {
 		default:
 			break;
 	}
-	console.log('i am your new state', newState.alarmRinging);
 	return newState;
 }
 
@@ -64,7 +63,6 @@ export const getAlarmsFromAsyncStorage = () => {
 	return dispatch => {
 		AsyncStorage.getItem('alarms')
 		.then((alarms) => {
-			// console.error('1', alarms);
 			alarms = alarms || '[]';
         	dispatch(setAlarms(JSON.parse(alarms)));
     	})
