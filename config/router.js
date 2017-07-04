@@ -6,6 +6,7 @@ import Home from '../app/screens/Home';
 import AlarmForm from '../app/screens/AlarmForm';
 import { getAlarmsFromAsyncStorage, createAlarmsInAsyncStorage } from '../app/redux';
 
+
 class MainNavigator extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,7 +28,7 @@ const Navigator = StackNavigator({
 		navigationOptions: ({navigation}) => ({
 			title: 'My Alarms',
 			headerRight: <Button title={'+'} onPress={ () =>
-				navigation.navigate('alarmDetail')
+				navigation.navigate('alarmDetail', this.props)
 			} />
 		})
 	},
