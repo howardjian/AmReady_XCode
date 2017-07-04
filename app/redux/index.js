@@ -32,6 +32,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	let newState = Object.assign({}, state);
+	newState.alarmRinging = Object.assign({}, newState.alarmRinging);
+	newState.currentAlarm = Object.assign({}, newState.currentAlarm);
 	switch (action.type) {
 		case SET_ALARMS:
 			newState.alarms = action.alarms;

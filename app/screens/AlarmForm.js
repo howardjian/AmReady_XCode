@@ -77,7 +77,6 @@ class AlarmForm extends React.Component  {
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
-      console.log('CURRENT ALARM BEFORE SAVING', currentAlarm);
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
       .then((result) => {
@@ -91,9 +90,7 @@ class AlarmForm extends React.Component  {
           const timerId = setTimer(currentAlarm, alarmIndex);
           console.log('timerId', timerId);
           this.setState({timerId}, () => {
-              console.log('CURRENT ALARM BEFORE UPDATING WITH TIMER ID', currentAlarm);
               this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
-              console.log('CURRENT ALARM AFTER UPDATING WITH TIMER ID', currentAlarm);
               console.warn('CREATED TIMER ID', timerId);
           });
       })
