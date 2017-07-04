@@ -112,7 +112,6 @@ class AlarmForm extends React.Component  {
 
 
 	render () {
-    console.log(this.state);
 		return (
       <ScrollView>
         <Container style={{backgroundColor: '#333333'}}>
