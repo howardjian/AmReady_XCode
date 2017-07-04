@@ -41,12 +41,9 @@ class AlarmForm extends React.Component  {
     this.onDateChange = this.onDateChange.bind(this);
     this.updateNewState = this.updateNewState.bind(this);
     this.navigateHome = this.navigateHome.bind(this);
-    // this.renderHeader = this.renderHeader.bind(this);
-    // this.renderContent = this.renderContent.bind(this);
 	}
 
   componentWillMount() {
-    // let selectedUserData = this.props.navigation.state.params
     if (this.props.currentAlarm.alarmInfo.alarmName) {
       this.setState(stateifyDbData(this.props.currentAlarm.alarmInfo));
     }
@@ -54,8 +51,6 @@ class AlarmForm extends React.Component  {
 
   componentDidMount() {
     this.props.navigation.setParams({ handleSave: this.handleSave });
-    // console.log(this.props);
-    // console.log(this.state);
   }
 
   componentWillUnmount() {
@@ -172,14 +167,6 @@ class AlarmForm extends React.Component  {
 	}
 }
 
-              // <Item floatingLabel style={{ width: 340, borderColor: '#696969' }}>
-              //   <Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time</Label>
-              //   <Input
-              //    style={{color: 'white' }}
-              //    onChangeText={(prepTime) => {this.setState({prepTime})}}
-              //    value={this.state.prepTime}
-              //   />
-              // </Item>
 const styles = StyleSheet.create({
   window: { backgroundColor: '#333333' },
   item: { width: 340 },
