@@ -46,7 +46,7 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-    //AIzaSyDeLijmYBeZMZA2UN2vAB_AYj9PHya8JjY
+    
     getDirections(){
       if(this.state.start && this.state.end){
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -149,29 +149,12 @@ export default class extends Component {
             {
               <View>
                 <Autocomplete locationChangeHandler={this.getTheStartAddress} />
-          
-//                     <SearchBar
-//                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-//                        inputStyle={{backgroundColor: '#333333', color: 'white' }}
-//                        onChangeText={(start) => {
-//                          this.setState({start})
-//                        }}
-//                        placeholder='From...'
-//                        value={this.state.start}
-//                     />
 
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
                 <Autocomplete locationChangeHandler={this.getTheEndAddress} />
   
-//                    <SearchBar
-//                        containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
-//                        inputStyle={{backgroundColor: '#333333', color: 'white'}}
-//                        onChangeText={(end) => this.setState({end})}
-//                        placeholder='To...'
-//                        value={this.state.end}
-//                        />
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
