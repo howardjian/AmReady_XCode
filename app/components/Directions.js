@@ -195,7 +195,9 @@ export default class extends Component {
                         <RouteOptions
                           key={index}
                           transit={option.short_name}
-                          icon={option.icon} index={index} selectRoute={this.selectRoute}
+                          icon={option.icon}
+                          index={index}
+                          selectRoute={this.selectRoute}
                           duration ={option.duration}
                         />
                       ))
