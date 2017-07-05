@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, Button } from 'react-native';
-import { resetAlarm } from '../features/Audio';
+import { resetAlarm } from '../features/Timer';
 
 const dismissAlarm = (timerId) => {
 	console.warn('DISMISSING', timerId);

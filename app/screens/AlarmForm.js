@@ -1,19 +1,15 @@
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Button,
-  DatePickerIOS } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
-import { setTimer, clearBackgroundTimer } from '../features/Audio';
+import { setTimer, clearBackgroundTimer } from '../features/Timer';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
 import { Divider, Slider} from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
+import DatePicker from 'react-native-datepicker';
+
 
 class AlarmForm extends React.Component  {
 	constructor (props) {
@@ -76,7 +72,7 @@ class AlarmForm extends React.Component  {
       const currentAlarm = AsyncStorageFormat(this.state);
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
-      .then((result) => {
+      .then(() => {
           // if there exists a background timer already, clear it and create a new one
           // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
           // we will reset after each edit)
@@ -131,11 +127,21 @@ class AlarmForm extends React.Component  {
 
 
 
-              <DatePickerIOS
+              <DatePicker
+                style={{width: 200}}
                 date={new Date(this.state.arrivalTime)}
-                mode='time'
-                timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
-                onDateChange={this.onDateChange}
+                mode="time"
+                format="HH:mm"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                minuteInterval={10}
+                showIcon={false}
+                customStyles={{
+                  dateText: {
+                    color: 'white'
+                  },
+                }}
+                onDateChange={(time) => {this.setState({arrivalTime: time});}}
               />
 
 
@@ -163,37 +169,6 @@ class AlarmForm extends React.Component  {
     )
 	}
 }
-
-const styles = StyleSheet.create({
-  window: { backgroundColor: '#333333' },
-  item: { width: 340 },
-  label: { color: '#5e5e5e' },
-  input: { color: 'white' }
-})
-
-//DATE PICKER
-  // renderHeader(section) {
-  //   return (
-  //     <View style={styles.header}>
-  //       <Text style={styles.headerText}>{section.title}</Text>
-  //     </View>
-  //   );
-  // }
-
-  // renderContent(section) {
-  //   return (
-  //     <View style={styles.content}>
-  //       <Text>{section.content}</Text>
-  //     </View>
-  //   );
-  // }
-
-// <Accordion
-//                 sections={new Date(this.state.arrivalTime)}
-//                 renderHeader={this.renderHeader}
-//                 renderContent={this.renderContent}
-//               />
-
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}

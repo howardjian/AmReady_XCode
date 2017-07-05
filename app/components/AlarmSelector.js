@@ -1,133 +1,137 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Text, Button} from 'react-native';
+import { View, FlatList, StyleSheet, Text, Button, ListView, TouchableHighlight} from 'react-native';
 import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
+import { Divider, Slider} from 'react-native-elements';
+import {resetAlarm, getEstimatedWakeupTime} from '../features/Timer';
+import {getArrivalTimeString} from '../../utils/utils';
 
 class AlarmSelector extends React.Component   {
-		constructor (props) {
-			super(props);
-			this.state = {
-				alarms: this.props.alarms
-			}
+        constructor (props) {
+            super(props);
+            const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+     this.state = {
+         dataSource: ds.cloneWithRows([])
+     };
 
-			this.deleteAlarm = this.deleteAlarm.bind(this);
-		}
+            this.deleteAlarm = this.deleteAlarm.bind(this);
+        }
 
-	componentWillMount(){
+    componentWillReceiveProps (props) {
+       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+       const alarmKeys = props.alarms.map((alarm, index) => {
+           return alarm; // need to stringify values because objects look the same to flatlist, and only renders first
+       });
+       this.setState({dataSource: ds.cloneWithRows(alarmKeys)});
+   }
 
-	}
 
-	componentDidMount () {
+    deleteAlarm(alarm, alarmIndex){
 
-	}
+        resetAlarm(alarm.timerId);
 
-	  // renderRow(rowData) {
-    // let swipeBtns = [{
-    //   text: 'Delete',
-    //   backgroundColor: 'red',
-    //   underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-    //   onPress: () => { this.deleteNote(rowData) }
-    // }];
+        this.props.deleteSelectedAlarm(this.props.alarms, alarmIndex);
+    }
 
-    // return (
-    //   <Swipeout right={swipeBtns}
-    //     autoClose='true'
-    //     backgroundColor= 'transparent'>
-    //     <TouchableHighlight
-    //       underlayColor='rgba(192,192,192,1,0.6)'
-    //       onPress={this.viewNote.bind(this, rowData)} >
-    //       <View>
-    //         <View style={styles.rowContainer}>
-    //           <Text style={styles.note}> {rowData} </Text>
-    //         </View>
-    //         <Divider />
-    //       </View>
-    //     </TouchableHighlight>
-    //   </Swipeout>
-    // )
-		// }
 
-	deleteAlarm(){
+renderRow(rowData, rowIndex, index) {
+            let swipeBtns = [{
+                text: 'Delete',
+                backgroundColor: 'red',
+                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 
-	}
+                onPress: () => { this.deleteAlarm(rowData, +index) }
+            }];
 
-	render(){
-			const alarmKeys = this.props.alarms.map((alarm, index) => {
-				return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
-			});
+            const arrivalTimeStr = getArrivalTimeString(getEstimatedWakeupTime(rowData.arrivalTime,
+              +rowData.prepTime, +rowData.duration));
+            return (
+                <Swipeout right={swipeBtns}
+                    autoClose='true'
+                    backgroundColor= 'transparent'>
+                    <TouchableHighlight
+                        underlayColor='rgba(192,192,192,1,0.6)'
+                        onPress={() => {
+                            this.props.selectAlarm(rowData, +index);
+                            this.props.navigation.navigate('alarmDetail', rowData);
+                        }} >
+                        <View>
+                            <View style={{ height: 40}}>
+                                <Text style={{paddingLeft: 15}}> {rowData.alarmName + ' ' +rowData.daysOfWeek + '' + arrivalTimeStr +' '+ rowData.duration}  </Text>
+                            </View>
+                            <Divider />
+                        </View>
+                    </TouchableHighlight>
+                </Swipeout>
+            )
+    }
 
-			return (
-		<View style={styles.container}>
-			{
-				alarmKeys.length ?
-				<FlatList data={alarmKeys}
-				renderItem={({item, index}) => {
-					const alarm = JSON.parse(item.key);
-					return (
-						<Button style={styles.list}
-							title={alarm.alarmName}
-							onPress={ () => {
-								this.props.selectAlarm(alarm, index);
-								this.props.navigation.navigate('alarmDetail', {alarm})
-							} }
-							accessibilityLabel={`Click to view ${item.key} alarm details`}>
-							<Text style={styles.item}>{alarm.alarmName} | {alarm.arrivalTime}</Text>
 
-						</Button>
-					)
-				}
-				} /> : null
-			}
-		</View>
-	)
 
-		}
-  }
+    render(){
+            const alarmKeys = this.props.alarms.map((alarm, index) => {
+                return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
+            });
+
+
+            return (
+
+                    <View style={styles.container}>
+                        {
+                            alarmKeys.length ?
+                            <ListView
+                                dataSource={this.state.dataSource}
+                                renderRow={this.renderRow.bind(this) }
+                            />
+                             : null
+                        }
+                    </View>
+                    )
+
+    }
+ }
+
+
 
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
-   return {alarms, currentAlarm}
+  return {alarms, currentAlarm}
 }
 
 const mapDispatchToProps = (dispatch) => {
-   return {
-		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm),
-		selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
-   }
+  return {
+        deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm(currentAlarms, alarmIndex)),
+        selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlarmSelector);
 
-
-
-
-
-
 let styles = StyleSheet.create({
-  container: {
-    marginTop: 65,
-    flex: 1,
-  },
-  titleText: {
-    padding: 10,
-    fontSize: 18,
-    color: '#111',
-    flex: 1
-  },
-  noteText: {
-    padding: 10,
-    flex: 18
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white'
-  },
-  button: {
-    height: 60,
-    backgroundColor: '#48BBEC',
-    flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+ container: {
+   marginTop: 65,
+   flex: 1,
+ },
+ titleText: {
+   padding: 10,
+   fontSize: 18,
+   color: '#111',
+   flex: 1
+ },
+ noteText: {
+   padding: 10,
+   flex: 18
+ },
+ buttonText: {
+   fontSize: 18,
+   color: 'white'
+ },
+ button: {
+   height: 60,
+   backgroundColor: '#48BBEC',
+   flex: 3,
+   alignItems: 'center',
+   justifyContent: 'center',
+ },
 });
