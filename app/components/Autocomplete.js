@@ -17,7 +17,7 @@ export default class extends Component {
 
     componentDidMount(){
         navigator.geolocation.getCurrentPosition(
-            (location)=>{this.setState({userLocation:location})
+            (location)=>{this.setState({userLocation: location})
         })
     }
     textChange(string){
