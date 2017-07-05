@@ -123,7 +123,6 @@ export default class extends Component {
     }
 
     selectRoute(index, duration){
-      console.warn('hur', this.state);
       this.props.updateNewState({
         routeIndex: index,
         routeSelectedHash: this.state.responseObjRoutes[+index]["overview_polyline"]["points"],
@@ -173,7 +172,8 @@ export default class extends Component {
               <View>
                 {
                   this.state.routeSelectedBool ?
-                    <Map start_lat={this.state.start_lat}
+                    <Map
+                      start_lat={this.state.start_lat}
                       start_long={this.state.start_long}
                       end_lat={this.state.end_lat}
                       end_long={this.state.end_long}
