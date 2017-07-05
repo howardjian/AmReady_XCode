@@ -9,12 +9,11 @@ import {resetAlarm} from '../features/Audio';
 import {getArrivalTimeString} from '../../utils/utils';
 
 
-
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
-			const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
           dataSource: ds.cloneWithRows([])
       };
@@ -23,7 +22,7 @@ class AlarmSelector extends React.Component   {
 		}
 
 	componentWillReceiveProps (props) {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+       
         const alarmKeys = props.alarms.map((alarm, index) => {
             return alarm; // need to stringify values because objects look the same to flatlist, and only renders first
         });
