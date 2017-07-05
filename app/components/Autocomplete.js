@@ -15,20 +15,21 @@ export default class extends Component {
      this.selectEvent = this.selectEvent.bind(this);
     }
 
-    componentWillMount(){ 
-        
-        this.props.savedState ? 
+    componentWillMount(){
+
+        this.props.savedState ?
             this.setState({currentTerm: this.props.savedState})
         :
         navigator.geolocation.getCurrentPosition(
             (location)=>{
                 if(this.props.start){
                     this.props.getUserCurrentPosition(location.coords.latitude, location.coords.longitude);
-                    this.setState({currentTerm:"Current Location"});                  
-                } 
+                    this.setState({currentTerm:"Current Location"});
+                }
                 this.setState({userLocation:location})
-                
+
         })
+
      
     }   
 
@@ -66,12 +67,13 @@ export default class extends Component {
                 console.warn("ERROR", err)
             })
 
+
     }
 
     selectEvent(places){
          this.props.locationChangeHandler(places.description);
          this.setState({
-             currentTerm:places.structured_formatting.main_text, 
+             currentTerm:places.structured_formatting.main_text,
              possibleLocations:null,
              currentValue:places.description
             })
@@ -80,23 +82,23 @@ export default class extends Component {
     render(){
         return (
             <View>
-                <SearchBar 
+                <SearchBar
                     containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
                     inputStyle={{backgroundColor: '#333333', color: 'white' }}
                     placeholder={this.props.placeHolder}
                     ref='searchBar'
-                    value={this.state.currentTerm}   
+                    value={this.state.currentTerm}
                     onChangeText={text => {this.textChange(text)}}
                     returnKeyType={ "done" }
                    
                     />
                     {
-                        this.state.possibleLocations ? 
+                        this.state.possibleLocations ?
                         this.state.possibleLocations.map(places => {
                             return (
-                                <Button small key={places.id}
-                                title={places.description}
-                                onPress={()=>{this.selectEvent(places)}}
+                                <Button small key=                                            {places.id}
+                                  title={places.description}
+                                  onPress={()=>{this.selectEvent(places)}}
                                 />
                             )
                         })
@@ -108,4 +110,3 @@ export default class extends Component {
     }
 }
 
- 

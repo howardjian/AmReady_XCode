@@ -81,3 +81,16 @@ export const AsyncStorageFormat = (currentAlarm) => {
     ]
   }
 }
+
+export const getArrivalTimeString = (time) => {
+    const arrivalTime = new Date(time);
+    const minutes = arrivalTime.getMinutes() < 10 ? `0${arrivalTime.getMinutes()}` : arrivalTime.getMinutes();
+    let hours = arrivalTime.getHours() || 12;
+    let label = 'AM';
+    if (hours > 12) {
+        hours = hours - 12;
+        label = 'PM';
+    }
+
+    return `${hours}:${minutes} ${label}`;
+}

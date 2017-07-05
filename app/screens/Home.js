@@ -10,8 +10,6 @@ class Home extends React.Component {
    constructor (props) {
       super(props);
       NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    onNotificationReceived(notification) {
       // only do this if there is no alarm ringing currently
@@ -26,8 +24,6 @@ class Home extends React.Component {
    componentWillUnmount() {
       // Don't forget to remove the event listeners to prevent memory leaks!
       NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
 
    render() {

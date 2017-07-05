@@ -22,7 +22,7 @@ module.exports = {
             duration: 50
          },
          prepTime: 10,
-         arrivalTime: 'Thu Jun 29 2017 17:00:00 GMT-0400 (EDT)',
+         arrivalTime: 'Thu Jun 29 2017 11:00:00 GMT-0400 (EDT)',
          contacts: [
             {
                user: 56,

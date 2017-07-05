@@ -51,16 +51,16 @@ export default class extends Component {
     getDirections(){
 
       if(this.state.start && this.state.end){
+
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
-        
-        this.state.userCurrent ? 
-        googleDirectionsQuery+= `origin=${this.state.start_lat},${this.state.start_long}&`
-        :
+        this.state.userCurrent ?
+        googleDirectionsQuery+= `origin=${this.state.start_lat},${this.state.start_long}&`:
         googleDirectionsQuery+= `origin=${this.state.start}&`
-       
+
+
         googleDirectionsQuery+= `destination=${this.state.end}&`;
         googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
-        
+
         fetch(
           googleDirectionsQuery,
           { mode: 'no-cors' }
@@ -150,9 +150,11 @@ export default class extends Component {
       this.setState({end})
     }
 
-    getUserCurrentPosition(start_lat,start_long){ 
+    getUserCurrentPosition(start_lat,start_long){
       this.setState({start_lat,start_long, userCurrent:true, start:true});
     }
+
+
 
     render(){
         return (
@@ -164,9 +166,8 @@ export default class extends Component {
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-
                 <Autocomplete start={false} savedState ={this.props.alarmInfo.end} locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
-  
+
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
@@ -192,7 +193,8 @@ export default class extends Component {
                       polylines={this.state.trainOptions[this.state.routeIndex]["polylines"]}
                       />
                   :
-                  <Map start_lat={this.state.start_lat}
+                  <Map
+                    start_lat={this.state.start_lat}
                     start_long={this.state.start_long}
                     end_lat={this.state.end_lat}
                     end_long={this.state.end_long}
