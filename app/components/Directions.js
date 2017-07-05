@@ -47,7 +47,7 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-    
+
     getDirections(){
 
       if(this.state.start && this.state.end){
@@ -164,6 +164,7 @@ export default class extends Component {
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
+
                 <Autocomplete start={false} savedState ={this.props.alarmInfo.end} locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
   
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
@@ -183,7 +184,8 @@ export default class extends Component {
               <View>
                 {
                   this.state.routeSelectedBool ?
-                    <Map start_lat={this.state.start_lat}
+                    <Map
+                      start_lat={this.state.start_lat}
                       start_long={this.state.start_long}
                       end_lat={this.state.end_lat}
                       end_long={this.state.end_long}
@@ -205,7 +207,9 @@ export default class extends Component {
                         <RouteOptions
                           key={index}
                           transit={option.short_name}
-                          icon={option.icon} index={index} selectRoute={this.selectRoute}
+                          icon={option.icon}
+                          index={index}
+                          selectRoute={this.selectRoute}
                           duration ={option.duration}
                         />
                       ))
