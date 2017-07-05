@@ -59,6 +59,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
+		<string>Digital Dismay.otf</string>
+		<string/>
 		<string>EvilIcons.ttf</string>
 		<string>FontAwesome.ttf</string>
 		<string>Foundation.ttf</string>

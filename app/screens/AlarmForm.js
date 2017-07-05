@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
 import { Divider, Slider} from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
+import DatePicker from 'react-native-datepicker';
+
 
 class AlarmForm extends React.Component  {
 	constructor (props) {
@@ -117,7 +119,7 @@ class AlarmForm extends React.Component  {
         <Container style={{backgroundColor: '#333333'}}>
           <Content>
             <Form>
-              <Item floatingLabel style={{ width: 340, borderColor: '#696969' }}>
+              <Item floatingLabel style={{ width: 370, borderColor: '#696969', alignSelf: 'center' }}>
                 <Label style={{color: '#00BFFF', fontSize: 18}}>Alarm Name</Label>
                 <Input
                  style={{ color: 'white' }}
@@ -125,18 +127,35 @@ class AlarmForm extends React.Component  {
                  value={this.state.alarmName}
                 />
               </Item>
+
               <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
               <Label style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}>Arrival Time:</Label>
 
+              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-
-
-              <DatePickerIOS
+              <DatePicker
+                style={{width: 340, alignSelf: 'center'}}
                 date={new Date(this.state.arrivalTime)}
-                mode='time'
-                timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
+                mode="time"
+                format="HH:mm"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                minuteInterval={10}
+                showIcon={false}
+                customStyles={{
+                  dateText: {
+                    width: 340,
+                    color: 'white',
+                    // borderTopColor: 'red', borderLeftColor: '#333333', borderRightColor: '#333333'
+                  },
+                }}
                 onDateChange={this.onDateChange}
               />
+
+              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
+
+
+
 
 
 

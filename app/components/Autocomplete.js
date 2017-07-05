@@ -15,7 +15,7 @@ export default class extends Component {
      this.selectEvent = this.selectEvent.bind(this);
     }
 
-    componentDidMount(){  
+    componentDidMount(){
         navigator.geolocation.getCurrentPosition(
             (location)=>{this.setState({userLocation:location})
         })
@@ -33,7 +33,7 @@ export default class extends Component {
             return data.json();
         })
         .then(locations => {
-            
+
             this.setState({currentTerm:string,possibleLocations:locations.predictions})
         })
     }
@@ -41,7 +41,7 @@ export default class extends Component {
     selectEvent(places){
          this.props.locationChangeHandler(places.description);
          this.setState({
-             currentTerm:places.structured_formatting.main_text, 
+             currentTerm:places.structured_formatting.main_text,
              possibleLocations:null,
              currentValue:places.description
             })
@@ -49,21 +49,21 @@ export default class extends Component {
     render(){
         return (
             <View>
-                <SearchBar 
+                <SearchBar
                     containerStyle={{ backgroundColor: '#333333', width: 340, alignSelf: 'center', borderTopWidth: 0, borderBottomWidth: 0}}
                     inputStyle={{backgroundColor: '#333333', color: 'white' }}
                     placeholder={this.props.placeHolder}
                     ref='searchBar'
-                    value={this.state.currentTerm}   
+                    value={this.state.currentTerm}
                     onChangeText={text => {this.textChange(text)}}
                     />
                     {
-                        this.state.possibleLocations ? 
+                        this.state.possibleLocations ?
                         this.state.possibleLocations.map(places => {
                             return (
-                                <Button small key={places.id}
-                                title={places.description}
-                                onPress={()=>{this.selectEvent(places)}}
+                                <Button small key=                                            {places.id}
+                                  title={places.description}
+                                  onPress={()=>{this.selectEvent(places)}}
                                 />
                             )
                         })
@@ -75,4 +75,3 @@ export default class extends Component {
     }
 }
 
- 

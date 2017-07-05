@@ -46,7 +46,7 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-    
+
     getDirections(){
       if(this.state.start && this.state.end){
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -154,7 +154,7 @@ export default class extends Component {
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
                 <Autocomplete locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
-  
+
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
