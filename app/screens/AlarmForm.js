@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Button,
-  DatePickerIOS } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
-import { setTimer, clearBackgroundTimer } from '../features/Audio';
+import { setTimer, clearBackgroundTimer } from '../features/Timer';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
@@ -78,7 +72,7 @@ class AlarmForm extends React.Component  {
       const currentAlarm = AsyncStorageFormat(this.state);
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
-      .then((result) => {
+      .then(() => {
           // if there exists a background timer already, clear it and create a new one
           // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
           // we will reset after each edit)
@@ -137,7 +131,8 @@ class AlarmForm extends React.Component  {
                 style={{width: 340, alignSelf: 'center'}}
                 date={new Date(this.state.arrivalTime)}
                 mode="time"
-                format="HH:mm"
+                format="h:mm A"
+                is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 minuteInterval={10}
@@ -188,15 +183,6 @@ class AlarmForm extends React.Component  {
     )
 	}
 }
-
-const styles = StyleSheet.create({
-  window: { backgroundColor: '#333333' },
-  item: { width: 340 },
-  label: { color: '#5e5e5e' },
-  input: { color: 'white' }
-})
-
-
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}
