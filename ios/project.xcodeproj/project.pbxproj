@@ -49,6 +49,7 @@
 		588FF53FF5EB4187B40B65EE /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7305738321F443A9BDDD3F09 /* libRNVectorIcons.a */; };
 		5C8D392DF56F45319458F015 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DF316AA49A2446ABCF87134 /* MaterialIcons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		81080CDB1F0C23120025A95F /* Digital Dismay.otf in Resources */ = {isa = PBXBuildFile; fileRef = 81080CDA1F0C23120025A95F /* Digital Dismay.otf */; };
 		818BC1F71F07083700F0D343 /* bells.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 818BC1F61F07083700F0D343 /* bells.mp3 */; };
 		8257D201F4CE4BDC8B35F1C8 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3F604E7A92E48F28E31EE44 /* FontAwesome.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -362,6 +363,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7AC3B8221CF148ACB7E6E175 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
 		7DD9FCC8BCAB4260B5F5ADE5 /* libRNNotifications.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNNotifications.a; sourceTree = "<group>"; };
+		81080CDA1F0C23120025A95F /* Digital Dismay.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Digital Dismay.otf"; sourceTree = "<group>"; };
 		8118CAC42BCF4BBCB2B4A214 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		818BC1F61F07083700F0D343 /* bells.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bells.mp3; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -652,6 +654,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				81080CDA1F0C23120025A95F /* Digital Dismay.otf */,
 				818BC1F61F07083700F0D343 /* bells.mp3 */,
 				13B07FAE1A68108700A75B9A /* project */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1158,6 +1161,7 @@
 				8257D201F4CE4BDC8B35F1C8 /* FontAwesome.ttf in Resources */,
 				BA291F75729445F9BDDA5313 /* Foundation.ttf in Resources */,
 				9F9423181A274724BB36AF91 /* Ionicons.ttf in Resources */,
+				81080CDB1F0C23120025A95F /* Digital Dismay.otf in Resources */,
 				3091F88478E5495193D0FFF2 /* MaterialCommunityIcons.ttf in Resources */,
 				5C8D392DF56F45319458F015 /* MaterialIcons.ttf in Resources */,
 				86208AF9BC684866B06F4EB8 /* Octicons.ttf in Resources */,

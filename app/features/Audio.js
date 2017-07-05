@@ -44,7 +44,9 @@ export function resetAlarm(backgroundTimerId, setSnooze, alarm, alarmIndex) {
     clearBackgroundTimer(backgroundTimerId);
     cancelNotification(localNotification);
     console.warn('AUDIO SOUND', audioId);
-    audioId.stop();
+    if(audioId !== null) {
+      audioId.stop();
+    }
     if (setSnooze) setTimer(alarm, alarmIndex, true);
 }
 
@@ -71,9 +73,9 @@ export function setTimer (alarm, alarmIndex, setSnooze = false) {
         // setInterval does not like negative numbers
         timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers < 0 ? 0 : timeInMinUntilAlarmTriggers;
     }
-    
+
     console.warn('TIME', timeInMinUntilAlarmTriggers);
-    
+
     // NOTE: We modified the react-native-background-timer index.js file
     // such that the output of the setTimeout function is invoked with the timerId.
     // The timerId is passed to the notification object so the timer can be turned off eventually

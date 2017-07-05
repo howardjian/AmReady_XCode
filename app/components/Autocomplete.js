@@ -72,9 +72,9 @@ export default class extends Component {
                         this.state.possibleLocations ?
                         this.state.possibleLocations.map(places => {
                             return (
-                                <Button small key={places.id}
-                                title={places.description}
-                                onPress={()=>{this.selectEvent(places)}}
+                                <Button small key=                                            {places.id}
+                                  title={places.description}
+                                  onPress={()=>{this.selectEvent(places)}}
                                 />
                             )
                         })
@@ -85,3 +85,4 @@ export default class extends Component {
         )
     }
 }
+

@@ -166,7 +166,6 @@ export default class extends Component {
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-
                 <Autocomplete start={false} savedState ={this.props.alarmInfo.end} locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
 
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
