@@ -113,22 +113,23 @@ class AlarmForm extends React.Component  {
         <Container style={{backgroundColor: '#333333'}}>
           <Content>
             <Form>
-              <Item floatingLabel style={{ width: 380, borderColor: '#696969', alignSelf: 'center' }}>
+              <Item floatingLabel style={{ width: 383, borderColor: '#696969' }}>
                 <Label style={{color: '#00BFFF', fontSize: 24, width: 380}}>Alarm Name</Label>
                 <Input
-                 style={{ color: 'white' }}
+                 style={{ color: 'white', width: 380 }}
                  onChangeText={(alarmName) => {this.setState({alarmName})}}
                  value={this.state.alarmName}
                 />
               </Item>
 
-              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
+              <Divider style={{paddingTop: 12, backgroundColor: '#333333'}}/>
+
               <Label style={{color: '#00BFFF', fontSize: 24, paddingLeft: 15}}>Arrival Time:</Label>
 
-              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
+              <Divider style={{paddingTop: 12, backgroundColor: '#333333'}}/>
 
               <DatePicker
-                style={{width: 340, alignSelf: 'center'}}
+                style={{width: 380, alignSelf: 'center'}}
                 date={new Date(this.state.arrivalTime)}
                 mode="time"
                 format="h:mm A"
@@ -139,29 +140,33 @@ class AlarmForm extends React.Component  {
                 showIcon={false}
                 customStyles={{
                   dateInput: {
-
-
-                    borderTopColor: '#333333', borderLeftColor: '#333333', borderRightColor: '#333333',
-                    width: 380
+                    width: 380,
+                    // marginLeft: 180,   only if have enough time, keep try set the lable on the same line
+                    borderBottomColor: '#696969',
+                    borderTopColor: '#333333',
+                    borderLeftColor: '#333333',
+                    borderRightColor: '#333333'
                   },
                   dateText: {
                     fontFamily: 'Digital Dismay',
-                    fontSize: 30,
-                    letterSpacing: 3,
+                    fontSize: 26,
+                    letterSpacing: 2,
+
                     paddingLeft: 15,
 
                     color: 'white',
-                    input: 'Arraival'
+
                   },
-                  DatePickerCon: {backgroundColor: 'red'},
-                 btnTextCancel: { color: 'red'}
+                  btnTextText: {
+                    paddingLeft: 15
+                  }
                 }}
                 onDateChange={this.onDateChange}
               />
 
               <Divider style={{paddingTop: 8, backgroundColor: '#333333'}} />
 
-              <Label style={{color: 'white', fontSize: 24, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 24}}>Preparation Time:</Label> <Label style={{fontFamily: 'Digital Dismay', letterSpacing:3, fontSize: 26}}>{+this.state.prepTime}</Label> minutes</Label>
+              <Label style={{color: 'white', fontSize: 24, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 24}}>Preparation Time:  </Label> <Label style={{fontFamily: 'Digital Dismay', letterSpacing:3, fontSize: 26}}>{+this.state.prepTime}</Label> minutes</Label>
 
               <Slider
                 minimumValue={0}
