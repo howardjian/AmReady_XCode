@@ -15,17 +15,28 @@ export default class extends Component {
      this.selectEvent = this.selectEvent.bind(this);
     }
 
-    componentDidMount(){
+    componentWillMount(){
+
+        this.props.savedState ?
+            this.setState({currentTerm: this.props.savedState})
+        :
         navigator.geolocation.getCurrentPosition(
-            (location)=>{this.setState({userLocation: location})
+            (location)=>{
+                if(this.props.start){
+                    this.props.getUserCurrentPosition(location.coords.latitude, location.coords.longitude);
+                    this.setState({currentTerm:"Current Location"});
+                }
+                this.setState({userLocation:location})
+
         })
+
+
+
     }
     textChange(string){
         let baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
-        let url = `input=${string}&types=address&location=
-                        ${this.state.userLocation.coords.latitude},
-                        ${this.state.userLocation.coords.longitude}
-                        &key=${"AIzaSyDfu6FrpQXz4TaxbnOzWVb69YFVSBNPFo0"}`;
+        let url = `input=${string}&types=address&
+                        &key=${"AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8"}`;
 
         let request = baseUrl+url;
         fetch(request,{ mode: 'no-cors' })

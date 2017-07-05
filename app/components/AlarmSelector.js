@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, ListView, TouchableHighlight} from 'react-native';
+import { View, StyleSheet, ListView, TouchableHighlight} from 'react-native';
 import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
@@ -8,13 +8,11 @@ import {resetAlarm} from '../features/Audio';
 
 import {getArrivalTimeString} from '../../utils/utils';
 
-
-
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
-			const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
           dataSource: ds.cloneWithRows([])
       };
@@ -23,7 +21,7 @@ class AlarmSelector extends React.Component   {
 		}
 
 	componentWillReceiveProps (props) {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+       
         const alarmKeys = props.alarms.map((alarm, index) => {
             return alarm; // need to stringify values because objects look the same to flatlist, and only renders first
         });
@@ -101,8 +99,6 @@ renderRow(rowData, rowIndex, index) {
   }
 
 
-
-
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}
 }
@@ -145,7 +141,3 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-
-
-
