@@ -90,11 +90,7 @@ export const unselectAlarm = () => {
 }
 
 export const deleteSelectedAlarm = (currentAlarms, alarmIndex) => {
-	console.log('1',currentAlarms);
-	// currentAlarms = JSON.parse(currentAlarms)
-	// console.log('2',currentAlarms);
 	const updatedAlarms = currentAlarms.filter((alarm, index) => index !== alarmIndex);
-	console.log("updateAlarms", updatedAlarms);
 	return updateAlarmsInAsyncStorage(updatedAlarms);
 }
 
