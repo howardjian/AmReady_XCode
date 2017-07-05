@@ -6,7 +6,9 @@ export default function({start_lat,start_long,end_lat,end_long, polylines}){
         <MapView
             style={{
                 height: 200,
-                width: 340, alignSelf:'center'}}
+                width: 340,
+                alignSelf:'center'
+            }}
             initialRegion={{
                 latitude: start_lat,
                 longitude: start_long,
