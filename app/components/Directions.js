@@ -9,7 +9,6 @@ import Autocomplete from './Autocomplete';
 export default class extends Component {
     constructor(props){
         super(props);
-
         const defaultState = {
             start: null,
             end: null,
@@ -23,7 +22,8 @@ export default class extends Component {
             routeSelectedHash: '',
             routeIndex: null,
             duration: '',
-            responseObjRoutes: {}
+            responseObjRoutes: {},
+            userCurrent:false
         }
 
         if(props.alarmInfo.alarmName) {
@@ -36,6 +36,7 @@ export default class extends Component {
         this.updateNewState = this.updateNewState.bind(this);
         this.getTheStartAddress = this.getTheStartAddress.bind(this);
         this.getTheEndAddress = this.getTheEndAddress.bind(this);
+        this.getUserCurrentPosition = this.getUserCurrentPosition.bind(this);
     }
 
     createStartAndEndLatLong(directionsObj){
@@ -46,13 +47,19 @@ export default class extends Component {
         end_long: directionsObj["routes"][0]["legs"][0]["end_location"].lng
       }
     }
-    
+
     getDirections(){
+
       if(this.state.start && this.state.end){
+
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
-        googleDirectionsQuery+= `origin=${this.state.start}&`;
+        this.state.userCurrent ?
+        googleDirectionsQuery+= `origin=${this.state.start_lat},${this.state.start_long}&`:
+        googleDirectionsQuery+= `origin=${this.state.start}&`
+
+
         googleDirectionsQuery+= `destination=${this.state.end}&`;
-        googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyDeLijmYBeZMZA2UN2vAB_AYj9PHya8JjY";
+        googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
 
         fetch(
           googleDirectionsQuery,
@@ -136,25 +143,31 @@ export default class extends Component {
     }
 
     getTheStartAddress(start){
-        this.setState({start})
+        this.setState({start, userCurrent:false});
     }
 
     getTheEndAddress(end){
       this.setState({end})
     }
 
+    getUserCurrentPosition(start_lat,start_long){
+      this.setState({start_lat,start_long, userCurrent:true, start:true});
+    }
+
+
+
     render(){
         return (
           <View>
             {
               <View>
-                <Autocomplete locationChangeHandler={this.getTheStartAddress} placeHolder='From...' />
+                <Autocomplete savedState ={this.props.alarmInfo.start} start={true} getUserCurrentPosition={this.getUserCurrentPosition} locationChangeHandler={this.getTheStartAddress} placeHolder='From...' />
 
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-                <Autocomplete locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
-  
+                <Autocomplete start={false} savedState ={this.props.alarmInfo.end} locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
+
                 <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
@@ -172,14 +185,16 @@ export default class extends Component {
               <View>
                 {
                   this.state.routeSelectedBool ?
-                    <Map start_lat={this.state.start_lat}
+                    <Map
+                      start_lat={this.state.start_lat}
                       start_long={this.state.start_long}
                       end_lat={this.state.end_lat}
                       end_long={this.state.end_long}
                       polylines={this.state.trainOptions[this.state.routeIndex]["polylines"]}
                       />
                   :
-                  <Map start_lat={this.state.start_lat}
+                  <Map
+                    start_lat={this.state.start_lat}
                     start_long={this.state.start_long}
                     end_lat={this.state.end_lat}
                     end_long={this.state.end_long}
@@ -194,7 +209,9 @@ export default class extends Component {
                         <RouteOptions
                           key={index}
                           transit={option.short_name}
-                          icon={option.icon} index={index} selectRoute={this.selectRoute}
+                          icon={option.icon}
+                          index={index}
+                          selectRoute={this.selectRoute}
                           duration ={option.duration}
                         />
                       ))

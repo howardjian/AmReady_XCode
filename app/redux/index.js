@@ -90,7 +90,7 @@ export const unselectAlarm = () => {
 }
 
 export const deleteSelectedAlarm = (currentAlarms, alarmIndex) => {
-	const updatedAlarms = currentAlarms.splice(alarmIndex, 1);
+	const updatedAlarms = currentAlarms.filter((alarm, index) => index !== alarmIndex);
 	return updateAlarmsInAsyncStorage(updatedAlarms);
 }
 
