@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
 import { Divider, Slider} from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
+import DatePicker from 'react-native-datepicker';
+
 
 class AlarmForm extends React.Component  {
 	constructor (props) {
@@ -117,38 +119,61 @@ class AlarmForm extends React.Component  {
         <Container style={{backgroundColor: '#333333'}}>
           <Content>
             <Form>
-              <Item floatingLabel style={{ width: 340, borderColor: '#696969' }}>
-                <Label style={{color: '#00BFFF', fontSize: 18}}>Alarm Name</Label>
+              <Item floatingLabel style={{ width: 380, borderColor: '#696969', alignSelf: 'center' }}>
+                <Label style={{color: '#00BFFF', fontSize: 24, width: 380}}>Alarm Name</Label>
                 <Input
                  style={{ color: 'white' }}
                  onChangeText={(alarmName) => {this.setState({alarmName})}}
                  value={this.state.alarmName}
                 />
               </Item>
+
               <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
-              <Label style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}>Arrival Time:</Label>
+              <Label style={{color: '#00BFFF', fontSize: 24, paddingLeft: 15}}>Arrival Time:</Label>
 
+              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
-
-
-              <DatePickerIOS
+              <DatePicker
+                style={{width: 340, alignSelf: 'center'}}
                 date={new Date(this.state.arrivalTime)}
-                mode='time'
-                timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
+                mode="time"
+                format="HH:mm"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                minuteInterval={10}
+                showIcon={false}
+                customStyles={{
+                  dateInput: {
+
+
+                    borderTopColor: '#333333', borderLeftColor: '#333333', borderRightColor: '#333333',
+                    width: 380
+                  },
+                  dateText: {
+                    fontFamily: 'Digital Dismay',
+                    fontSize: 30,
+                    letterSpacing: 3,
+                    paddingLeft: 15,
+
+                    color: 'white',
+                    input: 'Arraival'
+                  },
+                  DatePickerCon: {backgroundColor: 'red'},
+                 btnTextCancel: { color: 'red'}
+                }}
                 onDateChange={this.onDateChange}
               />
 
+              <Divider style={{paddingTop: 8, backgroundColor: '#333333'}} />
 
-
-
-              <Label style={{color: 'white', fontSize: 18, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 18}}>Preparation Time:</Label> {+this.state.prepTime + ' minutes'}</Label>
+              <Label style={{color: 'white', fontSize: 24, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 24}}>Preparation Time:</Label> <Label style={{fontFamily: 'Digital Dismay', letterSpacing:3, fontSize: 26}}>{+this.state.prepTime}</Label> minutes</Label>
 
               <Slider
                 minimumValue={0}
                 maximumValue={120}
                 step={1}
                 thumbTintColor={'#00BFFF'}
-                style={{width: 340, alignSelf: 'center'}}
+                style={{width: 380, alignSelf: 'center'}}
                 value={+this.state.prepTime}
                 onValueChange={(prepTime) => this.setState({prepTime})} />
 
@@ -171,28 +196,6 @@ const styles = StyleSheet.create({
   input: { color: 'white' }
 })
 
-//DATE PICKER
-  // renderHeader(section) {
-  //   return (
-  //     <View style={styles.header}>
-  //       <Text style={styles.headerText}>{section.title}</Text>
-  //     </View>
-  //   );
-  // }
-
-  // renderContent(section) {
-  //   return (
-  //     <View style={styles.content}>
-  //       <Text>{section.content}</Text>
-  //     </View>
-  //   );
-  // }
-
-// <Accordion
-//                 sections={new Date(this.state.arrivalTime)}
-//                 renderHeader={this.renderHeader}
-//                 renderContent={this.renderContent}
-//               />
 
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
