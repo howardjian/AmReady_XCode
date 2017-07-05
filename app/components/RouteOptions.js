@@ -11,12 +11,18 @@ export default ({icon, duration}) => {
    <View >
 
 
-     <Button  style={{width: 340, alignSelf: 'center', backgroundColor: '#878787', borderRadius: 3}}>
-       <Text style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}> <Image
-       style={{width: 20, height: 20}}
-        source = {{uri: `https:${icon}`}}
-     /> Duration: <Text style={{color: 'white', fontSize: 18, paddingLeft: 15}}> {' ' + d +' minutes'} </Text></Text>
-
+     <Button
+       style={{width: 340, alignSelf: 'center', backgroundColor: '#878787', borderRadius: 3}}>
+         <Text style={{color: '#00BFFF', fontSize: 18, paddingLeft: 15}}>
+         <Image
+           style={{width: 20, height: 20}}
+           source = {{uri: `https:${icon}`}}
+         />
+           Duration:
+           <Text
+            style={{color: 'white', fontSize: 18, paddingLeft: 15}}> {' ' + d +' minutes'}
+           </Text>
+        </Text>
      </Button>
 
 
