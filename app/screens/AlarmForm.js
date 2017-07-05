@@ -131,7 +131,8 @@ class AlarmForm extends React.Component  {
                 style={{width: 340, alignSelf: 'center'}}
                 date={new Date(this.state.arrivalTime)}
                 mode="time"
-                format="HH:mm"
+                format="h:mm A"
+                is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 minuteInterval={10}
