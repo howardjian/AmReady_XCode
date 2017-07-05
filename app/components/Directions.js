@@ -51,16 +51,16 @@ export default class extends Component {
     getDirections(){
 
       if(this.state.start && this.state.end){
-        
         let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
+        
         this.state.userCurrent ? 
-        googleDirectionsQuery+= `origin=${this.state.start_lat},${this.state.start_long}&`:
+        googleDirectionsQuery+= `origin=${this.state.start_lat},${this.state.start_long}&`
+        :
         googleDirectionsQuery+= `origin=${this.state.start}&`
        
-
         googleDirectionsQuery+= `destination=${this.state.end}&`;
         googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
-
+        
         fetch(
           googleDirectionsQuery,
           { mode: 'no-cors' }
@@ -142,11 +142,11 @@ export default class extends Component {
       })
     }
 
-    getTheStartAddress(start){
+    getTheStartAddress(start){ 
         this.setState({start, userCurrent:false});
     }
 
-    getTheEndAddress(end){
+    getTheEndAddress(end){   
       this.setState({end})
     }
 

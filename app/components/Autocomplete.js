@@ -29,10 +29,9 @@ export default class extends Component {
                 this.setState({userLocation:location})
                 
         })
-    
-        
-        
+     
     }   
+
     textChange(string){
             const key = "AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
             let baseUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${string}`;
@@ -77,6 +76,7 @@ export default class extends Component {
              currentValue:places.description
             })
     }
+
     render(){
         return (
             <View>
@@ -87,6 +87,8 @@ export default class extends Component {
                     ref='searchBar'
                     value={this.state.currentTerm}   
                     onChangeText={text => {this.textChange(text)}}
+                    returnKeyType={ "done" }
+                   
                     />
                     {
                         this.state.possibleLocations ? 
