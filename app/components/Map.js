@@ -46,7 +46,7 @@ export default function({start_lat,start_long,end_lat,end_long, polylines}){
     )
 }
 
-function calcCenter(start_lat,start_long,end_lat,end_long){
+const calcCenter = (start_lat,start_long,end_lat,end_long) => {
   let startLat = start_lat;
   let startLong = start_long;
   let endLat = end_lat;
