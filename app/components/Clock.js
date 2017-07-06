@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Image } from 'react-native';
+import {Button, Divider} from 'react-native-elements';
 import { resetAlarm } from '../features/Audio';
 
 const dismissAlarm = (timerId) => {
@@ -14,17 +15,41 @@ const snoozeAlarm = (alarm) => {
 
 export default (props) => {
 	return (
-		<View>
-			<Text>Alarm is ringing!</Text>
-			<Button title="I'm Ready!" onPress={() => {
+		<View >
+			<Image style={{  height: 680, width: 420, alignContent: 'center', backgroundColor:'transparent' }} source={require('../assets/sunset-on-a-beach.gif')}>
+
+					<Divider style={{paddingTop: 460, opacity: 0}}>	</Divider>
+				 <Button
+				 	style={{  opacity: 0.5, backgroundColor: 'white'}}
+
+					textStyle={{ color: 'yellow', fontWeight: 'bold', fontSize: 22}}
+					title="Snooze"
+					onPress={() => {
+					snoozeAlarm(props.alarm)
+					props.clearAlarm();}}>
+				 </Button>
+
+				 <Divider style={{paddingTop: 20, opacity: 0}}>	</Divider>
+			<Button
+				style={{  opacity: 0.5, backgroundColor: 'white'}}
+
+				textStyle={{ color: 'yellow', fontWeight: 'bold', fontSize: 22}}
+				title="Dismiss" onPress={() => {
 				dismissAlarm(props.alarm.alarmInfo.timerId)
 				props.clearAlarm();
 			}}>
 			</Button>
-			<Button title="I'm not Ready!" onPress={() => {
-				snoozeAlarm(props.alarm)
-				props.clearAlarm();
-			}}></Button>
+
+
+			</Image>
+
+
+
+
 		</View>
+
 	)
 }
+
+
+

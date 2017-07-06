@@ -83,14 +83,14 @@ class AlarmForm extends React.Component  {
           // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
           // we will reset after each edit)
           if (currentAlarm.timerId) {
-              console.warn('resetting the background timer', currentAlarm.timerId);
+              // console.warn('resetting the background timer', currentAlarm.timerId);
               clearBackgroundTimer(currentAlarm.timerId);
           }
           const timerId = setTimer(currentAlarm, alarmIndex);
-          console.log('timerId', timerId);
+          // console.log('timerId', timerId);
           this.setState({timerId}, () => {
               this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
-              console.warn('CREATED TIMER ID', timerId);
+              // console.warn('CREATED TIMER ID', timerId);
           });
       })
       this.navigateHome();
