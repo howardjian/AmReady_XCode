@@ -13,39 +13,85 @@ export function resetAlarm(backgroundTimerId, setSnooze, alarm, alarmIndex) {
     cancelNotification(localNotification);
     console.warn('AUDIO SOUND', audioId);
     stopAudio(audioId);
-    if (setSnooze) setTimer(alarm, alarmIndex, true);
+    if (setSnooze) setTimer(alarm, alarmIndex, null, true);
 }
 
-export function clearBackgroundTimer(backgroundTimerId) {
-    BackgroundTimer.clearTimeout(backgroundTimerId);
+// export function clearBackgroundTimer(oldTimerId, newTimerId, type) {
+//     BackgroundTimer.clearTimeout(oldTimerId);
+//     if (newTimerId !== undefined) updateAlarmTimer(oldTimerId, newTimerId, type);
+// }
+
+export function clearBackgroundTimer(oldTimerId, newTimerId, updateAlarmTimer) {
+    BackgroundTimer.clearTimeout(oldTimerId);
+    if (newTimerId !== undefined) {
+        console.log('NEW TIMER ID', newTimerId);
+        updateAlarmTimer(oldTimerId, newTimerId);
+    }
 }
 
-export function setTimer (alarm, alarmIndex, setSnooze = false) {
+export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false) {
     let timeInMinUntilAlarmTriggers;
     if (setSnooze) {
         timeInMinUntilAlarmTriggers = SNOOZE_TIME_IN_MIN;
     } else {
         const arrivalTimeStr = alarm.arrivalTime;
         timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, +alarm.route.duration);
-        console.warn(arrivalTimeStr, alarm.prepTime, alarm.duration);
+        // console.warn(arrivalTimeStr, alarm.prepTime, alarm.duration);
     }
+    // settimeout( setInterval(someNewFuncToFetchDuration, 15min ) ,2hoursBefore timeInMinUntilAlarmTriggers)
+    // someNewFuncToFetchDuration = fetchduration, run calcTimeBeforeAlarmTriggers, if difference, reset timeinMin
     
-    console.warn('TIME', timeInMinUntilAlarmTriggers);
+    // console.warn('TIME', timeInMinUntilAlarmTriggers);
+    
+    // console.warn('AFTER UPDATING', timeInMinUntilAlarmTriggers);
     
     // NOTE: We modified the react-native-background-timer index.js file
     // such that the output of the setTimeout function is invoked with the timerId.
     // The timerId is passed to the notification object so the timer can be turned off eventually
     // Normally, the timerId is returned from setTimeout, but we don't have access to it inside of the callback function
 
-    return BackgroundTimer.setTimeout(function () {
-        return (timerId) => {
-          console.warn('timer id from inside timer function', timerId);
-          const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
-          audioId = playAudio();
-          localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
-        }
-      }, timeInMinUntilAlarmTriggers * 60000);
+    // return setTimerToCheckDuration(timeInMinUntilAlarmTriggers - (2*60*60000), updateAlarmTimer);
+    return setTimerToCheckDuration(10000, updateAlarmTimer, alarm, alarmIndex); // 10 sec
 }
+
+function setTimerToCheckDuration(time, updateAlarmTimer, alarm, alarmIndex) {
+    return BackgroundTimer.setTimeout(function () { // 1
+        return (timerId) => {
+        console.warn('1', timerId);
+        let timeInMinUntilAlarmTriggers = 4000;
+          const setIntervalTimeoutId = BackgroundTimer.setInterval(function() {
+                return (timerId) => {
+                    console.warn('2', timerId);
+                    // fetch duration
+                    // let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, fetch());
+                    // let timeInMinUntilAlarmTriggers = 4000;
+                    console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
+                    if (timeInMinUntilAlarmTriggers <= 2000) { // UPDATE
+                        // set ringer timeout
+                        let ringerTimeoutId = BackgroundTimer.setTimeout(function () {
+                            return (timerId) => {
+                                console.warn('3', timerId);
+                              // console.warn('timer id from inside timer function', timerId);
+                              const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
+                              audioId = playAudio();
+                              localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
+                            }
+                        }, 2000); // UPDATE: timeInMinUntilAlarmTriggers * 60000
+                        // clear timeout and update the timer
+                        console.warn('2.5', ringerTimeoutId);
+                        clearBackgroundTimer(timerId, ringerTimeoutId, updateAlarmTimer);
+                    }
+                    timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers - 2000;
+                }
+          }, 2000) // UPDATE
+          // clear timeout and update the timer
+          console.warn('1.5', setIntervalTimeoutId);
+          clearBackgroundTimer(timerId, setIntervalTimeoutId, updateAlarmTimer); // 1
+        }
+      }, time);
+}
+
+function 
 
 export function getEstimatedWakeupTime(arrivalTimeStr, prepTime, duration) {
     const timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, prepTime, duration);
