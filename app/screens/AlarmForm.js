@@ -31,7 +31,7 @@ class AlarmForm extends React.Component  {
       arrivalTime: new Date(),
       timerId: null
     }
-    console.warn(this.state.arrivalTime);
+
 		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
@@ -67,9 +67,30 @@ class AlarmForm extends React.Component  {
   }
 
   handleSave() {
+      let arrvialFormat = this.state.arrivalTime.split(":");
+      let hours = arrvialFormat[0];
+      let pm = false;
+      if(arrvialFormat[1].includes("PM")){
+        pm = true;
+      }
+      let mins = arrvialFormat[1].replace("AM","").replace("PM","");
+      let newDate = new Date();
+      if(pm){
+        if(hours === 12){
+          newDate.setHours("0");
+        }else{
+           newDate.setHours(String(12+parseInt(hours)));
+        }  
+      }else{
+        newDate.setHours(hours);
+      }
+      
+      newDate.setMinutes(mins);
+      this.state.arrivalTime = newDate;
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
+      
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
       .then(() => {
@@ -101,13 +122,7 @@ class AlarmForm extends React.Component  {
   }
 
   onDateChange (date) {
-    convertHHSS = date.split(":");
-    let newDate = new Date();
-    newDate.setHours(convertHHSS[0]);
-    newDate.setMinutes(convertHHSS[1])
-    this.setState({arrivalTime: newDate});
-    
-    
+    this.setState({arrivalTime: date});
   }
 
 
@@ -136,8 +151,9 @@ class AlarmForm extends React.Component  {
 
               <DatePicker
                 style={{width: 380, alignSelf: 'center'}}
-                date={new Date(this.state.arrivalTime)}
+                date={this.state.arrivalTime}
                 mode="time"
+                format="h:mm A"
                 is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
