@@ -82,7 +82,6 @@ function setAlarmTimer (timeInMin, alarm, alarmIndex) {
     return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
             console.warn('3', timerId);
-          // console.warn('timer id from inside timer function', timerId);
           const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
           audioId = playAudio();
           localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);

@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
-import { selectAlarm, triggerAlarm, silenceAlarm } from '../redux';
+import { triggerAlarm, silenceAlarm } from '../redux';
 
 class Home extends React.Component {
    constructor (props) {
@@ -31,11 +31,7 @@ class Home extends React.Component {
          return <Clock alarm={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
       } else if (this.props.alarms) {
          return (
-            <AlarmSelector
-                  alarms = {this.props.alarms}
-                  navigation = {this.props.navigation}
-                  setCurrentAlarm = {this.props.setCurrentAlarm}
-               />
+            <AlarmSelector navigation = {this.props.navigation} />
          )
       } else {
          return <View />
@@ -49,7 +45,6 @@ const mapStateToProps = ({alarms, alarmRinging}) => {
 
 const mapDispatchToProps = (dispatch) => {
    return {
-      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
       triggerAlarm: (alarm, alarmIndex) => dispatch(triggerAlarm(alarm, alarmIndex)),
       silenceAlarm: () => dispatch(silenceAlarm())
    }

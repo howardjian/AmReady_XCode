@@ -143,11 +143,11 @@ export default class extends Component {
       })
     }
 
-    getTheStartAddress(start){
+    getTheStartAddress(start){ 
         this.setState({start, userCurrent:false});
     }
 
-    getTheEndAddress(end){
+    getTheEndAddress(end){   
       this.setState({end})
     }
 
@@ -162,12 +162,12 @@ export default class extends Component {
               <View>
                 <Autocomplete savedState ={this.props.alarmInfo.start} start={true} getUserCurrentPosition={this.getUserCurrentPosition} locationChangeHandler={this.getTheStartAddress} placeHolder='From...' />
 
-                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{width: 380, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
                 <Autocomplete start={false} savedState ={this.props.alarmInfo.end} locationChangeHandler={this.getTheEndAddress} placeHolder='To...' />
 
-                <Divider style={{width: 340, alignSelf:'center', backgroundColor: '#696969'}}/>
+                <Divider style={{width: 380, alignSelf:'center', backgroundColor: '#696969'}}/>
                 <Divider style={{paddingTop: 8, backgroundColor: '#333333'}}/>
 
                <Button
