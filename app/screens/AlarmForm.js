@@ -65,32 +65,38 @@ class AlarmForm extends React.Component  {
         return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
+  dateTimeConverter(){
+        let arrvialFormat = this.state.arrivalTime.split(":");
+        let hours = arrvialFormat[0];
+        let pm = false;
+        if(arrvialFormat[1].includes("PM")){
+          pm = true;
+        }
+        let mins = arrvialFormat[1].replace("AM","").replace("PM","");
+        let newDate = new Date();
+          if(pm){
+              if(hours === "12"){
+                newDate.setHours(hours);
+              }else{
+                newDate.setHours(String(12+parseInt(hours))); 
+              }
+          }else{
+            if(hours === "12"){
+              newDate.setHours("00");
+            }else{
+              newDate.setHours(hours);
+            }
+        }
+        
+        newDate.setMinutes(mins);
+        return newDate;
+    }
 
   handleSave() {
-      let arrvialFormat = this.state.arrivalTime.split(":");
-      let hours = arrvialFormat[0];
-      let pm = false;
-      if(arrvialFormat[1].includes("PM")){
-        pm = true;
+      if(typeof this.state.arrivalTime != "object"){
+        this.state.arrivalTime  = this.dateTimeConverter();
       }
-      let mins = arrvialFormat[1].replace("AM","").replace("PM","");
-      let newDate = new Date();
-      if(pm){
-          if(hours === "12"){
-             newDate.setHours(hours);
-          }else{
-            newDate.setHours(String(12+parseInt(hours))); 
-          }
-      }else{
-        if(hours === "12"){
-          newDate.setHours("00");
-        }else{
-          newDate.setHours(hours);
-        }
-      }
-      
-      newDate.setMinutes(mins);
-      this.state.arrivalTime = newDate;
+
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
