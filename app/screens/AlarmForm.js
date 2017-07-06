@@ -101,7 +101,7 @@ class AlarmForm extends React.Component  {
   }
 
   onDateChange (date) {
-    this.setState({arrivalTime: date});
+    this.setState({arrivalTime: Date(date)});
   }
 
 
@@ -130,7 +130,7 @@ class AlarmForm extends React.Component  {
 
               <DatePicker
                 style={{width: 380, alignSelf: 'center'}}
-                date={new Date(this.state.arrivalTime)}
+                date={this.state.arrivalTime}
                 mode="time"
                 format="h:mm A"
                 is24Hour={false}
