@@ -154,8 +154,6 @@ export default class extends Component {
       this.setState({start_lat,start_long, userCurrent:true, start:true});
     }
 
-
-
     render(){
         return (
           <View>

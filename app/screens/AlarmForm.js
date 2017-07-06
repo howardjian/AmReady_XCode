@@ -54,6 +54,7 @@ class AlarmForm extends React.Component  {
   }
 
   updateNewState(changedState) {
+		console.warn('i need to see the changedState', changedState);
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
