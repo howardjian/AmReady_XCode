@@ -21,7 +21,12 @@ class AlarmSelector extends React.Component   {
 		}
 
 	componentWillReceiveProps (props) {
-		if (this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+		// if (this.state.dataSource._cachedRowCount === 0) 
+			this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  	}
+
+  	componentWillMount () {
+  		// this.setState({dataSource: ds.cloneWithRows(this.props.alarms)});
   	}
 
 	deleteAlarm(alarm, alarmIndex){
@@ -31,6 +36,7 @@ class AlarmSelector extends React.Component   {
 
 
 renderRow(rowData, rowIndex, index) {
+		// if(index === 1) return;
 			let swipeBtns = [{
 				text: 'Delete',
 				backgroundColor: 'red',
