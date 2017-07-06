@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
 import { Divider, Slider, Grid, Col, Row, Badge} from 'react-native-elements';
-import {resetAlarm} from '../features/Timer';
+import {resetAlarm, getEstimatedWakeupTime} from '../features/Timer';
 import { Container, Content, Button, Text } from 'native-base';
 
 import {getArrivalTimeString} from '../../utils/utils';
@@ -15,7 +15,7 @@ class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
 		    this.state = {
-		        dataSource: ds.cloneWithRows([])
+		        dataSource: ds.cloneWithRows(this.props.alarms)
 		    };
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
@@ -44,7 +44,7 @@ renderRow(rowData, rowIndex, index) {
 				onPress: () => { this.deleteAlarm(rowData, +index) }
 			}];
 
-			let arrivalTimeStr = getArrivalTimeString(rowData.arrivalTime);
+			let arrivalTimeStr = getArrivalTimeString(getEstimatedWakeupTime(rowData.arrivalTime, +rowData.prepTime, +rowData.route.duration));
 
 			arrivalTimeStr = arrivalTimeStr.split(" ");
 			const etaDateStr = getArrivalTimeString(rowData.arrivalTime);
