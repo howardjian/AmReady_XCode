@@ -93,10 +93,6 @@ renderRow(rowData, rowIndex, index) {
 			)
 	}
 
-	// <View style={{ height: 100, backgroundColor: '#575757', paddingLeft: 20, flexDirection: 'row'}}>
-
-// <Text style={{paddingLeft: 15, paddingTop: 21, color: 'white'}}> {  'Mon, Tue, Wed'}  </Text>
-
 
 	render(){
 			return (
