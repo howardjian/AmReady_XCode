@@ -71,7 +71,6 @@ export default class extends Component {
 
               this.setState({responseObjRoutes: routes})
               let tmpOptions = [];
-              let lines = [];
               for(let j = 0; j < routes.length; j++) {
                 let duration = routes[j].legs[0].duration
                 let currentRoute = routes[j].legs[0].steps
