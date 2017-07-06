@@ -83,7 +83,6 @@ export const AsyncStorageFormat = (currentAlarm) => {
 }
 
 export const getArrivalTimeString = (time) => {
-    console.warn(time);
     const arrivalTime = new Date(time);
     const minutes = arrivalTime.getMinutes() < 10 ? `0${arrivalTime.getMinutes()}` : arrivalTime.getMinutes();
     let hours = arrivalTime.getHours();
