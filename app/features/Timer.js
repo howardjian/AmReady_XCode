@@ -52,7 +52,7 @@ export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false
     // Normally, the timerId is returned from setTimeout, but we don't have access to it inside of the callback function
 
     // return setTimerToCheckDuration(timeInMinUntilAlarmTriggers - (2*60*60000), updateAlarmTimer);
-    return setTimerToCheckDuration(5000, updateAlarmTimer, alarm, alarmIndex); // 10 sec
+    return setTimerToCheckDuration(2000, updateAlarmTimer, alarm, alarmIndex); // 10 sec
 }
 
 function setTimerToCheckDuration(time, updateAlarmTimer, alarm, alarmIndex) {
@@ -88,7 +88,6 @@ function setAlarmTimer (timeInMin, alarm, alarmIndex) {
     return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
             console.warn('3', timerId);
-          // console.warn('timer id from inside timer function', timerId);
           const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
           audioId = playAudio();
           localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
