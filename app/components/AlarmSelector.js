@@ -22,7 +22,7 @@ class AlarmSelector extends React.Component   {
 		}
 
 	componentWillReceiveProps (props) {
-      this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+			if(this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
   }
 
 
