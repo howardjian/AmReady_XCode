@@ -102,7 +102,7 @@ export const getDuration = (currentAlarm) => {
   googleDirectionsQuery+= `destination=${currentAlarm.route.address.end}&`;
   googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
 
-  fetch(
+  return fetch(
     googleDirectionsQuery,
     { mode: 'no-cors' }
   )

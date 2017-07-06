@@ -63,20 +63,23 @@ function setTimerToCheckDuration(time, updateAlarmTimer, alarm, alarmIndex) {
         let timeInMinUntilAlarmTriggers = 4000;
           const setIntervalTimeoutId = BackgroundTimer.setInterval(function() {
                 return (timerId) => {
-                    console.warn('2', timerId);
-                    console.warn('pliss', getDuration(alarm));
-                    // fetch duration
-                    // let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, fetch());
-                    // let timeInMinUntilAlarmTriggers = 4000;
-                    console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
-                    if (timeInMinUntilAlarmTriggers <= 2000) { // UPDATE
-                        // set ringer timeout
-                        let ringerTimeoutId = setAlarmTimer(0.1, alarm, alarmIndex); // UPDATE: timeInMinUntilAlarmTriggers
-                        console.warn('2.5', ringerTimeoutId);
-                        // clear timeout and update the timer
-                        clearBackgroundTimer(timerId, ringerTimeoutId, updateAlarmTimer);
-                    }
-                    timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers - 2000;
+                    getDuration(alarm)
+                    .then(duration => {
+                        console.warn('2', timerId);
+                        console.warn('pliss', duration);
+                        // fetch duration
+                        // let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, fetch());
+                        // let timeInMinUntilAlarmTriggers = 4000;
+                        console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
+                        if (timeInMinUntilAlarmTriggers <= 2000) { // UPDATE
+                            // set ringer timeout
+                            let ringerTimeoutId = setAlarmTimer(0.1, alarm, alarmIndex); // UPDATE: timeInMinUntilAlarmTriggers
+                            console.warn('2.5', ringerTimeoutId);
+                            // clear timeout and update the timer
+                            clearBackgroundTimer(timerId, ringerTimeoutId, updateAlarmTimer);
+                        }
+                        timeInMinUntilAlarmTriggers = timeInMinUntilAlarmTriggers - 2000;
+                    })
                 }
           }, 2000) // UPDATE
           // clear timeout and update the timer
