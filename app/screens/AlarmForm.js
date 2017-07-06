@@ -54,7 +54,6 @@ class AlarmForm extends React.Component  {
   }
 
   updateNewState(changedState) {
-		console.warn('i need to see the changedState', changedState);
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
@@ -94,13 +93,16 @@ class AlarmForm extends React.Component  {
     }
 
   handleSave() {
-      if(typeof this.state.arrivalTime != "object"){
-        this.state.arrivalTime  = this.dateTimeConverter();
-      }
-
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
-      const currentAlarm = AsyncStorageFormat(this.state);
+      let currentAlarm;
+      if(typeof this.state.arrivalTime != "object"){
+        this.state.arrivalTime  = this.dateTimeConverter();
+        currentAlarm = AsyncStorageFormat(this.state);
+      }else{
+        currentAlarm = AsyncStorageFormat(this.state);
+      }
+
       
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
@@ -109,13 +111,12 @@ class AlarmForm extends React.Component  {
           // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
           // we will reset after each edit)
           if (currentAlarm.timerId) {
-              // console.warn('resetting the background timer', currentAlarm.timerId);
               clearBackgroundTimer(currentAlarm.timerId);
           }
           const timerId = setTimer(currentAlarm, alarmIndex, updateAlarmTimer);
           this.setState({timerId}, () => {
               this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
-              // console.warn('CREATED TIMER ID', timerId);
+              
           });
       })
       this.navigateHome();

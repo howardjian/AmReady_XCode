@@ -120,9 +120,7 @@ export const updateAlarmTimer = (oldTimerId, newTimerId) => {
 	AsyncStorage.getItem('alarms')
 	.then(alarms => {
 		let index;
-		console.warn('ALARMSSS', alarms);
 		const myAlarm = JSON.parse(alarms).filter((alarm, i) => {
-			// console.warn('in filter', i);
 			if (alarm.timerId === oldTimerId) index = i;
 			return alarm.timerId === oldTimerId;
 		});

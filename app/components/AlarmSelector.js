@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
 import { Divider, Slider, Grid, Col, Row, Badge} from 'react-native-elements';
-import {resetAlarm} from '../features/Audio';
+import {resetAlarm} from '../features/Timer';
 import { Container, Content, Button, Text } from 'native-base';
 
 import {getArrivalTimeString} from '../../utils/utils';
@@ -15,14 +15,14 @@ class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
       this.state = {
-          dataSource: ds.cloneWithRows(props.alarms)
+          dataSource: ds.cloneWithRows(this.props.alarms)
       };
 
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
 
 	componentWillReceiveProps (props) {
-      this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+			if(this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
   }
 
 
@@ -37,7 +37,6 @@ renderRow(rowData, rowIndex, index) {
 				text: 'Delete',
 				backgroundColor: 'red',
 				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-
 				onPress: () => { this.deleteAlarm(rowData, +index) }
 			}];
 
@@ -75,7 +74,7 @@ renderRow(rowData, rowIndex, index) {
 <Col size={1}>
 
 								<Badge containerStyle={{ marginLeft: 21,  top: 32,  right: 25,  backgroundColor: 'black', borderWidth: 0, borderColor: '#00BFFF' }}>
-								<Text style={ { color: 'white', alignContent: 'center', fontFamily: 'Digital Dismay', fontSize: 30 }}>{arrivalTimeStr[0]}</Text>
+								<Text style={ { color: 'white', alignContent: 'center', fontFamily: 'Digital Dismay', fontSize: 28 }}>{arrivalTimeStr[0]}</Text>
 
 
 								</Badge>
