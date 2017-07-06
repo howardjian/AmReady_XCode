@@ -66,11 +66,42 @@ class AlarmForm extends React.Component  {
         return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
+  dateTimeConverter(){
+        let arrvialFormat = this.state.arrivalTime.split(":");
+        let hours = arrvialFormat[0];
+        let pm = false;
+        if(arrvialFormat[1].includes("PM")){
+          pm = true;
+        }
+        let mins = arrvialFormat[1].replace("AM","").replace("PM","");
+        let newDate = new Date();
+          if(pm){
+              if(hours === "12"){
+                newDate.setHours(hours);
+              }else{
+                newDate.setHours(String(12+parseInt(hours))); 
+              }
+          }else{
+            if(hours === "12"){
+              newDate.setHours("00");
+            }else{
+              newDate.setHours(hours);
+            }
+        }
+        
+        newDate.setMinutes(mins);
+        return newDate;
+    }
 
   handleSave() {
+      if(typeof this.state.arrivalTime != "object"){
+        this.state.arrivalTime  = this.dateTimeConverter();
+      }
+
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
+      
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
       .then(() => {
@@ -131,7 +162,7 @@ class AlarmForm extends React.Component  {
 
               <DatePicker
                 style={{width: 380, alignSelf: 'center'}}
-                date={new Date(this.state.arrivalTime)}
+                date={this.state.arrivalTime}
                 mode="time"
                 format="h:mm A"
                 is24Hour={false}
