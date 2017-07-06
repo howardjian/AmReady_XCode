@@ -76,13 +76,17 @@ class AlarmForm extends React.Component  {
       let mins = arrvialFormat[1].replace("AM","").replace("PM","");
       let newDate = new Date();
       if(pm){
-        if(hours === 12){
-          newDate.setHours("0");
-        }else{
-           newDate.setHours(String(12+parseInt(hours)));
-        }  
+          if(hours === "12"){
+             newDate.setHours(hours);
+          }else{
+            newDate.setHours(String(12+parseInt(hours))); 
+          }
       }else{
-        newDate.setHours(hours);
+        if(hours === "12"){
+          newDate.setHours("00");
+        }else{
+          newDate.setHours(hours);
+        }
       }
       
       newDate.setMinutes(mins);
