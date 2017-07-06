@@ -1,6 +1,7 @@
 import BackgroundTimer from 'react-native-background-timer';
 import { createLocalNotification, cancelNotification } from './Notifications';
 import { playAudio, stopAudio } from './Audio';
+import { getDuration } from '../../utils/utils';
 
 const SNOOZE_TIME_IN_MIN = 0.1;
 
@@ -41,11 +42,11 @@ export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false
     }
     // settimeout( setInterval(someNewFuncToFetchDuration, 15min ) ,2hoursBefore timeInMinUntilAlarmTriggers)
     // someNewFuncToFetchDuration = fetchduration, run calcTimeBeforeAlarmTriggers, if difference, reset timeinMin
-    
+
     // console.warn('TIME', timeInMinUntilAlarmTriggers);
-    
+
     // console.warn('AFTER UPDATING', timeInMinUntilAlarmTriggers);
-    
+
     // NOTE: We modified the react-native-background-timer index.js file
     // such that the output of the setTimeout function is invoked with the timerId.
     // The timerId is passed to the notification object so the timer can be turned off eventually
@@ -63,6 +64,7 @@ function setTimerToCheckDuration(time, updateAlarmTimer, alarm, alarmIndex) {
           const setIntervalTimeoutId = BackgroundTimer.setInterval(function() {
                 return (timerId) => {
                     console.warn('2', timerId);
+                    console.warn('pliss', getDuration(alarm));
                     // fetch duration
                     // let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, fetch());
                     // let timeInMinUntilAlarmTriggers = 4000;
@@ -120,4 +122,3 @@ function calcTimeInMin (time) {
     const dateObj = time ? new Date(time) : new Date();
     return dateObj.getHours() * 60 + dateObj.getMinutes();
 }
-

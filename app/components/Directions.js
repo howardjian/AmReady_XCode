@@ -71,6 +71,7 @@ export default class extends Component {
 
               this.setState({responseObjRoutes: routes})
               let tmpOptions = [];
+              let lines = [];
               for(let j = 0; j < routes.length; j++) {
                 let duration = routes[j].legs[0].duration
                 let currentRoute = routes[j].legs[0].steps
@@ -153,8 +154,6 @@ export default class extends Component {
     getUserCurrentPosition(start_lat,start_long){
       this.setState({start_lat,start_long, userCurrent:true, start:true});
     }
-
-
 
     render(){
         return (
