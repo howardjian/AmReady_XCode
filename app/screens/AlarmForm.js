@@ -69,6 +69,7 @@ class AlarmForm extends React.Component  {
   handleSave() {
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
+      this.state.arrivalTime = Date(this.state.arrivalTime);
       const currentAlarm = AsyncStorageFormat(this.state);
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
@@ -101,7 +102,7 @@ class AlarmForm extends React.Component  {
   }
 
   onDateChange (date) {
-    this.setState({arrivalTime: Date(date)});
+    this.setState({arrivalTime: date});
   }
 
 
