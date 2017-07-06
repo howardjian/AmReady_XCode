@@ -3,7 +3,7 @@ import { View, StyleSheet, ListView, TouchableHighlight} from 'react-native';
 import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
-import { Divider, Slider, Grid, Col, Button, Text} from 'react-native-elements';
+import { Divider, Text} from 'react-native-elements';
 import {resetAlarm} from '../features/Audio';
 
 import {getArrivalTimeString} from '../../utils/utils';
@@ -14,25 +14,19 @@ class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
       this.state = {
-          dataSource: ds.cloneWithRows([])
+          dataSource: ds.cloneWithRows(props.alarms)
       };
 
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
 
 	componentWillReceiveProps (props) {
-       
-        const alarmKeys = props.alarms.map((alarm, index) => {
-            return alarm; // need to stringify values because objects look the same to flatlist, and only renders first
-        });
-        this.setState({dataSource: ds.cloneWithRows(alarmKeys)});
-    }
+      this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  }
 
 
 	deleteAlarm(alarm, alarmIndex){
-
 		resetAlarm(alarm.timerId);
-
 		this.props.deleteSelectedAlarm(this.props.alarms, alarmIndex);
 	}
 
@@ -51,10 +45,9 @@ renderRow(rowData, rowIndex, index) {
 			return (
 
 				<Swipeout right={swipeBtns}
-					autoClose='true'
+					autoClose={true}
 					backgroundColor= 'transparent'>
 					<TouchableHighlight
-						underlayColor='rgba(192,192,192,1,0.6)'
 						onPress={() => {
 							this.props.selectAlarm(rowData, +index);
 							this.props.navigation.navigate('alarmDetail', rowData);
@@ -76,16 +69,10 @@ renderRow(rowData, rowIndex, index) {
 
 
 	render(){
-			const alarmKeys = this.props.alarms.map((alarm, index) => {
-				return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
-			});
-
-
 			return (
-
 					<View style={styles.container}>
 						{
-							alarmKeys.length ?
+							this.props.alarms.length ?
 							<ListView
 								dataSource={this.state.dataSource}
 								renderRow={this.renderRow.bind(this) }
@@ -105,8 +92,8 @@ const mapStateToProps = ({alarms, currentAlarm}) => {
 
 const mapDispatchToProps = (dispatch) => {
    return {
-		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm(currentAlarms, alarmIndex)),
-		selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+		  deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm(currentAlarms, alarmIndex)),
+		  selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
    }
 }
 

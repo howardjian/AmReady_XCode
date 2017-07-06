@@ -116,6 +116,26 @@ const updateAlarmsInAsyncStorage = (alarms) => {
 	}
 }
 
+export const updateAlarmTimer = (oldTimerId, newTimerId) => {
+	AsyncStorage.getItem('alarms')
+	.then(alarms => {
+		let index;
+		console.warn('ALARMSSS', alarms);
+		const myAlarm = JSON.parse(alarms).filter((alarm, i) => {
+			// console.warn('in filter', i);
+			if (alarm.timerId === oldTimerId) index = i;
+			return alarm.timerId === oldTimerId;
+		});
+		console.warn('what is the alarm?', myAlarm);
+		const newAlarm = Object.assign({}, myAlarm);
+		newAlarm.timerId = newTimerId;
+		// newAlarm.timerType = type;
+		alarms[index] = newAlarm;
+		return updateAlarmsInAsyncStorage(alarms);
+	})
+	.catch(console.error.bind(console));
+}
+
 export const triggerAlarm = (alarm, alarmIndex) => {
 	return setAlarmRinging(alarm, alarmIndex);
 }

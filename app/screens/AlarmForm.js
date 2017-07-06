@@ -5,7 +5,7 @@ import Directions from '../components/Directions';
 import { setTimer, clearBackgroundTimer } from '../features/Timer';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
-import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
+import { updateAlarm, saveNewAlarm, unselectAlarm, updateAlarmTimer } from '../redux';
 import { Divider, Slider} from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
 import DatePicker from 'react-native-datepicker';
@@ -80,7 +80,7 @@ class AlarmForm extends React.Component  {
               console.warn('resetting the background timer', currentAlarm.timerId);
               clearBackgroundTimer(currentAlarm.timerId);
           }
-          const timerId = setTimer(currentAlarm, alarmIndex);
+          const timerId = setTimer(currentAlarm, alarmIndex, updateAlarmTimer);
           console.log('timerId', timerId);
           this.setState({timerId}, () => {
               this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
@@ -197,7 +197,8 @@ const mapDispatchToProps = (dispatch) => {
    return {
         updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
         saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
-        unselectAlarm: () => dispatch(unselectAlarm())
+        unselectAlarm: () => dispatch(unselectAlarm()),
+        updateAlarmTimer: (oldTimerId, newTimerId) => dispatch(updateAlarmTimer(oldTimerId, newTimerId))
    }
 }
 
