@@ -3,8 +3,9 @@ import { View, StyleSheet, ListView, TouchableHighlight} from 'react-native';
 import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
-import { Divider, Text} from 'react-native-elements';
+import { Divider, Slider, Grid, Col, Row, Badge} from 'react-native-elements';
 import {resetAlarm} from '../features/Audio';
+import { Container, Content, Button, Text } from 'native-base';
 
 import {getArrivalTimeString} from '../../utils/utils';
 
@@ -40,7 +41,10 @@ renderRow(rowData, rowIndex, index) {
 				onPress: () => { this.deleteAlarm(rowData, +index) }
 			}];
 
-			const arrivalTimeStr = getArrivalTimeString(rowData.arrivalTime);
+			let arrivalTimeStr = getArrivalTimeString(rowData.arrivalTime);
+
+			arrivalTimeStr = arrivalTimeStr.split(" ");
+			const etaDateStr = getArrivalTimeString(rowData.arrivalTime);
 
 			return (
 
@@ -52,20 +56,42 @@ renderRow(rowData, rowIndex, index) {
 							this.props.selectAlarm(rowData, +index);
 							this.props.navigation.navigate('alarmDetail', rowData);
 						}} >
-						<View>
-							<View style={{ height: 100, backgroundColor: '#575757'}}>
+						<View style={{ height: 100, backgroundColor: '#575757'}}>
+						<Grid >
 
-								<Text style={{paddingLeft: 15, paddingTop: 21, paddingBottom: 3, color: '#00BFFF', fontSize: 22}}> {rowData.alarmName}</Text>
-								<Text style={{paddingLeft: 15, paddingTop: 3, color: 'white'}}> {  'Mon, Tue, Wed'}  </Text>
-								<Text  style={{paddingLeft: 15, paddingTop: 3, color: 'white'}}>{ ' ' + arrivalTimeStr + ' ' + rowData.duration}</Text>
-							</View>
+
+							<Col size={2}>
+							<Row>
+								<Text style={{left: 17, paddingTop: 20, paddingBottom: 10, color: '#00BFFF',fontSize: 22}}> {rowData.alarmName}</Text>
+								</Row>
+								<Row>
+								<Text style={{ paddingTop: 6, color: 'white', left: 21}}>{`ETA: ${etaDateStr}`}</Text>
+								</Row>
+</Col>
+
+								<Divider style={{backgroundColor: '#575757', paddingTop: 21}} />
+
+
+<Col size={1}>
+
+								<Badge containerStyle={{ marginLeft: 21,  top: 32,  right: 25,  backgroundColor: 'black', borderWidth: 0, borderColor: '#00BFFF' }}>
+								<Text style={ { color: 'white', alignContent: 'center', fontFamily: 'Digital Dismay', fontSize: 30 }}>{arrivalTimeStr[0]}</Text>
+
+
+								</Badge>
+
+
+</Col>
+<Col size={0.5}><Text style={{top: 42,  color:'white', fontSize: 18, left: -19}}>{' ' + arrivalTimeStr[1]}</Text></Col>
+
+
+							</Grid>
 							<Divider style={{backgroundColor: '#333333', paddingBottom: 2}} />
 						</View>
 					</TouchableHighlight>
 				</Swipeout>
 			)
 	}
-
 
 
 	render(){
@@ -79,6 +105,10 @@ renderRow(rowData, rowIndex, index) {
 							/>
 							 : null
 						}
+
+
+
+
 					</View>
 					)
 
