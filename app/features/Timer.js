@@ -11,18 +11,18 @@ let audioId = null;
 let localNotification = null;
 
 export function resetAlarm(backgroundTimerId, setSnooze, alarm, alarmIndex) {
-    console.warn('CLEARING TIME', backgroundTimerId);
     clearBackgroundTimer(backgroundTimerId);
     cancelNotification(localNotification);
-    console.warn('AUDIO SOUND', audioId);
-    stopAudio(audioId);
+    if(audioId){
+        stopAudio(audioId);
+    }
+    
     if (setSnooze) setTimer(alarm, alarmIndex, null, true);
 }
 
 export function clearBackgroundTimer(oldTimerId, newTimerId, updateAlarmTimer) {
     BackgroundTimer.clearTimeout(oldTimerId);
     if (newTimerId !== undefined) {
-        console.log('NEW TIMER ID', newTimerId);
         updateAlarmTimer(oldTimerId, newTimerId);
     }
 }
