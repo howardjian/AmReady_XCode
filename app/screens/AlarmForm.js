@@ -31,7 +31,7 @@ class AlarmForm extends React.Component  {
       arrivalTime: new Date(),
       timerId: null
     }
-
+    console.warn(this.state.arrivalTime);
 		this.saveAlarmDetails = this.saveAlarmDetails.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
@@ -69,7 +69,6 @@ class AlarmForm extends React.Component  {
   handleSave() {
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
-      this.state.arrivalTime = Date(this.state.arrivalTime);
       const currentAlarm = AsyncStorageFormat(this.state);
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
@@ -102,7 +101,13 @@ class AlarmForm extends React.Component  {
   }
 
   onDateChange (date) {
-    this.setState({arrivalTime: date});
+    convertHHSS = date.split(":");
+    let newDate = new Date();
+    newDate.setHours(convertHHSS[0]);
+    newDate.setMinutes(convertHHSS[1])
+    this.setState({arrivalTime: newDate});
+    
+    
   }
 
 
@@ -131,9 +136,8 @@ class AlarmForm extends React.Component  {
 
               <DatePicker
                 style={{width: 380, alignSelf: 'center'}}
-                date={this.state.arrivalTime}
+                date={new Date(this.state.arrivalTime)}
                 mode="time"
-                format="h:mm A"
                 is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
