@@ -14,17 +14,15 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
-      this.state = {
-          dataSource: ds.cloneWithRows(this.props.alarms)
-      };
-
+		    this.state = {
+		        dataSource: ds.cloneWithRows([])
+		    };
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
 
 	componentWillReceiveProps (props) {
-			if(this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
-  }
-
+		if (this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  	}
 
 	deleteAlarm(alarm, alarmIndex){
 		resetAlarm(alarm.timerId);
