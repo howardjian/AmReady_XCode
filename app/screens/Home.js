@@ -4,14 +4,12 @@ import {View} from 'react-native';
 import AlarmSelector from '../components/AlarmSelector';
 import Clock from '../components/Clock';
 import NotificationsIOS from 'react-native-notifications';
-import { selectAlarm, triggerAlarm, silenceAlarm } from '../redux';
+import { triggerAlarm, silenceAlarm } from '../redux';
 
 class Home extends React.Component {
    constructor (props) {
       super(props);
       NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.addEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
    onNotificationReceived(notification) {
       // only do this if there is no alarm ringing currently
@@ -26,8 +24,6 @@ class Home extends React.Component {
    componentWillUnmount() {
       // Don't forget to remove the event listeners to prevent memory leaks!
       NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceived.bind(this));
-      // NotificationsIOS.removeEventListener('notificationOpened', this.onNotificationOpened.bind(this));
    }
 
    render() {
@@ -35,11 +31,7 @@ class Home extends React.Component {
          return <Clock alarm={this.props.alarmRinging} clearAlarm={this.props.silenceAlarm} />
       } else if (this.props.alarms) {
          return (
-            <AlarmSelector
-                  alarms = {this.props.alarms}
-                  navigation = {this.props.navigation}
-                  setCurrentAlarm = {this.props.setCurrentAlarm}
-               />
+            <AlarmSelector navigation = {this.props.navigation} />
          )
       } else {
          return <View />
@@ -53,7 +45,6 @@ const mapStateToProps = ({alarms, alarmRinging}) => {
 
 const mapDispatchToProps = (dispatch) => {
    return {
-      setCurrentAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
       triggerAlarm: (alarm, alarmIndex) => dispatch(triggerAlarm(alarm, alarmIndex)),
       silenceAlarm: () => dispatch(silenceAlarm())
    }

@@ -68,6 +68,7 @@ export const AsyncStorageFormat = (currentAlarm) => {
          start: currentAlarm.start,
          end: currentAlarm.end
        },
+       routeSelectedHash: currentAlarm.routeSelectedHash,
        routeSelectedBool: currentAlarm.routeSelectedBool,
        duration: currentAlarm.duration
     },
@@ -86,11 +87,49 @@ export const getArrivalTimeString = (time) => {
     const arrivalTime = new Date(time);
     const minutes = arrivalTime.getMinutes() < 10 ? `0${arrivalTime.getMinutes()}` : arrivalTime.getMinutes();
     let hours = arrivalTime.getHours();
-    let amPm = 'AM';
-    if (hours > 12) {
+    let label = 'AM';
+    if (hours >= 12) {
+      if(hours > 12){
         hours = hours - 12;
-        amPm = 'PM';
+      }
+      label = 'PM';
+    } else if(!hours) {
+      hours = 12;
     }
 
-    return `${hours}:${minutes} ${amPm}`;
+    return `${hours}:${minutes} ${label}`;
+}
+
+export const getDuration = (currentAlarm) => {
+  let googleDirectionsQuery = "https://maps.googleapis.com/maps/api/directions/json?";
+  googleDirectionsQuery+= `origin=${currentAlarm.route.address.start}&`
+  googleDirectionsQuery+= `destination=${currentAlarm.route.address.end}&`;
+  googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
+
+  return fetch(
+    googleDirectionsQuery,
+    { mode: 'no-cors' }
+  )
+  .then(
+      (responseText) => {
+        let routes = JSON.parse(responseText['_bodyInit'])["routes"];
+        let allRoutes = [];
+        routes.forEach(route => {
+          allRoutes.push(route);
+        })
+        let foundRoute = allRoutes.filter(route => {
+          return route["overview_polyline"]["points"] === currentAlarm.route.routeSelectedHash;
+        })
+        //testing purposes!!!
+        // console.error(foundRoute[0]["overview_polyline"], "----------------", currentAlarm.route.routeSelectedHash);
+        let duration = foundRoute[0].legs[0].duration.value;
+        console.warn('duration is here', duration);
+        return duration
+      }
+  )
+  .catch(
+      (error) => {
+          console.warn('Error', error);
+      }
+  );
 }

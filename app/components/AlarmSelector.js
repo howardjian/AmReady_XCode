@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, ListView, TouchableHighlight} from 'react-native';
+import { View, StyleSheet, ListView, TouchableHighlight} from 'react-native';
 import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
@@ -9,33 +9,25 @@ import { Container, Content, Button, Text } from 'native-base';
 
 import {getArrivalTimeString} from '../../utils/utils';
 
-
-
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
-			const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
-          dataSource: ds.cloneWithRows([])
+          dataSource: ds.cloneWithRows(props.alarms)
       };
 
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
 
 	componentWillReceiveProps (props) {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        const alarmKeys = props.alarms.map((alarm, index) => {
-            return alarm; // need to stringify values because objects look the same to flatlist, and only renders first
-        });
-        this.setState({dataSource: ds.cloneWithRows(alarmKeys)});
-    }
+      this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  }
 
 
 	deleteAlarm(alarm, alarmIndex){
-
 		resetAlarm(alarm.timerId);
-
 		this.props.deleteSelectedAlarm(this.props.alarms, alarmIndex);
 	}
 
@@ -57,10 +49,9 @@ renderRow(rowData, rowIndex, index) {
 			return (
 
 				<Swipeout right={swipeBtns}
-					autoClose='true'
+					autoClose={true}
 					backgroundColor= 'transparent'>
 					<TouchableHighlight
-						underlayColor='rgba(192,192,192,1,0.6)'
 						onPress={() => {
 							this.props.selectAlarm(rowData, +index);
 							this.props.navigation.navigate('alarmDetail', rowData);
@@ -108,16 +99,10 @@ renderRow(rowData, rowIndex, index) {
 
 
 	render(){
-			const alarmKeys = this.props.alarms.map((alarm, index) => {
-				return {key: JSON.stringify(alarm)} // need to stringify values because objects look the same to flatlist, and only renders first
-			});
-
-
 			return (
-
 					<View style={styles.container}>
 						{
-							alarmKeys.length ?
+							this.props.alarms.length ?
 							<ListView
 								dataSource={this.state.dataSource}
 								renderRow={this.renderRow.bind(this) }
@@ -135,16 +120,14 @@ renderRow(rowData, rowIndex, index) {
   }
 
 
-
-
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}
 }
 
 const mapDispatchToProps = (dispatch) => {
    return {
-		deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm(currentAlarms, alarmIndex)),
-		selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex))
+		  deleteSelectedAlarm: (currentAlarms, alarmIndex) => dispatch(deleteSelectedAlarm(currentAlarms, alarmIndex)),
+		  selectAlarm: (alarm, alarmIndex) => dispatch(selectAlarm(alarm, alarmIndex)),
    }
 }
 
@@ -179,7 +162,3 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-
-
-

@@ -90,11 +90,7 @@ export const unselectAlarm = () => {
 }
 
 export const deleteSelectedAlarm = (currentAlarms, alarmIndex) => {
-	console.log('1',currentAlarms);
-	// currentAlarms = JSON.parse(currentAlarms)
-	// console.log('2',currentAlarms);
 	const updatedAlarms = currentAlarms.filter((alarm, index) => index !== alarmIndex);
-	console.log("updateAlarms", updatedAlarms);
 	return updateAlarmsInAsyncStorage(updatedAlarms);
 }
 
@@ -118,6 +114,26 @@ const updateAlarmsInAsyncStorage = (alarms) => {
 	      dispatch(setAlarms(alarms));
 	    })
 	}
+}
+
+export const updateAlarmTimer = (oldTimerId, newTimerId) => {
+	AsyncStorage.getItem('alarms')
+	.then(alarms => {
+		let index;
+		console.warn('ALARMSSS', alarms);
+		const myAlarm = JSON.parse(alarms).filter((alarm, i) => {
+			// console.warn('in filter', i);
+			if (alarm.timerId === oldTimerId) index = i;
+			return alarm.timerId === oldTimerId;
+		});
+		console.warn('what is the alarm?', myAlarm);
+		const newAlarm = Object.assign({}, myAlarm);
+		newAlarm.timerId = newTimerId;
+		// newAlarm.timerType = type;
+		alarms[index] = newAlarm;
+		return updateAlarmsInAsyncStorage(alarms);
+	})
+	.catch(console.error.bind(console));
 }
 
 export const triggerAlarm = (alarm, alarmIndex) => {

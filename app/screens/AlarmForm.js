@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Button,
-  DatePickerIOS } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Directions from '../components/Directions';
-import { setTimer, clearBackgroundTimer } from '../features/Audio';
+import { setTimer, clearBackgroundTimer } from '../features/Timer';
 import { stateifyDbData, AsyncStorageFormat } from '../../utils/utils';
 import { connect } from 'react-redux';
-import { updateAlarm, saveNewAlarm, unselectAlarm } from '../redux';
+import { updateAlarm, saveNewAlarm, unselectAlarm, updateAlarmTimer } from '../redux';
 import { Divider, Slider} from 'react-native-elements';
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
 import DatePicker from 'react-native-datepicker';
@@ -60,6 +54,7 @@ class AlarmForm extends React.Component  {
   }
 
   updateNewState(changedState) {
+		console.warn('i need to see the changedState', changedState);
     let newState = Object.assign({}, this.state, changedState)
     this.setState(newState);
   }
@@ -71,14 +66,45 @@ class AlarmForm extends React.Component  {
         return this.props.saveAlarm(alarms, currentAlarm)
     }
   }
+  dateTimeConverter(){
+        let arrvialFormat = this.state.arrivalTime.split(":");
+        let hours = arrvialFormat[0];
+        let pm = false;
+        if(arrvialFormat[1].includes("PM")){
+          pm = true;
+        }
+        let mins = arrvialFormat[1].replace("AM","").replace("PM","");
+        let newDate = new Date();
+          if(pm){
+              if(hours === "12"){
+                newDate.setHours(hours);
+              }else{
+                newDate.setHours(String(12+parseInt(hours))); 
+              }
+          }else{
+            if(hours === "12"){
+              newDate.setHours("00");
+            }else{
+              newDate.setHours(hours);
+            }
+        }
+        
+        newDate.setMinutes(mins);
+        return newDate;
+    }
 
   handleSave() {
+      if(typeof this.state.arrivalTime != "object"){
+        this.state.arrivalTime  = this.dateTimeConverter();
+      }
+
       const alarms = this.props.alarms;
       const alarmIndex = this.props.currentAlarm.index;
       const currentAlarm = AsyncStorageFormat(this.state);
+      
       // save in async storage
       this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
-      .then((result) => {
+      .then(() => {
           // if there exists a background timer already, clear it and create a new one
           // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
           // we will reset after each edit)
@@ -86,8 +112,7 @@ class AlarmForm extends React.Component  {
               // console.warn('resetting the background timer', currentAlarm.timerId);
               clearBackgroundTimer(currentAlarm.timerId);
           }
-          const timerId = setTimer(currentAlarm, alarmIndex);
-          // console.log('timerId', timerId);
+          const timerId = setTimer(currentAlarm, alarmIndex, updateAlarmTimer);
           this.setState({timerId}, () => {
               this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
               // console.warn('CREATED TIMER ID', timerId);
@@ -136,9 +161,10 @@ class AlarmForm extends React.Component  {
 
               <DatePicker
                 style={{width: 380, alignSelf: 'center'}}
-                date={new Date(this.state.arrivalTime)}
+                date={this.state.arrivalTime}
                 mode="time"
-                format="HH:mm"
+                format="h:mm A"
+                is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 minuteInterval={10}
@@ -194,15 +220,6 @@ class AlarmForm extends React.Component  {
 	}
 }
 
-const styles = StyleSheet.create({
-  window: { backgroundColor: '#333333' },
-  item: { width: 340 },
-  label: { color: '#5e5e5e' },
-  input: { color: 'white' }
-})
-
-
-
 const mapStateToProps = ({alarms, currentAlarm}) => {
    return {alarms, currentAlarm}
 }
@@ -211,7 +228,8 @@ const mapDispatchToProps = (dispatch) => {
    return {
         updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
         saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
-        unselectAlarm: () => dispatch(unselectAlarm())
+        unselectAlarm: () => dispatch(unselectAlarm()),
+        updateAlarmTimer: (oldTimerId, newTimerId) => dispatch(updateAlarmTimer(oldTimerId, newTimerId))
    }
 }
 
