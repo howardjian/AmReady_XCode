@@ -142,11 +142,11 @@ export default class extends Component {
       })
     }
 
-    getTheStartAddress(start){
+    getTheStartAddress(start){ 
         this.setState({start, userCurrent:false});
     }
 
-    getTheEndAddress(end){
+    getTheEndAddress(end){   
       this.setState({end})
     }
 

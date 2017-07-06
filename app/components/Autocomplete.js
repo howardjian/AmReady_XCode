@@ -30,23 +30,44 @@ export default class extends Component {
 
         })
 
+     
+    }   
 
-
-    }
     textChange(string){
-        let baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
-        let url = `input=${string}&types=address&
-                        &key=${"AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8"}`;
+            const key = "AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
+            let baseUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${string}`;
+           
+            let address = `&types=address&location=&key=${key}`;
+            let establishment = `&types=establishment&location=&key=${key}`;
+            let region = `&types=regions&location=&key=${key}`;
 
-        let request = baseUrl+url;
-        fetch(request,{ mode: 'no-cors' })
-        .then(data => {
-            return data.json();
-        })
-        .then(locations => {
+            let addresRequest = baseUrl+address;
+            let establishmentRequest = baseUrl+establishment;
+            let regionRequest = baseUrl+region;
+            Promise.all([
+                fetch(addresRequest,{ mode: 'no-cors' }), 
+                fetch(establishmentRequest,{ mode: 'no-cors' }),
+                fetch(regionRequest,{ mode: 'no-cors' })
+                ])
+            .then(locations => {
+                let addressPredictions = JSON.parse(locations[0]["_bodyInit"]).predictions;
+                let establishmentPredictions = JSON.parse(locations[1]["_bodyInit"]).predictions;
+                let regionPredictions = JSON.parse(locations[2]["_bodyInit"]).predictions;
+                if(addressPredictions.length >= establishmentPredictions.length && addressPredictions.length >= regionPredictions.length){
+                    this.setState({currentTerm:string,possibleLocations:addressPredictions})
+                }
+                else if(establishmentPredictions.length >= addressPredictions.length && establishmentPredictions.length >= regionPredictions.length){
+                    this.setState({currentTerm:string,possibleLocations:establishmentPredictions})
+                }
+                else{
+                    this.setState({currentTerm:string,possibleLocations:regionPredictions})
+                }
+            })
+            .catch(err => {
+                console.warn("ERROR", err)
+            })
 
-            this.setState({currentTerm:string,possibleLocations:locations.predictions})
-        })
+
     }
 
     selectEvent(places){
@@ -57,6 +78,7 @@ export default class extends Component {
              currentValue:places.description
             })
     }
+
     render(){
         return (
             <View>
@@ -67,6 +89,8 @@ export default class extends Component {
                     ref='searchBar'
                     value={this.state.currentTerm}
                     onChangeText={text => {this.textChange(text)}}
+                    returnKeyType={ "done" }
+                   
                     />
                     {
                         this.state.possibleLocations ?
