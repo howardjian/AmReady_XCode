@@ -15,7 +15,9 @@ class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
 		    this.state = {
-		        dataSource: ds.cloneWithRows(this.props.alarms)
+		        dataSource: ds.cloneWithRows(this.props.alarms),
+		        rowAlarms:[]
+
 		    };
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
@@ -36,6 +38,15 @@ class AlarmSelector extends React.Component   {
 
 
 renderRow(rowData, rowIndex, index) {
+		this.state.rowAlarms.forEach(data => {
+			// console.warn();
+			if(data.alarmName === rowData.alarmName){
+				return
+			}else{
+				this.state.rowAlarms.push(rowData);
+			}
+		})
+		
 		// if(index === 1) return;
 			let swipeBtns = [{
 				text: 'Delete',

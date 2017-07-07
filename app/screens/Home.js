@@ -14,7 +14,7 @@ class Home extends React.Component {
    onNotificationReceived(notification) {
       // only do this if there is no alarm ringing currently
       if (this.props.alarmRinging.index === null) {
-         console.warn("Notification Received", notification);
+         // console.warn("Notification Received", notification);
          const alarm = JSON.parse(notification._data.alarm);
          const alarmIndex = +notification._data.alarmIndex;
          this.props.triggerAlarm(alarm, alarmIndex);

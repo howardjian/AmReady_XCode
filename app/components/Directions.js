@@ -59,7 +59,7 @@ export default class extends Component {
 
 
         googleDirectionsQuery+= `destination=${this.state.end}&`;
-        googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
+        googleDirectionsQuery+= "mode=transit&alternatives=true&sensor=true&key=AIzaSyD0ELx61-4ALpdcPUI0-5M09SQezzdnl5Q";
 
         fetch(
           googleDirectionsQuery,
