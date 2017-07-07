@@ -13,10 +13,9 @@ let localNotification = null;
 export function resetAlarm(backgroundTimerId, setSnooze, alarm, alarmIndex) {
     clearBackgroundTimer(backgroundTimerId);
     cancelNotification(localNotification);
-    if(audioId){
+    if (audioId){
         stopAudio(audioId);
     }
-    
     if (setSnooze) setTimer(alarm, alarmIndex, null, true);
 }
 
@@ -37,7 +36,12 @@ export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false
         timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(arrivalTimeStr, +alarm.prepTime, +alarm.route.duration);
         let timeUntilWeStartCheckingDuration = timeInMinUntilAlarmTriggers - TIME_IN_MIN_BEFORE_CHECKING_DURATION;
         timeUntilWeStartCheckingDuration = timeUntilWeStartCheckingDuration < 0 ? 0 : timeUntilWeStartCheckingDuration;
-        return setTimerToCheckDuration(timeUntilWeStartCheckingDuration, updateAlarmTimer, alarm, alarmIndex);
+        // bypass setinterval if time alarm is supposed to ring is less than time interval
+        if (timeUntilWeStartCheckingDuration < SET_INTERVAL_TIME_IN_MIN) {
+            return setAlarmTimer(timeInMinUntilAlarmTriggers, alarm, alarmIndex)
+        } else {
+            return setTimerToCheckDuration(timeUntilWeStartCheckingDuration, updateAlarmTimer, alarm, alarmIndex);
+        }
     }
 }
 
@@ -49,21 +53,21 @@ export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false
 function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex) {
     return BackgroundTimer.setTimeout(function () { // 1
         return (timerId) => {
-        console.warn('1', timerId);
+        // console.warn('1', timerId);
         // let timeInMinUntilAlarmTriggers = 4000;
           const setIntervalTimeoutId = BackgroundTimer.setInterval(function() {
                 return (timerId) => {
                     getDuration(alarm)
                     .then(duration => {
-                        console.warn('2', timerId);
-                        console.warn('pliss', duration);
+                        // console.warn('2', timerId);
+                        // console.warn('pliss', duration);
                         // fetch duration
                         let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(alarm.arrivalTime, +alarm.prepTime, duration);
-                        console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
+                        // console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
                         if (timeInMinUntilAlarmTriggers <= SET_INTERVAL_TIME_IN_MIN) { // UPDATE
                             // set ringer timeout
                             let ringerTimeoutId = setAlarmTimer(timeInMinUntilAlarmTriggers, alarm, alarmIndex); // UPDATE: timeInMinUntilAlarmTriggers
-                            console.warn('2.5', ringerTimeoutId);
+                            // console.warn('2.5', ringerTimeoutId);
                             // clear timeout and update the timer
                             clearBackgroundTimer(timerId, ringerTimeoutId, updateAlarmTimer);
                         }
@@ -72,7 +76,7 @@ function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex)
                 }
           }, SET_INTERVAL_TIME_IN_MIN * 60000)
           // clear timeout and update the timer
-          console.warn('1.5', setIntervalTimeoutId);
+          // console.warn('1.5', setIntervalTimeoutId);
           clearBackgroundTimer(timerId, setIntervalTimeoutId, updateAlarmTimer);
         }
       }, timeInMin * 60000);
@@ -81,7 +85,7 @@ function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex)
 function setAlarmTimer (timeInMin, alarm, alarmIndex) {
     return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
-            console.warn('3', timerId);
+            // console.warn('3', timerId);
           const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
           audioId = playAudio();
           localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
@@ -100,7 +104,7 @@ function calcTimeBeforeAlarmTriggers(arrivalTimeStr, prepTime, duration) {
     let timeBetweenArrivalTimeAndNow = arrivalTimeInMin - timeNowInMin;
     // add 24 hours if the arrival time has already elapsed, i.e. if arrival time is 9AM and current time is 11PM
     if (timeBetweenArrivalTimeAndNow <= 0) timeBetweenArrivalTimeAndNow += 24 * 60;
-    console.warn('TIME UNTIL ALARM RINGS', timeBetweenArrivalTimeAndNow/60);
+    // console.warn('TIME UNTIL ALARM RINGS', timeBetweenArrivalTimeAndNow/60);
     let timeInMinUntilAlarmTriggers = timeBetweenArrivalTimeAndNow
       - (prepTime || 0) // in min
       - ((duration || 0) / 60); // in sec, convert to min

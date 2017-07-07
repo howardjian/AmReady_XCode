@@ -168,7 +168,7 @@ class AlarmForm extends React.Component  {
                 is24Hour={false}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
-                minuteInterval={10}
+                minuteInterval={1}
                 showIcon={false}
                 customStyles={{
                   dateInput: {

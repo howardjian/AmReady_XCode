@@ -34,7 +34,7 @@ export default class extends Component {
     }   
 
     textChange(string){
-            const key = "AIzaSyBq0-IRUlG9ORXcMvAxEMXSdxOsEv25OD8";
+            const key = "AIzaSyD0ELx61-4ALpdcPUI0-5M09SQezzdnl5Q";
             let baseUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${string}`;
            
             let address = `&types=address&location=&key=${key}`;

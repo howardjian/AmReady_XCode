@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { deleteSelectedAlarm, selectAlarm } from '../redux';
 import Swipeout from 'react-native-swipeout';
 import { Divider, Slider, Grid, Col, Row, Badge} from 'react-native-elements';
-import {resetAlarm} from '../features/Timer';
+import {resetAlarm, getEstimatedWakeupTime} from '../features/Timer';
 import { Container, Content, Button, Text } from 'native-base';
 
 import {getArrivalTimeString} from '../../utils/utils';
@@ -14,17 +14,22 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 class AlarmSelector extends React.Component   {
 		constructor (props) {
 			super(props);
-      this.state = {
-          dataSource: ds.cloneWithRows(this.props.alarms)
-      };
+		    this.state = {
+		        dataSource: ds.cloneWithRows(this.props.alarms),
+		        rowAlarms:[]
 
+		    };
 			this.deleteAlarm = this.deleteAlarm.bind(this);
 		}
 
 	componentWillReceiveProps (props) {
-			if(this.state.dataSource._cachedRowCount === 0) this.setState({dataSource: ds.cloneWithRows(props.alarms)});
-  }
+		// if (this.state.dataSource._cachedRowCount === 0) 
+			this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  	}
 
+  	componentWillMount () {
+  		// this.setState({dataSource: ds.cloneWithRows(this.props.alarms)});
+  	}
 
 	deleteAlarm(alarm, alarmIndex){
 		resetAlarm(alarm.timerId);
@@ -33,6 +38,16 @@ class AlarmSelector extends React.Component   {
 
 
 renderRow(rowData, rowIndex, index) {
+		this.state.rowAlarms.forEach(data => {
+			// console.warn();
+			if(data.alarmName === rowData.alarmName){
+				return
+			}else{
+				this.state.rowAlarms.push(rowData);
+			}
+		})
+		
+		// if(index === 1) return;
 			let swipeBtns = [{
 				text: 'Delete',
 				backgroundColor: 'red',
@@ -40,7 +55,7 @@ renderRow(rowData, rowIndex, index) {
 				onPress: () => { this.deleteAlarm(rowData, +index) }
 			}];
 
-			let arrivalTimeStr = getArrivalTimeString(rowData.arrivalTime);
+			let arrivalTimeStr = getArrivalTimeString(getEstimatedWakeupTime(rowData.arrivalTime, +rowData.prepTime, +rowData.route.duration));
 
 			arrivalTimeStr = arrivalTimeStr.split(" ");
 			const etaDateStr = getArrivalTimeString(rowData.arrivalTime);
