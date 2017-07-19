@@ -142,11 +142,11 @@ export default class extends Component {
       })
     }
 
-    getTheStartAddress(start){ 
+    getTheStartAddress(start){
         this.setState({start, userCurrent:false});
     }
 
-    getTheEndAddress(end){   
+    getTheEndAddress(end){
       this.setState({end})
     }
 
@@ -238,7 +238,7 @@ export default class extends Component {
 //
 // Upon submit of the valid addresses, the get directions is called, which runs the google maps api fetch request
 //
-// THE IMPORTANT THING ABOUT THE CRAZY NESTED RESPONSE OBJECT is that not every part of the object is "JSON-ified" and that this object is nested in different ways depending on the query / type of response (eg. if one part of the route is walking, this route object will look different than the part of the route that is a transit object)
+// THE IMPORTANT THING ABOUT THE NESTED RESPONSE OBJECT is that not every part of the object is "JSON-ified" and that this object is nested in different ways depending on the query / type of response (eg. if one part of the route is walking, this route object will look different than the part of the route that is a transit object)
 //
 // Here are some examples:
 // - JSON.parse(responseText['_bodyInit']) <- THE '_bodyInit' is text

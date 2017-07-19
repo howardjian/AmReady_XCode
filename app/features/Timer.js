@@ -50,24 +50,27 @@ export function setTimer (alarm, alarmIndex, updateAlarmTimer, setSnooze = false
 // The timerId is passed to the notification object so the timer can be turned off eventually
 // Normally, the timerId is returned from setTimeout, but we don't have access to it inside of the callback function
 
+
+// # How the timer works
+//
+// We set an initial timeout function to wait until 2 hours before the initial alarm time.
+//
+// When this timer hits, we kill the set time out and trigger a setInterval to constantly check the duration of the selected route every 15 minutes. If there is a difference, we have to clear the current background timer and create a new one. This is because React Native's background timer inherently works like JavaScripts setTimeout/setInterval in that they cannot be modified
+//
+// If the current interval is less than or equal to 15 minutes before the alarm triggers, we kill the setInterval and set a final timeout for the alarm to ring.
+
 function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex) {
-    return BackgroundTimer.setTimeout(function () { // 1
+    return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
-        // console.warn('1', timerId);
-        // let timeInMinUntilAlarmTriggers = 4000;
           const setIntervalTimeoutId = BackgroundTimer.setInterval(function() {
                 return (timerId) => {
                     getDuration(alarm)
                     .then(duration => {
-                        // console.warn('2', timerId);
-                        // console.warn('pliss', duration);
                         // fetch duration
                         let timeInMinUntilAlarmTriggers = calcTimeBeforeAlarmTriggers(alarm.arrivalTime, +alarm.prepTime, duration);
-                        // console.warn('BEFORE UPDATING', timeInMinUntilAlarmTriggers);
                         if (timeInMinUntilAlarmTriggers <= SET_INTERVAL_TIME_IN_MIN) { // UPDATE
                             // set ringer timeout
                             let ringerTimeoutId = setAlarmTimer(timeInMinUntilAlarmTriggers, alarm, alarmIndex); // UPDATE: timeInMinUntilAlarmTriggers
-                            // console.warn('2.5', ringerTimeoutId);
                             // clear timeout and update the timer
                             clearBackgroundTimer(timerId, ringerTimeoutId, updateAlarmTimer);
                         }
@@ -76,7 +79,6 @@ function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex)
                 }
           }, SET_INTERVAL_TIME_IN_MIN * 60000)
           // clear timeout and update the timer
-          // console.warn('1.5', setIntervalTimeoutId);
           clearBackgroundTimer(timerId, setIntervalTimeoutId, updateAlarmTimer);
         }
       }, timeInMin * 60000);
@@ -85,7 +87,6 @@ function setTimerToCheckDuration(timeInMin, updateAlarmTimer, alarm, alarmIndex)
 function setAlarmTimer (timeInMin, alarm, alarmIndex) {
     return BackgroundTimer.setTimeout(function () {
         return (timerId) => {
-            // console.warn('3', timerId);
           const alarmWithBackgroundTimerId = Object.assign({}, alarm, { timerId });
           audioId = playAudio();
           localNotification = createLocalNotification(alarmWithBackgroundTimerId, alarmIndex);
@@ -104,7 +105,6 @@ function calcTimeBeforeAlarmTriggers(arrivalTimeStr, prepTime, duration) {
     let timeBetweenArrivalTimeAndNow = arrivalTimeInMin - timeNowInMin;
     // add 24 hours if the arrival time has already elapsed, i.e. if arrival time is 9AM and current time is 11PM
     if (timeBetweenArrivalTimeAndNow <= 0) timeBetweenArrivalTimeAndNow += 24 * 60;
-    // console.warn('TIME UNTIL ALARM RINGS', timeBetweenArrivalTimeAndNow/60);
     let timeInMinUntilAlarmTriggers = timeBetweenArrivalTimeAndNow
       - (prepTime || 0) // in min
       - ((duration || 0) / 60); // in sec, convert to min
