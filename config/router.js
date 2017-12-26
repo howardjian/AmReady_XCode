@@ -25,7 +25,6 @@ class MainNavigator extends React.Component {
 const Navigator = StackNavigator({
 	home: {
 		screen: Home,
-		// header: {style: { backgroundColor: 'red' }},
 		navigationOptions: ({navigation}) => ({
 			title: 'My Alarms',
 			headerRight: <Button title={'+'} onPress={ () =>
@@ -35,7 +34,6 @@ const Navigator = StackNavigator({
 	},
 	alarmDetail: {
 		screen: AlarmForm,
-		// header: {style: {backgroundColor: 'red'}},
 		navigationOptions: ({ navigation, screenProps }) => (
 		{
 			title: navigation.state.params ?

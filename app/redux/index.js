@@ -108,11 +108,11 @@ export const createAlarmsInAsyncStorage = (alarms) => {
 const updateAlarmsInAsyncStorage = (alarms) => {
 	return dispatch => {
 		return AsyncStorage.setItem('alarms', JSON.stringify(alarms), (err) => {
-	      if (err){
-	        console.error(err);
-	      }
-	      dispatch(setAlarms(alarms));
-	    })
+      if (err){
+        console.error(err);
+      }
+      dispatch(setAlarms(alarms));
+	  })
 	}
 }
 
@@ -120,15 +120,16 @@ export const updateAlarmTimer = (oldTimerId, newTimerId) => {
 	AsyncStorage.getItem('alarms')
 	.then(alarms => {
 		let index;
+
 		const myAlarm = JSON.parse(alarms).filter((alarm, i) => {
 			if (alarm.timerId === oldTimerId) index = i;
 			return alarm.timerId === oldTimerId;
 		});
-		console.warn('what is the alarm?', myAlarm);
+
 		const newAlarm = Object.assign({}, myAlarm);
 		newAlarm.timerId = newTimerId;
-		// newAlarm.timerType = type;
 		alarms[index] = newAlarm;
+		
 		return updateAlarmsInAsyncStorage(alarms);
 	})
 	.catch(console.error.bind(console));

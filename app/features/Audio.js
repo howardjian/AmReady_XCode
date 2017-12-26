@@ -7,15 +7,16 @@ export function playAudio () {
   // See notes below about preloading sounds within initialization code below.
   var sound = new Sound('bells.mp3', Sound.MAIN_BUNDLE, (error) => {
     if (error) {
-      console.log('failed to load the sound', error);
+      console.error('failed to load the sound', error);
       return;
     }
     // loaded successfully
-    console.log('duration in seconds: ' + sound.getDuration() + 'number of channels: ' + sound.getNumberOfChannels());
+    // console.log('duration in seconds: ' + sound.getDuration() + 'number of channels: ' + sound.getNumberOfChannels());
+
     // Play the sound with an onEnd callback
     sound.play((success) => {
       if (success) {
-        console.warn('successfully finished playing');
+        // console.warn('successfully finished playing');
       } else {
         console.warn('playback failed due to audio decoding errors');
       }

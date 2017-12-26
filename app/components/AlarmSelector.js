@@ -11,123 +11,102 @@ import {getArrivalTimeString} from '../../utils/utils';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-class AlarmSelector extends React.Component   {
-		constructor (props) {
-			super(props);
-		    this.state = {
-		        dataSource: ds.cloneWithRows(this.props.alarms),
-		        rowAlarms:[]
-
-		    };
-			this.deleteAlarm = this.deleteAlarm.bind(this);
-		}
+class AlarmSelector extends React.Component {
+	constructor (props) {
+		super(props);
+	    this.state = {
+        dataSource: ds.cloneWithRows(this.props.alarms),
+        rowAlarms:[]
+	    };
+		this.deleteAlarm = this.deleteAlarm.bind(this);
+		this.renderRow = this.renderRow.bind(this);
+	}
 
 	componentWillReceiveProps (props) {
-		// if (this.state.dataSource._cachedRowCount === 0) 
-			this.setState({dataSource: ds.cloneWithRows(props.alarms)});
-  	}
-
-  	componentWillMount () {
-  		// this.setState({dataSource: ds.cloneWithRows(this.props.alarms)});
-  	}
+		this.setState({dataSource: ds.cloneWithRows(props.alarms)});
+  }
 
 	deleteAlarm(alarm, alarmIndex){
 		resetAlarm(alarm.timerId);
 		this.props.deleteSelectedAlarm(this.props.alarms, alarmIndex);
 	}
 
-
-renderRow(rowData, rowIndex, index) {
+	renderRow(rowData, rowIndex, index) {
 		this.state.rowAlarms.forEach(data => {
-			// console.warn();
 			if(data.alarmName === rowData.alarmName){
 				return
-			}else{
+			} else {
 				this.state.rowAlarms.push(rowData);
 			}
 		})
-		
-		// if(index === 1) return;
-			let swipeBtns = [{
-				text: 'Delete',
-				backgroundColor: 'red',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				onPress: () => { this.deleteAlarm(rowData, +index) }
-			}];
 
-			let arrivalTimeStr = getArrivalTimeString(getEstimatedWakeupTime(rowData.arrivalTime, +rowData.prepTime, +rowData.route.duration));
+		const swipeBtns = [{
+			text: 'Delete',
+			backgroundColor: 'red',
+			underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+			onPress: () => { this.deleteAlarm(rowData, +index) }
+		}];
 
-			arrivalTimeStr = arrivalTimeStr.split(" ");
-			const etaDateStr = getArrivalTimeString(rowData.arrivalTime);
+		let arrivalTimeStr = getArrivalTimeString(getEstimatedWakeupTime(rowData.arrivalTime, +rowData.prepTime, +rowData.route.duration));
 
-			return (
+		arrivalTimeStr = arrivalTimeStr.split(" ");
+		const etaDateStr = getArrivalTimeString(rowData.arrivalTime);
 
-				<Swipeout right={swipeBtns}
-					autoClose={true}
-					backgroundColor= 'transparent'>
-					<TouchableHighlight
-						onPress={() => {
-							this.props.selectAlarm(rowData, +index);
-							this.props.navigation.navigate('alarmDetail', rowData);
-						}} >
-						<View style={{ height: 100, backgroundColor: '#575757'}}>
-						<Grid >
-
-
-							<Col size={2}>
+		return (
+			<Swipeout right={swipeBtns}
+				autoClose={true}
+				backgroundColor= 'transparent'>
+				<TouchableHighlight
+					onPress={() => {
+						this.props.selectAlarm(rowData, +index);
+						this.props.navigation.navigate('alarmDetail', rowData);
+					}} >
+					<View style={{ height: 100, backgroundColor: '#575757'}}>
+					<Grid >
+						<Col size={2}>
 							<Row>
 								<Text style={{left: 17, paddingTop: 20, paddingBottom: 10, color: '#00BFFF',fontSize: 22}}> {rowData.alarmName}</Text>
-								</Row>
-								<Row>
+							</Row>
+							<Row>
 								<Text style={{ paddingTop: 6, color: 'white', left: 21}}>{`ETA: ${etaDateStr}`}</Text>
-								</Row>
-</Col>
+							</Row>
+						</Col>
 
-								<Divider style={{backgroundColor: '#575757', paddingTop: 21}} />
+						<Divider style={{backgroundColor: '#575757', paddingTop: 21}} />
 
-
-<Col size={1}>
-
-								<Badge containerStyle={{ marginLeft: 21,  top: 32,  right: 25,  backgroundColor: 'black', borderWidth: 0, borderColor: '#00BFFF' }}>
-								<Text style={ { color: 'white', alignContent: 'center', fontFamily: 'Digital Dismay', fontSize: 28 }}>{arrivalTimeStr[0]}</Text>
-
-
-								</Badge>
-
-
-</Col>
-<Col size={0.5}><Text style={{top: 42,  color:'white', fontSize: 18, left: -19}}>{' ' + arrivalTimeStr[1]}</Text></Col>
-
-
-							</Grid>
-							<Divider style={{backgroundColor: '#333333', paddingBottom: 2}} />
-						</View>
-					</TouchableHighlight>
-				</Swipeout>
-			)
+						<Col size={1}>
+							<Badge containerStyle={{ marginLeft: 21,  top: 32,  right: 25,  backgroundColor: 'black', borderWidth: 0, borderColor: '#00BFFF' }}>
+								<Text style={ { color: 'white', alignContent: 'center', fontFamily: 'Digital Dismay', fontSize: 28 }}>{arrivalTimeStr[0]}
+								</Text>
+							</Badge>
+						</Col>
+						<Col size={0.5}>
+							<Text style={{top: 42,  color:'white', fontSize: 18, left: -19}}>{' ' + arrivalTimeStr[1]}
+							</Text>
+						</Col>
+						</Grid>
+						<Divider style={{backgroundColor: '#333333', paddingBottom: 2}} />
+					</View>
+				</TouchableHighlight>
+			</Swipeout>
+		)
 	}
-
 
 	render(){
-			return (
-					<View style={styles.container}>
-						{
-							this.props.alarms.length ?
-							<ListView
-								dataSource={this.state.dataSource}
-								renderRow={this.renderRow.bind(this) }
-							/>
-							 : null
-						}
-
-
-
-
-					</View>
-					)
-
+		return (
+			<View style={styles.container}>
+				{
+					this.props.alarms.length ?
+					<ListView
+						dataSource={this.state.dataSource}
+						renderRow={this.renderRow}
+					/>
+					 : null
+				}
+			</View>
+		)
 	}
-  }
+}
 
 
 const mapStateToProps = ({alarms, currentAlarm}) => {
@@ -143,9 +122,8 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlarmSelector);
 
-let styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    // paddingTop: 25,
     flex: 1,
 		backgroundColor: '#333333'
   },

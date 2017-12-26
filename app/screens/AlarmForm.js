@@ -19,10 +19,10 @@ class AlarmForm extends React.Component  {
       alarmName: '',
       start:null,
       end:null,
-      start_lat: 40.7051,
-      start_long: -74.0092,
+			start_lat: 40.702794,
+			start_long: -73.990672,
       end_lat: 40.7051,
-      end_long: -74.0092,
+      end_long: -73.990672,
       directions:false,
       trainOptions: [],
       routeSelectedBool: false,
@@ -66,78 +66,73 @@ class AlarmForm extends React.Component  {
     }
   }
   dateTimeConverter(){
-        let arrvialFormat = this.state.arrivalTime.split(":");
-        let hours = arrvialFormat[0];
-        let pm = false;
-        if(arrvialFormat[1].includes("PM")){
-          pm = true;
-        }
-        let mins = arrvialFormat[1].replace("AM","").replace("PM","");
-        let newDate = new Date();
-          if(pm){
-              if(hours === "12"){
-                newDate.setHours(hours);
-              }else{
-                newDate.setHours(String(12+parseInt(hours))); 
-              }
-          }else{
-            if(hours === "12"){
-              newDate.setHours("00");
-            }else{
-              newDate.setHours(hours);
-            }
-        }
-        
-        newDate.setMinutes(mins);
-        return newDate;
+    const arrvialFormat = this.state.arrivalTime.split(":");
+    const hours = arrvialFormat[0];
+    let pm = false;
+    if(arrvialFormat[1].includes("PM")){
+      pm = true;
     }
 
-  handleSave() {
-      const alarms = this.props.alarms;
-      const alarmIndex = this.props.currentAlarm.index;
-      let currentAlarm;
-      if(typeof this.state.arrivalTime != "object"){
-        this.state.arrivalTime  = this.dateTimeConverter();
-        currentAlarm = AsyncStorageFormat(this.state);
-      }else{
-        currentAlarm = AsyncStorageFormat(this.state);
-      }
+    const mins = arrvialFormat[1].replace("AM","").replace("PM","");
 
-      
-      // save in async storage
-      this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
-      .then(() => {
-          // if there exists a background timer already, clear it and create a new one
-          // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
-          // we will reset after each edit)
-          if (currentAlarm.timerId) {
-              clearBackgroundTimer(currentAlarm.timerId);
-          }
-          const timerId = setTimer(currentAlarm, alarmIndex, updateAlarmTimer);
-          this.setState({timerId}, () => {
-              this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
-              
-          });
-      })
-      this.navigateHome();
+    const newDate = new Date();
+    if(pm) {
+      if(hours === "12") {
+        newDate.setHours(hours);
+      } else {
+        newDate.setHours(String(12+parseInt(hours)));
+      }
+    } else {
+      if(hours === "12") {
+        newDate.setHours("00");
+      } else {
+        newDate.setHours(hours);
+      }
+    }
+    newDate.setMinutes(mins);
+    return newDate;
+  }
+
+  handleSave() {
+    const alarms = this.props.alarms;
+    const alarmIndex = this.props.currentAlarm.index;
+    let currentAlarm;
+    if(typeof this.state.arrivalTime != "object"){
+      this.state.arrivalTime  = this.dateTimeConverter();
+      currentAlarm = AsyncStorageFormat(this.state);
+    } else {
+      currentAlarm = AsyncStorageFormat(this.state);
+    }
+
+    // save in async storage
+    this.saveAlarmDetails(alarms, currentAlarm, alarmIndex)
+    .then(() => {
+      // if there exists a background timer already, clear it and create a new one
+      // (technically, this only needs to be done when arrival time, prep time or duration changes, but for simplicity sake,
+      // we will reset after each edit)
+      if (currentAlarm.timerId) {
+        clearBackgroundTimer(currentAlarm.timerId);
+      }
+      const timerId = setTimer(currentAlarm, alarmIndex, updateAlarmTimer);
+      this.setState({timerId}, () => {
+        this.props.updateAlarm(alarms, AsyncStorageFormat(this.state), alarmIndex);
+      });
+    })
+    this.navigateHome();
   }
 
   navigateHome() {
-      this.props.navigation.dispatch(NavigationActions.reset(
-      {
-        index: 0,
-        actions: [
-          NavigationActions.navigate({ routeName: 'home'})
-        ]
-      }));
+    this.props.navigation.dispatch(NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'home'})
+      ]
+    }));
   }
 
   onDateChange (date) {
     this.setState({arrivalTime: date});
   }
-
-
-
 
 	render () {
 		return (
@@ -173,7 +168,6 @@ class AlarmForm extends React.Component  {
                 customStyles={{
                   dateInput: {
                     width: 380,
-                    // marginLeft: 180,   only if have enough time, keep try set the lable on the same line
                     borderBottomColor: '#696969',
                     borderTopColor: '#333333',
                     borderLeftColor: '#333333',
@@ -183,11 +177,8 @@ class AlarmForm extends React.Component  {
                     fontFamily: 'Digital Dismay',
                     fontSize: 26,
                     letterSpacing: 2,
-
                     paddingLeft: 15,
-
                     color: 'white',
-
                   },
                   btnTextText: {
                     paddingLeft: 15
@@ -198,7 +189,12 @@ class AlarmForm extends React.Component  {
 
               <Divider style={{paddingTop: 8, backgroundColor: '#333333'}} />
 
-              <Label style={{color: 'white', fontSize: 24, paddingLeft: 15}}><Label style={{color: '#00BFFF', fontSize: 24}}>Preparation Time:  </Label> <Label style={{fontFamily: 'Digital Dismay', letterSpacing:3, fontSize: 26}}>{+this.state.prepTime}</Label> minutes</Label>
+              <Label style={{color: 'white', fontSize: 24, paddingLeft: 15}}>
+								<Label style={{color: '#00BFFF', fontSize: 24}}>Preparation Time:
+								</Label>
+								<Label style={{fontFamily: 'Digital Dismay', letterSpacing:3, fontSize: 26}}>{+this.state.prepTime}
+								</Label> minutes
+							</Label>
 
               <Slider
                 minimumValue={0}
@@ -209,9 +205,7 @@ class AlarmForm extends React.Component  {
                 value={+this.state.prepTime}
                 onValueChange={(prepTime) => this.setState({prepTime})} />
 
-
-
-                 <Directions updateNewState={this.updateNewState} alarmInfo={this.state} />
+							<Directions updateNewState={this.updateNewState} alarmInfo={this.state} />
 
             </Form>
           </Content>
@@ -226,12 +220,12 @@ const mapStateToProps = ({alarms, currentAlarm}) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-   return {
-        updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
-        saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
-        unselectAlarm: () => dispatch(unselectAlarm()),
-        updateAlarmTimer: (oldTimerId, newTimerId) => dispatch(updateAlarmTimer(oldTimerId, newTimerId))
-   }
+	return {
+	  updateAlarm: (alarms, alarm, alarmIndex) => dispatch(updateAlarm(alarms, alarm, alarmIndex)),
+	  saveAlarm: (currentAlarms, newAlarm) => dispatch(saveNewAlarm(currentAlarms, newAlarm)),
+	  unselectAlarm: () => dispatch(unselectAlarm()),
+	  updateAlarmTimer: (oldTimerId, newTimerId) => dispatch(updateAlarmTimer(oldTimerId, newTimerId))
+	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlarmForm);

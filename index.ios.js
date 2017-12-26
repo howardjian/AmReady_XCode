@@ -1,14 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import {
-  AppRegistry,
-} from 'react-native';
+import { AppRegistry } from 'react-native';
 import MainNavigator from './config/router';
 import store from './app/store';
 
@@ -16,8 +8,8 @@ export default class project extends Component {
   render() {
     return (
     	<Provider store={store}>
-      		<MainNavigator />
-      	</Provider>
+      	<MainNavigator />
+      </Provider>
     );
   }
 }

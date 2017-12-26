@@ -123,7 +123,6 @@ export const getDuration = (currentAlarm) => {
         //testing purposes!!!
         // console.error(foundRoute[0]["overview_polyline"], "----------------", currentAlarm.route.routeSelectedHash);
         let duration = foundRoute[0].legs[0].duration.value;
-        console.warn('duration is here', duration);
         return duration
       }
   )
